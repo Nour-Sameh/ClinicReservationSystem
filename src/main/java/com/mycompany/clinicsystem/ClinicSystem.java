@@ -11,6 +11,6 @@ package com.mycompany.clinicsystem;
 public class ClinicSystem {
 
     public static void main(String[] args) {
-        System.out.println("haaaaaaaaaaaaaaaaaa!");
+        System.out.println("ya gma3aaa!");
     }
 }
