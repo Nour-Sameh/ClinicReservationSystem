@@ -10,9 +10,13 @@ import java.util.*;
 
 /**
  *
- * @author Javengers                              == validate before switch 
+ * @author Javengers 
  */
-
+/**
+ * Main class representing the Clinic Management System.
+ * Handles user login/registration, practitioner and patient menus,
+ * clinic management, appointment booking, and ratings.
+ */
 public class ClinicSystem {
     
     private static final Scanner in = new Scanner(System.in);
@@ -35,7 +39,7 @@ public class ClinicSystem {
         start();
         
     }
-    
+     // Starts the main system loop (login/register/exit)
     private static void start() {
         
         while (true) {
@@ -43,6 +47,7 @@ public class ClinicSystem {
             System.out.println("1. Login");
             System.out.println("2. Register");
             System.out.println("3. Exit");
+            System.out.print("> ");
             int choice = in.nextInt();
             in.nextLine();
 
@@ -60,6 +65,7 @@ public class ClinicSystem {
             }
         }
     }
+     // Handles user login for both practitioners and patients
     static void login() {
         
         System.out.println("-- Login --");
@@ -92,12 +98,14 @@ public class ClinicSystem {
             return;
         } 
         else {
-            System.out.println("Invalid login ❌");
+            System.out.println("Invalid login ");
             login();
         }
         
-}
-
+    }
+    
+// Handles user registration for practitioners or patients
+    
     private static void Register() {
         
         System.out.println("-- Register --");
@@ -116,8 +124,8 @@ public class ClinicSystem {
 
         System.out.print("Enter name: ");
         String name = in.nextLine().trim();
-        while(name.isEmpty() || name.length() < 3) { /// cheak
-            System.out.println(" Name must be at least 3 characters.");
+        while(name.isEmpty() || name.length() < 3 || !name.matches("[a-zA-Z ]+")) { 
+            System.out.println("Name must be at least 3 characters and contain letters only.");
             System.out.print("Enter name: ");
             name = in.nextLine().trim();
         }
@@ -133,13 +141,13 @@ public class ClinicSystem {
         System.out.print("Enter email: ");
         String email = in.nextLine().trim();
         while(!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-            System.out.println("❌ Invalid email format.");
+            System.out.println(" Invalid email format.");
             System.out.print("Enter email: ");
             email = in.nextLine().trim();
         }
         
         while(emailExists(email)) {
-            System.out.println("❌ Email already exists.");
+            System.out.println(" Email already exists.");
             System.out.print("Enter email: ");
             email = in.nextLine().trim();
             while(!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
@@ -152,26 +160,28 @@ public class ClinicSystem {
         System.out.print("Enter password: ");
         String password = in.nextLine().trim();
         while (password.length() < 4) {
-            System.out.println("❌ Password must be at least 4 characters.");
+            System.out.println(" Password must be at least 4 characters.");
             password = in.nextLine().trim();
         }
 
-        int newID = generateID(); // validiation
+        int newID = generateID();
 
         if (role == 1){
             Clinic clinic = null;
             Practitioner doctor = new Practitioner(newID, name, phone, email, password, clinic);
             Practitioners.add(doctor);
-            System.out.println("✅ Doctor registered successfully!");
+            System.out.println(" Doctor registered successfully!");
         }
         else {
             Patient patient = new Patient(newID, name, phone, email, password);
             patients.add(patient);
-            System.out.println("✅ Patient registered successfully!");
+            System.out.println(" Patient registered successfully!");
         }
 
         login();
     }
+    
+    // Checks if the email is already used
     
     private static boolean emailExists(String email) {
         for (Practitioner d : Practitioners)
@@ -181,9 +191,31 @@ public class ClinicSystem {
         return false;
     }
     
+    // Generates a random ID
     private static int generateID() {
-        return new Random().nextInt(10000) + 1;
+        int newID;
+        do {
+            newID = new Random().nextInt(10000) + 1;
+        } while (idExists(newID));
+        return newID;
     }
+    
+    private static boolean idExists(int id) {
+        for (Practitioner d : Practitioners) {
+            if (d.getID() == id) return true;
+        }
+        for (Patient p : patients) {
+            if (p.getID() == id) return true;
+        }
+        for (Clinic c : clinics) {
+            if (c.getID() == id) return true;
+        }
+        return false;
+    }
+
+    
+    
+    // Practitioner menu
     
     private static void doctorMenu() {
         
@@ -191,6 +223,7 @@ public class ClinicSystem {
         System.out.println("1. Add Clinic");
         System.out.println("2. View Clinic");
         System.out.println("3. Logout");
+        System.out.print("> ");
         int choice = in.nextInt();
         in.nextLine();
         
@@ -203,13 +236,15 @@ public class ClinicSystem {
                 break;
             case 3:
                 cur_Practitioner = null;
-                System.out.println("Logged out ✅");
+                System.out.println("Logged out ");
                 return;
             default:
-                System.out.println("❌ Invalid choice");
+                System.out.println(" Invalid choice");
         }
     }
 
+    // Patient menu
+    
     private static void patientMenu() {
         while (true) {
             System.out.println("\nPatient Menu:");
@@ -232,16 +267,17 @@ public class ClinicSystem {
                     break;
                 case "4":
                     cur_Patient = null;
-                    System.out.println("Logged out ✅");
+                    System.out.println("Logged out ");
                     return;
                 default:
-                    System.out.println("❌ Invalid choice");
+                    System.out.println(" Invalid choice");
             }
         }
     }
     
     // ----------------------------------------------------------
     
+    // Adds a new clinic for the current practitioner
         private static void addClinic() {
         System.out.println("\n-- Add Clinic --");
         int ID = generateID();
@@ -296,51 +332,56 @@ public class ClinicSystem {
         clinic.setSchedule(schedule);// time slots created
         cur_Practitioner.setClinic(clinic);
         clinics.add(clinic);
-        System.out.println("\nClinic added successfully ✅");
+        System.out.println("\nClinic added successfully ");
         doctorMenu();
         
     }
-        //================================
+    
+    // Views the current practitioner's clinic details
+        
     private static void viewClinic() {
         System.out.println("\n-- View Clinic --");
 
         if (cur_Practitioner.getClinic() == null) {
             System.out.println("You don't have a clinic yet.");
-            return;
+            
         }
+        else{
+            Clinic clinic = cur_Practitioner.getClinic();
 
-        Clinic clinic = cur_Practitioner.getClinic();
+            System.out.println("Name: " + clinic.getName());
+            System.out.println("Address: " + clinic.getAddress());
+            System.out.println("Price: " + clinic.getPrice());
 
-        System.out.println("Name: " + clinic.getName());
-        System.out.println("Address: " + clinic.getAddress());
-        System.out.println("Price: " + clinic.getPrice());
+            String specialty = switch (clinic.getDepartmentID()) {
+                case 1 -> "Cardiology";
+                case 2 -> "Dermatology";
+                case 3 -> "Pediatrics";
+                case 4 -> "General";
+                default -> "Unknown";
+            };
+            System.out.println("Specialty: " + specialty);
 
-        String specialty = switch (clinic.getDepartmentID()) {
-            case 1 -> "Cardiology";
-            case 2 -> "Dermatology";
-            case 3 -> "Pediatrics";
-            case 4 -> "General";
-            default -> "Unknown";
-        };
-        System.out.println("Specialty: " + specialty);
-
-        Schedule schedule = clinic.getSchedule();
-        if (schedule == null) {
-            System.out.println("\nNo schedule set for this clinic.");
-        } else {
-            System.out.println("\nSlot duration: " + schedule.getSlotDurationInMinutes() + " minutes");
-            System.out.println("Working Days & Hours:");
-            if (schedule.getWeeklyRules() == null || schedule.getWeeklyRules().isEmpty()) {
-                System.out.println("No working hours defined.");
+            Schedule schedule = clinic.getSchedule();
+            if (schedule == null) {
+                System.out.println("\nNo schedule set for this clinic.");
             } else {
-                for (WorkingHoursRule rule : schedule.getWeeklyRules()) {
-                    System.out.println("- " + rule.getDay() + ": " 
-                        + rule.getStartTime() + " → " + rule.getEndtTime());
+                System.out.println("\nSlot duration: " + schedule.getSlotDurationInMinutes() + " minutes");
+                System.out.println("Working Days & Hours:");
+                if (schedule.getWeeklyRules() == null || schedule.getWeeklyRules().isEmpty()) {
+                    System.out.println("No working hours defined.");
+                } else {
+                    for (WorkingHoursRule rule : schedule.getWeeklyRules()) {
+                        System.out.println("- " + rule.getDay() + ": " 
+                            + rule.getStartTime() + " → " + rule.getEndtTime());
+                    }
                 }
             }
         }
         doctorMenu();
     }
+    
+    // Allows a patient to search clinics by specialty and book an appointment
     
     private static void searchClinics() {
 
@@ -382,7 +423,6 @@ public class ClinicSystem {
             System.out.println(" Clinic has no working schedule.");
             return;
         }
-        ///////////////////////
         
         System.out.println("\nAvailable Working Days:");
         for (WorkingHoursRule rule : selected.getSchedule().getWeeklyRules()) {
@@ -431,10 +471,11 @@ public class ClinicSystem {
         Appointment newApp = new Appointment(cur_Patient, selected, chosenSlot);
         appointments.add(newApp);
 
-        System.out.println("✅ Appointment booked successfully for " + chosenDay + " " +
+        System.out.println(" Appointment booked successfully for " + chosenDay + " " +
                             chosenSlot.getStartTime() + " - " + chosenSlot.getEndTime());
     }
-  
+  // Views all appointments of the current patient
+    
     private static void viewMyAppointments() {
         System.out.println("\n-- My Appointments --");
 
@@ -451,6 +492,7 @@ public class ClinicSystem {
             System.out.println("No appointments found.");
     }
     
+    // Allows a patient to add a rating for a clinic
     
      static void addRating() {
         if (clinics.isEmpty()) {
@@ -459,42 +501,43 @@ public class ClinicSystem {
         }
         else {
             System.out.println("\n-- Rate a Clinic --");
-        for (int i = 0; i < clinics.size(); ++i) {
-            Clinic c = clinics.get(i);
-            System.out.println((i + 1) + ". " + c.getName() + " | " + c.getAddress() + " | Price: " + c.getPrice());
-        }
+            for (int i = 0; i < clinics.size(); ++i) {
+                Clinic c = clinics.get(i);
+                System.out.println((i + 1) + ". " + c.getName() + " | " + c.getAddress() + " | Price: " + c.getPrice());
+            }
 
-        int choice;
-        System.out.print("Select clinic number to rate: ");
-        choice = in.nextInt();
-        in.nextLine();
-
-        while (choice < 1 || choice > clinics.size()) {
-            System.out.println("Invalid choice!");
+            int choice;
+            System.out.print("Select clinic number to rate: ");
             choice = in.nextInt();
             in.nextLine();
-        }
 
-        Clinic selectedClinic = clinics.get(choice - 1);
+            while (choice < 1 || choice > clinics.size()) {
+                System.out.println("Invalid choice!");
+                choice = in.nextInt();
+                in.nextLine();
+            }
 
-        System.out.print("Enter rating score (1–5): ");
-        int score = in.nextInt();
-        in.nextLine(); 
-        while (score < 1 || score > 5) {
-            System.out.println("Invalid score!");
-            score = in.nextInt();
-            in.nextLine();
-        }
+            Clinic selectedClinic = clinics.get(choice - 1);
 
-        System.out.print("Enter your comment: ");
-        String comment = in.nextLine();
+            System.out.print("Enter rating score (1–5): ");
+            int score = in.nextInt();
+            in.nextLine(); 
+            while (score < 1 || score > 5) {
+                System.out.println("Invalid score!");
+                score = in.nextInt();
+                in.nextLine();
+            }
 
-        if (cur_Patient != null) {
-            cur_Patient.addRating(selectedClinic, score, comment);
-            System.out.println("✅ Rating added successfully for " + selectedClinic.getName());
-        } else {
-            System.out.println("You must be logged in as a patient to rate a clinic.");
-        }
+            System.out.print("Enter your comment: ");
+            String comment = in.nextLine();
+
+            if (cur_Patient != null) {
+                cur_Patient.addRating(selectedClinic, score, comment);
+                System.out.println(" Rating added successfully for " + selectedClinic.getName());
+            } 
+            else {
+                System.out.println("You must be logged in as a patient to rate a clinic.");
+            }
         }
         
     }    
