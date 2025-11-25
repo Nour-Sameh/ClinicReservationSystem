@@ -2,10 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package clinicreservationsystem;
+package main;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.*;
+import model.*;
 
 /**
  *
@@ -28,7 +30,6 @@ public class ClinicReservationSystem {
 
 
     public static void main(String[] args) {
-
 
         clinics = new ArrayList<>();
         appointments = new ArrayList<>();

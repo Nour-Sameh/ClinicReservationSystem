@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package clinicreservationsystem;
+package model;
 import java.util.*;
 /**
  * Represents a department in the clinic system, holding a list of clinics

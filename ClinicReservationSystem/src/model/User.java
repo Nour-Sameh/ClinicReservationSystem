@@ -2,8 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package clinicreservationsystem;
-import java.util.*;
+package model;
 
 /**
  * Abstract class representing a generic user in the clinic system.
@@ -11,11 +10,11 @@ import java.util.*;
  * Subclasses like Patient and Practitioner will inherit these properties.
  */
 public abstract class User {
-    protected int ID;
-    protected String name;
-    protected String phone;
-    protected String email;
-    protected String password;
+    public int ID;
+    public String name;
+    public String phone;
+    public String email;
+    public String password;
 
     // Constructor: creates a new user with the specified personal information
     public User(int ID, String name, String phone, String email, String password) {
