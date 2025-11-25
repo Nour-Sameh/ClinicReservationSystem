@@ -9,12 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-/**
- * Represents a time slot for appointments, including day, start and end times,
- * and whether the slot is booked or available.
- * @author Javengers
- */
 public class TimeSlot {
+    
+    private int id; 
+    private int clinicId; //  تم إضافته
     private LocalDate date;
     private DayOfWeek day;
     private LocalTime startTime;
@@ -22,7 +20,7 @@ public class TimeSlot {
     private boolean isBooked;
     private boolean isCancelled;
 
-    public TimeSlot(LocalDate date, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+    public TimeSlot( LocalDate date, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
         this.date = date;
         this.day = day;
         this.startTime = startTime;
@@ -31,13 +29,31 @@ public class TimeSlot {
         this.isCancelled = false;
     }
 
+    public TimeSlot(int id, int clinicId, LocalDate date, DayOfWeek day, LocalTime startTime, LocalTime endTime, boolean isBooked, boolean isCancelled) {
+        this.id = id;
+        this.clinicId = clinicId;
+        this.date = date;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.isBooked = isBooked;
+        this.isCancelled = isCancelled;
+    }
+    
+    // Getters and Setters:
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public int getClinicId() { return clinicId; }
+    public void setClinicId(int clinicId) { this.clinicId = clinicId; }
+    
     public LocalDate getDate() { return date; }
     public DayOfWeek getDay() { return day; }
     public LocalTime getStartTime() { return startTime; }
     public LocalTime getEndTime() { return endTime; }
     public boolean isBooked() { return isBooked; }
     public boolean isCancelled() { return isCancelled; }
-
+    
+    
     public void markAsBooked() { isBooked = true; isCancelled = false; }
     public void markAsAvailable() { isBooked = false; isCancelled = false; }
     public void markAsCancelled() { isBooked = false; isCancelled = true; }
@@ -50,8 +66,8 @@ public class TimeSlot {
         if (!(o instanceof TimeSlot)) return false;
         TimeSlot t = (TimeSlot) o;
         return date.equals(t.date) &&
-               startTime.equals(t.startTime) &&
-               endTime.equals(t.endTime);
+                startTime.equals(t.startTime) &&
+                endTime.equals(t.endTime);
     }
 
     @Override
@@ -62,7 +78,9 @@ public class TimeSlot {
     @Override
     public String toString() {
         return "TimeSlot{" +
-                "date=" + date +
+                "id=" + id +
+                ", clinicId=" + clinicId +
+                ", date=" + date +
                 ", day=" + day +
                 ", start=" + startTime +
                 ", end=" + endTime +

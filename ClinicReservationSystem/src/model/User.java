@@ -46,6 +46,10 @@ public abstract class User {
     // Sets the user's phone number
     public void setPhone(String phone) { this.phone = phone; }
 
+    public void setId(int ID) {
+        this.ID = ID;
+    }
+
     // Sets the user's email
     public void setEmail(String email) { this.email = email; }
 

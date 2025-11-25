@@ -1,49 +1,47 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dao;
+
 import database.DBConnection;
-import model.Patient;
+import model.Department;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author noursameh
  */
-public class PatientDAO implements GenericDAO<Patient> {
-    
-    private Patient extractPatientFromResultSet(ResultSet rs) throws SQLException {
-        return new Patient(
+public class DepartmentDAO implements GenericDAO<Department> {
+
+    private Department extractDepartmentFromResultSet(ResultSet rs) throws SQLException {
+        return new Department(
                 rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("phone"),
-                rs.getString("email"),
-                rs.getString("password")
+                rs.getString("name")
         );
     }
 
     // Insert
     @Override
-    public void add(Patient patient) throws SQLException {
-        String sql = "INSERT INTO Patients (name, phone, email, password) VALUES (?, ?, ?, ?)";
+    public void add(Department department) throws SQLException {
+        String sql = "INSERT INTO Departments (name) VALUES (?)";
         Connection con = null;
         PreparedStatement ps = null;
 
         try {
             con = DBConnection.getConnection();
             ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, patient.getName());
-            ps.setString(2, patient.getPhone());
-            ps.setString(3, patient.getEmail());
-            ps.setString(4, patient.getPassword());
+            ps.setString(1, department.getName());
 
-            int rowsAffected = ps.executeUpdate(); // برجع من الجدول الid الي تم انشاه
+            int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-                    patient.setId(rs.getInt(1));
+                    department.setID(rs.getInt(1));
                 }
             }
         } finally {
@@ -52,10 +50,10 @@ public class PatientDAO implements GenericDAO<Patient> {
         }
     }
 
-    // ٌRead
+    // Get by ID
     @Override
-    public Patient getById(int id) throws SQLException {
-        String sql = "SELECT * FROM Patients WHERE id = ?";
+    public Department getById(int id) throws SQLException {
+        String sql = "SELECT * FROM Departments WHERE id = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -67,7 +65,7 @@ public class PatientDAO implements GenericDAO<Patient> {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return extractPatientFromResultSet(rs);
+                return extractDepartmentFromResultSet(rs);
             }
             return null;
         } finally {
@@ -77,11 +75,11 @@ public class PatientDAO implements GenericDAO<Patient> {
         }
     }
 
-    // Read All
+    // Get All
     @Override
-    public List<Patient> getAll() throws SQLException {
-        String sql = "SELECT * FROM Patients";
-        List<Patient> patients = new ArrayList<>();
+    public List<Department> getAll() throws SQLException {
+        String sql = "SELECT * FROM Departments";
+        List<Department> departments = new ArrayList<>();
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
@@ -92,9 +90,9 @@ public class PatientDAO implements GenericDAO<Patient> {
             rs = st.executeQuery(sql);
 
             while (rs.next()) {
-                patients.add(extractPatientFromResultSet(rs));
+                departments.add(extractDepartmentFromResultSet(rs));
             }
-            return patients;
+            return departments;
         } finally {
             if (rs != null) rs.close();
             if (st != null) st.close();
@@ -104,20 +102,16 @@ public class PatientDAO implements GenericDAO<Patient> {
 
     // Update
     @Override
-    public void update(Patient patient) throws SQLException {
-        String sql = "UPDATE Patients SET name = ?, phone = ?, email = ?, password = ? WHERE id = ?";
+    public void update(Department department) throws SQLException {
+        String sql = "UPDATE Departments SET name = ? WHERE id = ?";
         Connection con = null;
         PreparedStatement ps = null;
 
         try {
             con = DBConnection.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, patient.getName());
-            ps.setString(2, patient.getPhone());
-            ps.setString(3, patient.getEmail());
-            ps.setString(4, patient.getPassword());
-            ps.setInt(5, patient.getID());
-
+            ps.setString(1, department.getName());
+            ps.setInt(2, department.getID());
             ps.executeUpdate();
         } finally {
             if (ps != null) ps.close();
@@ -128,9 +122,10 @@ public class PatientDAO implements GenericDAO<Patient> {
     // Delete
     @Override
     public void delete(int id) throws SQLException {
-        String sql = "DELETE FROM Patients WHERE id = ?";
+        String sql = "DELETE FROM Departments WHERE id = ?";
         Connection con = null;
         PreparedStatement ps = null;
+
         try {
             con = DBConnection.getConnection();
             ps = con.prepareStatement(sql);

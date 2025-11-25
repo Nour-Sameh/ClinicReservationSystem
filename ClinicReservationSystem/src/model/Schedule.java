@@ -27,6 +27,10 @@ public class Schedule {
         this.weeklyRules = weeklyRules;
         this.slots = new ArrayList<>();
     }
+    public Schedule(int ID, int slotDurationInMinutes) {
+        this.ID = ID;
+        this.slotDurationInMinutes = slotDurationInMinutes;
+    }
 
     // Returns the list of time slots in the schedule
     public List<TimeSlot> getSlots() {
@@ -36,6 +40,10 @@ public class Schedule {
     // Sets the list of time slots in the schedule
     public void setSlots(List<TimeSlot> slots) {
         this.slots = slots;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
     
     // Returns the schedule ID
