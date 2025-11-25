@@ -1,49 +1,63 @@
-# Clinic Reservation System
+# 🏥 Clinic Management System
 
-
-The **Clinic Reservation System** is a Java-based console application designed to manage patients, appointments, and clinics.  
-It follows **Object-Oriented Programming (OOP)** principles and provides role-based functionality for patients and practitioners to simulate a real-world clinic workflow.
-
----
-
-## Features
-
-### User Management
-- Register new users (patients and practitioners) with unique credentials.  
-- Login system through the console.  
-- Role-based options: different menus for patients and doctors.  
-
-### Clinic Management
-- Practitioners can create and manage their clinics.  
-- Set clinic details such as name, address, department, and consultation price.  
-- Define and update working hours using schedules and time slots.  
-
-### Appointment Management
-- Patients can search for available clinics by department.  
-- Book, view, and cancel appointments.  
-- Practitioners can view all upcoming appointments.  
-- Prevents double-booking for the same time slot.  
-
-### Rating System
-- Patients can rate and comment on clinics after their appointments.  
-- Clinics display average ratings based on patient feedback.  
-
-### Data Handling
-- Data is currently stored in memory (no permanent database).    
-- Clear structure for extending persistence later.
+## 🌟 Overview
+**ClinicDB** is a comprehensive system designed to efficiently manage clinics, practitioners, patients, appointments, ratings, real-time chat, and waiting list operations.  
+The project is fully implemented in **Java**, applying the **DAO (Data Access Object) Pattern** for database interaction.
 
 ---
 
-## Classes Structure
-The system can be organized as follows:
+## 🔑 Key Features
 
-- **ClinicSystem:** Main application file, contains menus and program logic.  
-- **User:** Base abstract class for shared user data and behavior.  
-- **Practitioner** Represents a doctor who owns a clinic.  
-- **Patient** Represents a patient who can book appointments.  
-- **Clinic:** Stores clinic details and its schedule.  
-- **Schedule/ WorkingHoursRule.java:** Defines clinic working hours and available slots.  
-- **Appointment.java:** Connects a patient, clinic, and time slot.  
-- **Rating:** Manages patient feedback for clinics.  
+### 👤 User Management
+- Secure storage of Patients and Practitioners.
+- Console-based login and role-specific menu options.
+
+### 📅 Appointment Management (CRUD)
+- Book, update, cancel, and view appointments.
+- Prevents double-booking for the same time slot.
+- Practitioners can view all upcoming appointments.
+
+### ⏳ Waiting List System (Queue)
+- FIFO logic that automatically assigns cancelled slots to the next waiting patient.
+- Based on the `request_time` of each waiting entry.
+
+### ⭐ Rating System
+- Patients can rate clinics after their appointments.
+- Ratings include **score (1–5)** and **comment**.
+- Clinics display their average rating.
+
+### 💬 1:1 Chat System
+- Real-time and persistent messaging between patient and practitioner.
+- Each conversation is stored in a dedicated chat session.
+
+### 🕒 Scheduling
+- Clinics can define detailed working hours using:
+  - `Schedule`
+  - `WorkingHoursRule`
+- Time slots generated automatically based on the working hours.
 
 ---
+
+## 🏗️ Technical Stack
+
+| Component       | Description |
+|----------------|-------------|
+| **Language**   | Java |
+| **Database**   | MySQL / MariaDB |
+| **Architecture** | DAO Pattern |
+| **Tools** | NetBeans, MySQL Workbench |
+
+---
+
+## 👥 Contributors
+
+- **Nour Sameh**  
+- **Mariem Tarek**
+- **Nermen Ramadan**
+- **Mariem Ali**
+
+---
+
+## 📜 License
+This project is currently provided without a specific license.  
+You may add MIT, Apache, or GPL license depending on your needs.
