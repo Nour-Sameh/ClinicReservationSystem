@@ -737,7 +737,7 @@ public class ClinicReservationSystem {
         appointments.remove(toCancel);
         System.out.println("Appointment canceled successfully.");
 
-        // Waiting list processing
+        // WaitingList list processing
         Clinic clinic = toCancel.getClinic();
         if (!clinic.getWaitingList().isEmpty()) {
             Patient nextPatient = clinic.getWaitingList().remove(0);

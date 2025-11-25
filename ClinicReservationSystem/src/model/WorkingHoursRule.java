@@ -14,51 +14,40 @@ import java.time.LocalTime;
  * @author Javengers
  */
 public class WorkingHoursRule {
+    private int id; 
     private DayOfWeek day;
+    private int scheduleId; 
     private LocalTime startTime;
-    private LocalTime endtTime;
+    private LocalTime endTime;
 
     // Constructor: creates a working hours rule with a specific day, start time, and end time
-    public WorkingHoursRule(DayOfWeek day, LocalTime startTime, LocalTime endtTime) {
+    public WorkingHoursRule(int id, int scheduleId, DayOfWeek day, LocalTime startTime, LocalTime endtTime) {
+        this.id = id;
+        this.scheduleId = scheduleId;
         this.day = day;
         this.startTime = startTime;
-        this.endtTime = endtTime;
+        this.endTime = endtTime;
     }
-
-    // Returns the day of the week for this working hours rule
-    public DayOfWeek getDay() {
-        return day;
+    public WorkingHoursRule(int scheduleId, DayOfWeek day, LocalTime startTime, LocalTime endtTime) {
+        this(0, scheduleId, day, startTime, endtTime);
     }
+    
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public int getScheduleId() { return scheduleId; }
+    public void setScheduleId(int scheduleId) { this.scheduleId = scheduleId; }
+    public DayOfWeek getDay() { return day; }
+    public LocalTime getStartTime() { return startTime; }
+    public LocalTime getEndtTime() { return endTime; }
 
-    // Returns the start time of the working hours
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    // Returns the end time of the working hours
-    public LocalTime getEndtTime() {
-        return endtTime;
-    }
-
-    // Sets the day of the week for this working hours rule
-    public void setDay(DayOfWeek day) {
-        this.day = day;
-    }
-
-    // Sets the start time of the working hours
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    // Sets the end time of the working hours
-    public void setEndtTime(LocalTime endtTime) {
-        this.endtTime = endtTime;
-    }
-
+    public void setDay(DayOfWeek day) { this.day = day; }
+    public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
+    public void setEndtTime(LocalTime endtTime) { this.endTime = endtTime; }
+    
     // Returns a string representation of the working hours rule
     @Override
     public String toString() {
-        return "WorkingHoursRule{" + "day=" + day + ", startTime=" + startTime + ", endtTime=" + endtTime + '}';
+        return "WorkingHoursRule{" + "day=" + day + ", startTime=" + startTime + ", endtTime=" + endTime + '}';
     }
     
 }

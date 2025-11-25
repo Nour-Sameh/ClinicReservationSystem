@@ -32,7 +32,7 @@ public class Clinic {
     private double avgRating;
     private List<Appointment> appointments ;
     private List<Rating>ratings ;
-    private Queue<Waiting> waitingList = new LinkedList<>();
+    private Queue<WaitingList> waitingList = new LinkedList<>();
     
     
     List<Rating> getRatings() {
@@ -105,7 +105,7 @@ public class Clinic {
     schedule.generateTimeSlots(startDate, endDate);
 }
 
-    public Queue<Waiting> getWaitingList() {
+    public Queue<WaitingList> getWaitingList() {
         return waitingList;
     }
 
@@ -168,13 +168,13 @@ public class Clinic {
     }
     
     public void addToWaitingList(Patient patient) {
-        waitingList.add(new Waiting(patient));
+        waitingList.add(new WaitingList(patient,this));
     }
     
     public void notifyWaitingList(TimeSlot freedSlot) {
         if(waitingList.isEmpty()) return;
 
-        Waiting next = waitingList.poll();
+        WaitingList next = waitingList.poll();
         Patient p = next.getPatient();
 
         // الفكرة هنا: تبعتي Notification (GUI message أو Email)
