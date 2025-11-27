@@ -49,14 +49,17 @@ public class Appointment {
     public TimeSlot getAppointmentDateTime() { return appointmentDateTime; }
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
+    public void setAppointmentDateTime(TimeSlot appointmentDateTime) {
+        this.appointmentDateTime = appointmentDateTime;
+    }
     
+/*
     public void cancel() {
         this.status = Status.Cancelled;
         appointmentDateTime.markAsCancelled();
         clinic.notifyWaitingList(appointmentDateTime);//// in servise
         clinic.getAppointments().remove(this);
         patient.getAppointmentList().remove(this);
-
     }
 
     public void reschedule(TimeSlot newSlot) {
@@ -65,6 +68,7 @@ public class Appointment {
         newSlot.markAsBooked();
         this.status = Status.Booked;
     }
+*/
     
     // Returns a string representation of the appointment details
     @Override

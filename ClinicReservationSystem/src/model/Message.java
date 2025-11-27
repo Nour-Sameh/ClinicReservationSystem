@@ -43,6 +43,10 @@ public class Message {
     public int getReceiverId() { return receiverId; }
     public String getMessageText() { return messageText; }
     public LocalDateTime getTimestamp() { return timestamp; }
+    public void setChatId(int chatId) {
+        this.chatId = chatId;
+    }
+    
 
     public void setMessageText(String messageText) { this.messageText = messageText; }
 

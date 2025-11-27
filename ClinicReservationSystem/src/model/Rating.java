@@ -39,16 +39,33 @@ public class Rating {
     public int getScore() { return score; }
     public String getComment() { return comment; }
 
-    public void setScore(int score) {
-         if (score >= 1 && score <= 5)
-             this.score = score;
-         else
-             System.out.println("Please score must be between 1 to 5.");
+    public boolean setScore(int score) {
+        if (score >= 1 && score <= 5) {
+            this.score = score;
+            return true;
+        }
+        else return false;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Rating) {
+            Rating other = (Rating) obj;
+            return this.patient == other.patient && this.clinic == other.clinic;
+        }
+        else return false;
+    }
+    
     // Returns a string representation of the rating
     @Override
     public String toString() {

@@ -53,4 +53,19 @@ public class Practitioner extends User {
             clinic.setPrice(price);
         }
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Practitioner) {
+            Practitioner other = (Practitioner) obj;
+            return this.ID == other.ID && this.email.equals(other.email) && this.password.equals(other.password);
+        }
+        else return false;
+    }
 }

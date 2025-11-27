@@ -35,7 +35,7 @@ public class Clinic {
     private Queue<WaitingList> waitingList = new LinkedList<>();
     
     
-    List<Rating> getRatings() {
+    public List<Rating> getRatings() {
         return ratings;
     }
     
@@ -137,7 +137,7 @@ public class Clinic {
       the slots already booked by appointments, and returns only
       the unbooked (available) slots.*/
     
-    public List<TimeSlot> getAvailableSlot() {
+    public List<TimeSlot> getAvailableSlots() {
         List<TimeSlot> total = schedule.getSlots();
         List<TimeSlot> Booked = new ArrayList();
         for(Appointment x: appointments){
@@ -152,7 +152,7 @@ public class Clinic {
         }
         return r;
     }
-    
+/*
     public void cancelAppointmentsInDay(DayOfWeek day) {
         List<Appointment> toCancel = new ArrayList<>();
         for(Appointment a : appointments) {
@@ -166,11 +166,11 @@ public class Clinic {
             System.out.println("Appointment for " + a.getPatient().getName() + " cancelled on " + day);
         }
     }
-    
+
     public void addToWaitingList(Patient patient) {
         waitingList.add(new WaitingList(patient,this));
     }
-    
+
     public void notifyWaitingList(TimeSlot freedSlot) {
         if(waitingList.isEmpty()) return;
 
@@ -220,6 +220,7 @@ public class Clinic {
         // 3) شيل السلوْتز نهائيًا
         schedule.getSlots().removeIf(slot -> slot.getDay() == day);
     }
+
     public void regenerateSlots(LocalDate start, LocalDate end) {
         List<TimeSlot> oldSlots = new ArrayList<>(schedule.getSlots());
 
@@ -233,8 +234,22 @@ public class Clinic {
             }
         }
     }
+*/
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Clinic) {
+            Clinic other = (Clinic) obj;
+            return this.ID == other.ID && this.departmentID == other.departmentID && this.name.equals(other.name);
+        }
+        else return false;
+    }
 
-    
 }
 
 
