@@ -72,7 +72,42 @@ public class TimeSlotDAO implements GenericDAO<TimeSlot> {
             DBConnection.closeConnection(con);
         }
     }
+    
+    public List<TimeSlot> getSlotsByClinic(int clinicId) throws SQLException {
+        List<TimeSlot> slots = new ArrayList<>();
+        String sql = "SELECT * FROM TimeSlots WHERE clinic_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, clinicId);
+            rs = ps.executeQuery();
 
+            while (rs.next()) {
+                TimeSlot slot = new TimeSlot(
+                    rs.getInt("id"),
+                    rs.getInt("clinic_id"),
+                    rs.getDate("date").toLocalDate(),
+                    DayOfWeek.valueOf(rs.getString("day")),
+                    rs.getTime("start_time").toLocalTime(),
+                    rs.getTime("end_time").toLocalTime(),
+                    rs.getBoolean("is_booked"),
+                    rs.getBoolean("is_cancelled")
+                );
+                slots.add(slot);
+            }
+            return slots;
+
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            DBConnection.closeConnection(con);
+        }
+    }
+
+    
     // Get by ID
     @Override
     public TimeSlot getById(int id) throws SQLException {

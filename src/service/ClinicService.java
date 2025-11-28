@@ -6,15 +6,11 @@ package service;
 
 import dao.*;
 import jakarta.mail.MessagingException;
-
-import java.util.List;
+import java.util.*;
 import model.*;
 
 import java.sql.SQLException;
-import java.time.DayOfWeek; // نملي التايم سلوتس
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import model.Appointment;
 import model.Patient;
 
@@ -22,11 +18,14 @@ import model.Patient;
  *
  * @author mariam
  */
+
 public class ClinicService {
 
     private final ClinicDAO clinicDAO = new ClinicDAO();
     private final TimeSlotDAO timeSlotDAO = new TimeSlotDAO();
-    private final RatingDAO ratingDAO = new RatingDAO();
+    private final ScheduleDAO scheduleDAO = new ScheduleDAO();
+    private final AppointmentDAO appointmentDAO = new AppointmentDAO();
+    private final WorkingHoursRuleDAO ruleDAO = new WorkingHoursRuleDAO();
     private final WaitingListDAO waitingListDAO = new WaitingListDAO();
     private final AppointmentService appointmentService = new AppointmentService();
     private final NotificationService notificationService = new NotificationService();
@@ -46,7 +45,7 @@ public class ClinicService {
 //            System.out.println("Appointment for " + a.getPatient().getName() + " cancelled on " + day);
 //        }
 //    }
-        
+
    public void notifyWaitingList(Clinic clinic, TimeSlot freedSlot) { // عظمههههههههههههههههههه
         try {
             if (clinic.getWaitingList().isEmpty()) return;
@@ -54,9 +53,12 @@ public class ClinicService {
             WaitingList next = clinic.getWaitingList().peek();
             Patient p = next.getPatient();
 
-            System.out.println("Notification to " + p.getName() +
-                    ": A slot became available at " + freedSlot +
-                    ". You have 1 minute to book it.");
+            String subject = "Clinic Slot Available!";
+            String body = "<h3>Hi " + p.getName() + ",</h3>"
+                    + "<p>A time slot just became available at <b>" + freedSlot + "</b>.</p>"
+                    + "<p>You have 1 minute to book it</p>";
+
+            notificationService.sendEmail(p.getEmail(), subject, body);
 
             new java.util.Timer().schedule(new java.util.TimerTask() {
                 @Override
@@ -80,83 +82,74 @@ public class ClinicService {
             System.err.println("Error notifying waiting list: " + e.getMessage());
         }
     }
+   
+   
+    public void updateSchedule(Clinic clinic, int slotDuration, List<WorkingHoursRule> newRules, LocalDate startDate, LocalDate endDate) throws SQLException, MessagingException {
+        
+        List<TimeSlot> oldSlots = new ArrayList<>(timeSlotDAO.getSlotsByClinic(clinic.getID()));
 
-    
-    public void shiftSchedule(Clinic clinic, int minutes) throws SQLException {
+        List<Appointment> oldAppointments = new ArrayList<>(clinic.getAppointments());
+        oldAppointments.sort((a, b) -> {
+            int dateCompare = a.getAppointmentDateTime().getDate()
+                                .compareTo(b.getAppointmentDateTime().getDate());
+            if (dateCompare != 0) {
+                return dateCompare;
+            }
+            return a.getAppointmentDateTime().getStartTime()
+                     .compareTo(b.getAppointmentDateTime().getStartTime());
+        });
 
-        for (TimeSlot slot : clinic.getSchedule().getSlots()) {
+        clinic.getSchedule().setWeeklyRules(newRules);
+        clinic.getSchedule().setSlotDurationInMinutes(slotDuration);
 
-            LocalTime newStart = slot.getStartTime().plusMinutes(minutes);
-            LocalTime newEnd = slot.getEndTime().plusMinutes(minutes);
+        clinic.getSchedule().generateTimeSlots(startDate, endDate);
+        List<TimeSlot> newSlots = clinic.getSchedule().getSlots();
+        newSlots.sort((s1, s2) -> {
+            int cmp = s1.getDate().compareTo(s2.getDate());
+            if (cmp != 0) return cmp;
+            return s1.getStartTime().compareTo(s2.getStartTime());
+        });
+        
+        for (TimeSlot oldSlot : oldSlots) {
+            if (!newSlots.contains(oldSlot)) {
+                timeSlotDAO.delete(oldSlot.getId());
+            }
+        }
 
-            // خارج اليوم → cancel appointments
-            if (newStart.isBefore(LocalTime.MIN) || newEnd.isAfter(LocalTime.MAX)) {
-
-                for (Appointment app : clinic.getAppointments()) {
-
-                    if (app.getAppointmentDateTime().equals(slot)) {
-                        appointmentService.cancel(app);
-                    }
+        newSlots.forEach(TimeSlot::markAsAvailable);
+        for (TimeSlot slot : newSlots) {
+            timeSlotDAO.add(slot);
+        }
+        for (Appointment app : oldAppointments) {
+            boolean scheduled = false;
+            for (TimeSlot slot : newSlots) {
+                if (!slot.isBooked() && !slot.isCancelled()) {
+                    slot.markAsBooked();
+                    app.setAppointmentDateTime(slot);
+                    appointmentDAO.update(app);
+                    scheduled = true;
+                    timeSlotDAO.update(slot);
+                    break;
                 }
             }
+            if (!scheduled) {
+                addToWaitingList(clinic, app.getPatient()); 
+                String subject = "Your appointment is cancelled !";
+                String body = "<h3>Hi " + app.getPatient().getName() + ",</h3>"
+                        + "<p>We already put you in waiting list </p>";
 
-            slot.setStartTime(newStart);
-            slot.setEndTime(newEnd);
-
-            timeSlotDAO.update(slot);
+                notificationService.sendEmail(app.getPatient().getEmail(), subject, body); 
+                appointmentService.cancelWithoutNoty(app); 
+            }
         }
+
+        clinic.setSchedule(clinic.getSchedule());
     }
-    
-    public void removeDay(Clinic clinic, DayOfWeek day) throws SQLException {
 
-        List<TimeSlot> removedSlots =
-                clinic.getSchedule().getSlots().stream()
-                        .filter(s -> s.getDay() == day)
-                        .toList();
-
-        // Cancel appointments in these slots
-        for (Appointment app : new ArrayList<>(clinic.getAppointments())) {
-            if (removedSlots.contains(app.getAppointmentDateTime())) {
-                appointmentService.cancel(app);
-            }
-        }
-        
-        clinic.getSchedule().getSlots().removeIf(s -> s.getDay() == day);
-
-        for (TimeSlot s : removedSlots) {
-            timeSlotDAO.delete(s.getId());
-        }
-    }
-    
-    public void regenerateSlots(Clinic clinic, LocalDate start, LocalDate end) throws SQLException {
-        List<TimeSlot> oldSlots = new ArrayList<>(clinic.getSchedule().getSlots());
-
-        clinic.getSchedule().generateTimeSlots(start, end);
-
-        List<TimeSlot> newSlots = clinic.getSchedule().getSlots();
-
-        for (Appointment a : new ArrayList<>(clinic.getAppointments())) {
-            if (!newSlots.contains(a.getAppointmentDateTime())) {
-                appointmentService.cancel(a);
-            }
-        }
-
-        for (TimeSlot s : oldSlots) {
-            if (!newSlots.contains(s)) {
-                timeSlotDAO.delete(s.getId());
-            }
-        }
-
-        for (TimeSlot s : newSlots) {
-            if (s.getId() == 0) { 
-                timeSlotDAO.add(s);
-            }
-        }
-    }
     public void addToWaitingList(Clinic clinic, Patient patient) throws SQLException {
         WaitingList x = new WaitingList(patient,clinic);
         clinic.getWaitingList().add(x);
         waitingListDAO.add(x);
     }
-    
 }
+        

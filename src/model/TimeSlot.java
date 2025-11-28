@@ -22,7 +22,6 @@ public class TimeSlot {
 
     public TimeSlot( LocalDate date, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
         this.date = date;
-        this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.isBooked = false;
@@ -38,6 +37,12 @@ public class TimeSlot {
         this.endTime = endTime;
         this.isBooked = isBooked;
         this.isCancelled = isCancelled;
+    }
+
+    TimeSlot(DayOfWeek day, LocalTime current, LocalTime slotEnd) {
+        this.day = day;
+        this.startTime = current;
+        this.endTime = slotEnd;
     }
     
     // Getters and Setters:

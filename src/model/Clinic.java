@@ -100,9 +100,8 @@ public class Clinic {
         return schedule;
     }
     //Sets a new schedule for this clinic and regenerates time slots
-    public void setSchedule(Schedule schedule, LocalDate startDate, LocalDate endDate) {
+    public void setSchedule(Schedule schedule) {
     this.schedule = schedule;
-    schedule.generateTimeSlots(startDate, endDate);
 }
 
     public Queue<WaitingList> getWaitingList() {

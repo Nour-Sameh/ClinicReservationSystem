@@ -28,7 +28,7 @@ public class AppointmentService {
             List<Appointment> appointments = appointmentDAO.getAppointmentList(patient);
 
             for (Appointment a : appointments) {
-                if (a.getAppointmentDateTime().equals(slot)) {
+                if (a.getAppointmentDateTime().equals(slot)) { /////
                     return true;
                 }
             }
@@ -52,7 +52,18 @@ public class AppointmentService {
             
         clinicService.notifyWaitingList(appointment.getClinic(), appointment.getAppointmentDateTime());
     }
-
+    public void cancelWithoutNoty(Appointment appointment) throws SQLException {
+        
+        appointment.setStatus(Status.Cancelled);
+        appointment.getAppointmentDateTime().markAsCancelled();
+        
+        appointmentDAO.update(appointment);
+        timeSlotDAO.update(appointment.getAppointmentDateTime());
+        
+        appointment.getClinic().getAppointments().remove(appointment);
+        appointment.getPatient().getAppointmentList().remove(appointment);
+            
+    }
     
     public boolean reschedule(Appointment appointment, TimeSlot newSlot) throws SQLException {
         if (appointment == null || newSlot == null || appointment.getClinic() == null) return false;
