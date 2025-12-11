@@ -5,7 +5,7 @@ public enum Status {
     Cancelled_by_Patient("Cancelled by Patient"),
     Cancelled_by_Doctor("Cancelled by Doctor"),
     Completed("Completed"),
-    Absent("Absent (No-Show)"); // ← ✅ الجديدة
+    Absent("Absent (No-Show)");
 
     private final String displayName;
 
@@ -13,7 +13,6 @@ public enum Status {
         this.displayName = displayName;
     }
 
-    // ✅ fromDatabase: يدعم الحالة الجديدة، ويحافظ على التوافق مع القيم القديمة
     public static Status fromDatabase(String dbValue) {
         if (dbValue == null) return Booked;
         return switch (dbValue.trim()) {
@@ -26,17 +25,17 @@ public enum Status {
         };
     }
 
-    // ✅ toDatabaseValue: نخزنها كـ "Absent" في الداتا بيز (واضح وقابل للبحث)
+
     public String toDatabaseValue() {
         return switch (this) {
             case Booked -> "Booked";
-            case Cancelled_by_Patient, Cancelled_by_Doctor -> "Cancelled";
+            case Cancelled_by_Patient -> "Cancelled_by_Patient";
+            case Cancelled_by_Doctor -> "Cancelled_by_Doctor";
             case Completed -> "Completed";
-            case Absent -> "Absent"; // ← جديد
+            case Absent -> "Absent";
         };
     }
 
-    // ✅ toString() للعرض في الواجهة والتقارير
     @Override
     public String toString() {
         return displayName;

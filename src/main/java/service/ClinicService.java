@@ -226,8 +226,8 @@ public class ClinicService {
 
             if (clinic.getDepartmentID() > 0) {
                 String department = DepartmentService.getDepartmentNameById(clinic.getDepartmentID());
-                if (department != "Unknown Specialty") {
-                    clinic.setName(department);
+                if (!"Unknown Specialty".equals(department)) {
+                    clinic.setDepartmentName(department);
                 }
             }
 

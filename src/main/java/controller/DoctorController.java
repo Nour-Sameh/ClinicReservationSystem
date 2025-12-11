@@ -86,6 +86,7 @@ public class DoctorController {
     @FXML private PasswordField confirmPasswordField;
     @FXML private Button deleteClinicButton;
 
+
     private Practitioner currentDoctor;
     private final DepartmentDAO departmentDAO = new DepartmentDAO();
     private final PractitionerService practitionerService = new PractitionerService();
@@ -444,12 +445,10 @@ public class DoctorController {
             });
         });
 
-        // ✅ ✅ ✅ التعديل الوحيد المطلوب: إضافة زرَين لو الموعد Booked + الوقت انتهى
         LocalDateTime now = LocalDateTime.now();
         boolean isOverdueAndBooked = a.getStatus() == Status.Booked && now.isAfter(endTime);
 
         if (isOverdueAndBooked) {
-            // زر "Mark as Completed"
             Button completeBtn = new Button("✓ Completed");
             completeBtn.setStyle("-fx-background-color: #2E7D32; -fx-text-fill: white; " +
                     "-fx-font-size: 11px; -fx-padding: 3 8; -fx-background-radius: 4;");
@@ -503,7 +502,7 @@ public class DoctorController {
                 }
             });
 
-            // نضع الزرارين قبل spacer (أي بعد العناصر، قبل الزر Cancel)
+
             int spacerIndex = box.getChildren().indexOf(spacer);
             if (spacerIndex >= 0) {
                 box.getChildren().add(spacerIndex, absentBtn);
@@ -910,39 +909,45 @@ public class DoctorController {
     }
     @FXML
     private void handleSettings() {
-        // إخفاء كل البوكسات
+        // ✅ إخفاء كل الـ boxes
         clinicInfoBox.setVisible(false);
         appointmentsBox.setVisible(false);
         reviewsBox.setVisible(false);
         reportBox.setVisible(false);
 
-        // تحميل البيانات الحالية
         loadCurrentUserSettings();
 
-        // إظهار settings
         settingsBox.setVisible(true);
     }
 
-    // DoctorController مثال:
     private void loadCurrentUserSettings() {
-        if (currentDoctor != null) {
-            usernameField.setText(currentDoctor.getFullName());
-            nameField.setText(currentDoctor.getName());
-            emailField.setText(currentDoctor.getEmail());
-            phoneField.setText(currentDoctor.getPhone());
 
-            genderField.setText(currentDoctor.getGender());
-            dobField.setText(
-                    currentDoctor.getDateOfBirth() != null ?
-                            currentDoctor.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                            : "—"
-            );
+        if (currentDoctor != null) {
+            String name = currentDoctor.getName() != null ? currentDoctor.getName() : "";
+
+            usernameField.setText(name);
+
+
+            emailField.setText(currentDoctor.getEmail() != null ? currentDoctor.getEmail() : "");
+            phoneField.setText(currentDoctor.getPhone() != null ? currentDoctor.getPhone() : "");
+            genderField.setText(currentDoctor.getGender() != null ? currentDoctor.getGender() : "");
+            dobField.setText(currentDoctor.getDateOfBirth() != null ?
+                    currentDoctor.getDateOfBirth().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "—");
+            usernameField.setEditable(true);
+
+            emailField.setEditable(false);
+            phoneField.setEditable(false);
             genderField.setEditable(false);
             dobField.setEditable(false);
+            emailField.setOpacity(0.7);
+            phoneField.setOpacity(0.7);
+            genderField.setOpacity(0.7);
+            dobField.setOpacity(0.7);
+            System.out.println(">>> Doctor Gender: [" + currentDoctor.getGender() + "]");
         }
     }
 
-    @FXML
+            @FXML
     private void handleSettingsCancel() {
         settingsBox.setVisible(false);
         clinicInfoBox.setVisible(true);
@@ -951,49 +956,50 @@ public class DoctorController {
     @FXML
     private void handleSettingsSave() {
         try {
-            String newUsername = usernameField.getText().trim();
             String newName = nameField.getText().trim();
             String currentPass = currentPasswordField.getText();
             String newPass = newPasswordField.getText();
             String confirmPass = confirmPasswordField.getText();
 
-            // ✅ تغيير الباسورد لو موجود
-            if (!newPass.isEmpty()) {
+            if (newName.isEmpty()) {
+                showAlert("Error", "Name/Username cannot be empty.");
+                return;
+            }
+            PractitionerDAO doctorDAO = new PractitionerDAO();
+            if (!newName.equals(currentDoctor.getName())) {
+                if (doctorDAO.isNameTaken(newName, currentDoctor.getID())) {
+                    showAlert("Error", "This name is already taken. Please choose another one.");
+                    return;
+                }
+            }
+            if (!newName.equals(currentDoctor.getName())) {
+                currentDoctor.setName(newName);
+            }if (!newPass.isEmpty()) {
                 if (currentPass.isEmpty()) {
-                    showAlert("Error", "Please enter current password.");
+                    showAlert("Error", "Please enter your current password.");
                     return;
                 }
                 if (!newPass.equals(confirmPass)) {
                     showAlert("Error", "New passwords do not match.");
                     return;
                 }
-                PractitionerDAO practitionerDAO = new PractitionerDAO();
-                // تحقق من الباسورد القديم (من DB)
                 if (!currentPass.equals(currentDoctor.getPassword())) {
                     showAlert("Error", "Current password is incorrect.");
                     return;
                 }
-                currentDoctor.setPassword(newPass);
+                currentDoctor.setPassword(newPass);}
+
+            doctorDAO.update(currentDoctor);
+
+            if (welcomeLabel != null) {
+                welcomeLabel.setText("Welcome, Dr. " + currentDoctor.getName());
             }
-
-            // ✅ تغيير username و name
-            if (!newName.equals(currentDoctor.getName())) {
-                currentDoctor.setName(newName);
-                new PractitionerDAO().update(currentDoctor);
-            }
-
-          //  practitionerService.updateName(currentDoctor.getId(), newName);
-
-            // ✅ تحديث الجلسة
-         //   currentDoctor.setUsername(newUsername);
-          //  currentDoctor.setName(newName);
 
             showAlert("Success", "Profile updated successfully!");
-            handleSettingsCancel(); // رجوع للشاشة الرئيسية
+            handleSettingsCancel();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to update profile: " + e.getMessage());
+        } catch (Exception e) {  e.printStackTrace();
+            showAlert("Error", "Failed to update profile.");
         }
     }
 
@@ -1139,5 +1145,7 @@ public class DoctorController {
             con.commit();
         }
     }
+
+
 
 }

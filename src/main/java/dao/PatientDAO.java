@@ -10,6 +10,8 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
+import static database.DBConnection.getConnection;
+
 public class PatientDAO implements GenericDAO<Patient> {
     
     private Patient extractPatientFromResultSet(ResultSet rs) throws SQLException {
@@ -32,7 +34,7 @@ public class PatientDAO implements GenericDAO<Patient> {
         PreparedStatement ps = null;
 
         try {
-            con = DBConnection.getConnection();
+            con = getConnection();
             ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, patient.getName());
             ps.setString(2,patient.getPhone() );
@@ -64,7 +66,7 @@ public class PatientDAO implements GenericDAO<Patient> {
         ResultSet rs = null;
 
         try {
-            con = DBConnection.getConnection();
+            con = getConnection();
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -90,7 +92,7 @@ public class PatientDAO implements GenericDAO<Patient> {
         ResultSet rs = null;
 
         try {
-            con = DBConnection.getConnection();
+            con = getConnection();
             st = con.createStatement();
             rs = st.executeQuery(sql);
 
@@ -105,7 +107,6 @@ public class PatientDAO implements GenericDAO<Patient> {
         }
     }
 
-    // Update
     @Override
     public void update(Patient patient) throws SQLException {
         String sql = """
@@ -113,25 +114,24 @@ public class PatientDAO implements GenericDAO<Patient> {
         SET name = ?, phone = ?, email = ?, password = ?, gender = ?, date_of_birth = ?
         WHERE id = ?
         """;
-        Connection con = null;
-        PreparedStatement ps = null;
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(sql);
             ps.setString(1, patient.getName());
-            ps.setString(2,patient.getEmail() );
-            ps.setString(3, patient.getPhone());
+            ps.setString(2, patient.getPhone());
+            ps.setString(3, patient.getEmail());
             ps.setString(4, patient.getPassword());
-            ps.setInt(5, patient.getID());
-            ps.setString(6, patient.getGender());
-            ps.setDate(7, java.sql.Date.valueOf(patient.getDateOfBirth()));
+            ps.setString(5, patient.getGender());
 
+            if (patient.getDateOfBirth() != null) {
+                ps.setDate(6, java.sql.Date.valueOf(patient.getDateOfBirth()));
+            } else {
+                ps.setNull(6, Types.DATE);
+            }
+
+            ps.setInt(7, patient.getID());
 
             ps.executeUpdate();
-        } finally {
-            if (ps != null) ps.close();
-            DBConnection.closeConnection(con);
         }
     }
 
@@ -142,7 +142,7 @@ public class PatientDAO implements GenericDAO<Patient> {
         Connection con = null;
         PreparedStatement ps = null;
         try {
-            con = DBConnection.getConnection();
+            con = getConnection();
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             ps.executeUpdate();
@@ -150,7 +150,9 @@ public class PatientDAO implements GenericDAO<Patient> {
             if (ps != null) ps.close();
             DBConnection.closeConnection(con);
         }
+
     }
+
 
 
     public List<Patient> getPatientsWithChatsForPractitioner(int practitionerId) throws SQLException {
@@ -167,7 +169,7 @@ public class PatientDAO implements GenericDAO<Patient> {
         ResultSet rs = null;
 
         try {
-            con = DBConnection.getConnection();
+            con = getConnection();
             ps = con.prepareStatement(sql);
             ps.setInt(1, practitionerId);
             rs = ps.executeQuery();
@@ -181,5 +183,24 @@ public class PatientDAO implements GenericDAO<Patient> {
             if (ps != null) ps.close();
             DBConnection.closeConnection(con);
         }
+    }
+    // PatientDAO.java
+    public boolean isNameTaken(String name, int excludePatientId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM patients WHERE name = ? AND id != ?";
+
+        // ✅ try-with-resources: يفتح connection ويقفله تلقائيًا
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, name.trim());
+            stmt.setInt(2, excludePatientId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 
 public class NominatimService {
 
-    // ✅ 1. حذف المسافات الزايدة من الـ URL
     private static final String BASE_URL = "https://nominatim.openstreetmap.org/search";
 
     public static List<String> getAddressSuggestions(String query) throws Exception {
@@ -25,7 +24,6 @@ public class NominatimService {
         }
 
         String encodedQuery = URLEncoder.encode(query.trim(), StandardCharsets.UTF_8);
-        // ✅ 2. بناء الـ URL بدون مسافات
         String url = BASE_URL + "?format=json&limit=5&addressdetails=1&q=" + encodedQuery;
 
         HttpClient client = HttpClient.newBuilder()
@@ -34,10 +32,10 @@ public class NominatimService {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("User-Agent", "ClinicSystem/1.0 (mariam@example.com)")
+                .header("User-Agent", "ClinicSystem/1.0 (Nermen@example.com)")
                 .header("Accept", "application/json")
-                .header("Accept-Language", "ar") // ✅ عربي أفضل للمستخدم المصري
-                .header("Referer", "https://nominatim.openstreetmap.org/") // ← مهم جدًا! Nominatim بيطلبه دلوقتي
+                .header("Accept-Language", "ar")
+                .header("Referer", "https://nominatim.openstreetmap.org/")
                 .timeout(java.time.Duration.ofSeconds(15))
                 .GET()
                 .build();
@@ -49,7 +47,7 @@ public class NominatimService {
             throw new RuntimeException("⚠️ Nominatim: ممنوع إرسال طلبات كثيرة. انتظر دقيقة وجرب تاني.");
         }
         if (code == 429) {
-            throw new RuntimeException("⚠️ Nominatim: تجاوزت الحد المسموح. خذ استراحة قصيرة 😊");
+            throw new RuntimeException("⚠️ Nominatim: تجاوزت الحد المسموح. خذ استراحة قصيرة ");
         }
         if (code != 200) {
             String preview = response.body().length() > 100 ? response.body().substring(0, 100) + "..." : response.body();
@@ -61,8 +59,12 @@ public class NominatimService {
 
         for (JsonElement element : results) {
             JsonObject obj = element.getAsJsonObject();
-            if (obj.has("display_name")) {
-                suggestions.add(obj.get("display_name").getAsString());
+            String displayName = obj.has("display_name") ?
+                    obj.get("display_name").getAsString() :
+                    obj.get("name").getAsString();
+
+            if (displayName != null && !displayName.trim().isEmpty()) {
+                suggestions.add(displayName);
             }
         }
 

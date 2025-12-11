@@ -16,6 +16,7 @@ import model.Practitioner;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class RegisterController {
 
@@ -62,6 +63,7 @@ public class RegisterController {
         String password = passwordField.getText().trim();
         String gender = genderComboBox.getValue();
         LocalDate dob = dobPicker.getValue();
+        int age = Period.between(dob, LocalDate.now()).getYears();
 
         if (!patientCheck.isSelected() && !doctorCheck.isSelected()) {
             showAlert("Error", "Please select Patient or Practitioner.");
@@ -73,11 +75,11 @@ public class RegisterController {
             return;
         }
 
-        if (!name.matches("^[A-Za-z][A-Za-z ]{2,}$")) {
-            showAlert("Error", "Full Name must start with a letter and be at least 3 characters.");
+        if (!name.matches("^[A-Za-z]+( [A-Za-z]+)*$") || name.length() < 3) {
+            showAlert("Error", "Full Name must contain only letters and spaces, and be at least 3 characters.");
             return;
         }
-        if (!email.matches("^[A-Za-z][A-Za-z_]{2,}[0-9]*@[A-Za-z0-9.-]+$")) {
+        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
             showAlert("Error", "Invalid email format.");
             return;
         }
@@ -85,9 +87,33 @@ public class RegisterController {
             showAlert("Error", "Invalid phone number.");
             return;
         }
-        if (password.length() < 6) {
-            showAlert("Error", "Password must be at least 6 characters.");
+        if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {
+            showAlert("Error",
+                    "Password must be at least 8 characters and include:\n" +
+                            "- Uppercase letter (A-Z)\n" +
+                            "- Lowercase letter (a-z)\n" +
+                            "- Number (0-9)\n" +
+                            "- Special character (@#$%^&+=!)"
+            );
             return;
+        }
+
+
+        if (dob.isAfter(LocalDate.now())) {
+            showAlert("Error", "Date of birth cannot be in the future.");
+            return;
+        }
+
+        if (patientCheck.isSelected()) {
+            if (age < 18) {
+                showAlert("Error", "Patients must be at least 18 years old.");
+                return;
+            }
+        } else if (doctorCheck.isSelected()) {
+            if (age < 24) {
+                showAlert("Error", "Practitioners must be at least 24 years old.");
+                return;
+            }
         }
 
         try {

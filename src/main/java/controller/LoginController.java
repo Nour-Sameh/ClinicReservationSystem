@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import model.Patient;
 import model.Practitioner;
 import model.Clinic;
+import service.NotificationService;
 import service.PatientService;
 import service.PractitionerService;
 import service.ClinicService;
@@ -170,8 +171,52 @@ public class LoginController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    @FXML
+    private void handleForgotPassword(ActionEvent event) {
+        String email = emailField.getText().trim();
+
+        if (email.isEmpty()) {
+            showAlert("Error", "Please enter your email to recover password.");
+            return;
+        }
+
+        try {
+            String password = null;
+
+            // Check in Patients
+            for (Patient p : patientService.getAllPatients()) {
+                if (p.getEmail().equalsIgnoreCase(email)) {
+                    password = p.getPassword();
+                    break;
+                }
+            }
+
+            // Check in Practitioners
+            if (password == null) {
+                for (Practitioner d : practitionerService.getAllPractitioners()) {
+                    if (d.getEmail().equalsIgnoreCase(email)) {
+                        password = d.getPassword();
+                        break;
+                    }
+                }
+            }
+
+            if (password == null) {
+                showAlert("Error", "Email not found in our system.");
+                return;
+            }
+
+            // Send password via email
+            NotificationService notificationService = new NotificationService();
+            notificationService.sendEmail(email, "Password Recovery", "<h3>Your password is: "+password+"</h3>");
+
+            showAlert("Success", "Your password has been sent to your email!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not send email: " + e.getMessage());
+        }
+    }
 }
-/*
-*
-*
- * */
+

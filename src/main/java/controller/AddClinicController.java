@@ -89,6 +89,7 @@ public class AddClinicController {
         } catch (SQLException e) {
             showAlert("Error", "Failed to load departments.");
             e.printStackTrace();
+            return;
         }
 
         enableConsultationCheck.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
@@ -98,12 +99,11 @@ public class AddClinicController {
             consultationHintLabel.setVisible(visible);
         });
 
-        // ✅ Auto-complete مُصلَح بالكامل
         addressSuggestionsMenu = new ContextMenu();
         addressSuggestionsMenu.setAutoHide(true);
 
         addressField.textProperty().addListener((obs, oldVal, newVal) -> {
-            final String query = newVal; // ← final هنا
+            final String query = newVal;
 
             if (query == null || query.trim().length() < 3) {
                 addressSuggestionsMenu.hide();
@@ -116,7 +116,7 @@ public class AddClinicController {
 
             currentRequestFuture = CompletableFuture.runAsync(() -> {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(1500);
                 } catch (InterruptedException ignored) {}
 
                 List<String> suggestions = new ArrayList<>();
@@ -126,7 +126,6 @@ public class AddClinicController {
                     System.err.println("Search failed: " + e.getMessage());
                 }
 
-                // ✅ هنا التعديل السحري: خلي الـ references final جوه الـ loop
                 final TextField af = addressField;
                 final Label statusLbl = addressStatusLabel;
                 final ContextMenu menu = addressSuggestionsMenu;
@@ -142,7 +141,7 @@ public class AddClinicController {
                     for (String s : finalSuggestions) {
                         MenuItem item = new MenuItem(s);
                         item.setOnAction(e -> {
-                            af.setText(s);        // ← استخدم af (final)
+                            af.setText(s);
                             menu.hide();
                             if (statusLbl != null) {
                                 statusLbl.setText("✓ تم اختيار العنوان");
@@ -262,8 +261,6 @@ public class AddClinicController {
                 showAlert("Error", "Consultation Price and Validity (Days) are required when enabled.");
                 return;
             }
-
-            // ✅ Get main visit price for validation
             double visitPrice = price;
 
             try {

@@ -20,7 +20,7 @@ public class Practitioner extends User {
     // Constructor: creates a new practitioner with personal info and associated clinic
     public Practitioner(int ID, String name, String phone, String email, String password, String gender, LocalDate dateOfBirth) {
         super(ID, name, phone, email, password, gender, dateOfBirth);
-        this.clinic = clinic;
+        this.clinic = null;
     }
     public String getFullName() {
         return name;

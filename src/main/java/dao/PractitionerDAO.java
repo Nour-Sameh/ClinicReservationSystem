@@ -144,7 +144,6 @@ public class PractitionerDAO implements GenericDAO<Practitioner> {
         }
     }
 
-    // Update
     @Override
     public void update(Practitioner practitioner) throws SQLException {
         String sql = "UPDATE Practitioners SET name = ?, phone = ?, email = ?, password = ?, clinic_id = ? WHERE id = ?";
@@ -253,6 +252,18 @@ public class PractitionerDAO implements GenericDAO<Practitioner> {
             if (rs != null) rs.close();
             if (ps != null) ps.close();
             DBConnection.closeConnection(con);
+        }
+    }
+    // DoctorDAO.java
+    public boolean isNameTaken(String name, int excludeDoctorId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM doctors WHERE name = ? AND id != ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name.trim());
+            stmt.setInt(2, excludeDoctorId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
         }
     }
     // جلب الأطباء اللي عند المريض محادثات معهم (مرتبين حسب أحدث رسالة)

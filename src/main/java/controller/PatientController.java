@@ -94,12 +94,10 @@ public class PatientController {
 
                 searchView.getChildren().addAll(label, combo, scroll);
                 mainContentPane.getChildren().setAll(searchView);
-
                 AnchorPane.setTopAnchor(searchView, 0.0);
+                AnchorPane.setBottomAnchor(searchView, 0.0);
                 AnchorPane.setLeftAnchor(searchView, 0.0);
                 AnchorPane.setRightAnchor(searchView, 0.0);
-                AnchorPane.setBottomAnchor(searchView, 0.0);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -130,7 +128,6 @@ public class PatientController {
                 content.getChildren().addAll(header, cardsContainer);
                 content.setStyle("-fx-background-color: white;");
 
-// ✅ ✅ ✅ إضافة ScrollPane هنا — السر كله
                 ScrollPane scrollPane = new ScrollPane(content);
                 scrollPane.setFitToWidth(true);
                 scrollPane.setFitToHeight(true);
@@ -186,8 +183,18 @@ public class PatientController {
         Platform.runLater(() -> {
             createSearchView();
             mainContentPane.getChildren().setAll(searchView);
+            AnchorPane.setTopAnchor(searchView, 0.0);
+            AnchorPane.setBottomAnchor(searchView, 0.0);
+            AnchorPane.setLeftAnchor(searchView, 0.0);
+            AnchorPane.setRightAnchor(searchView, 0.0);
             loadAllClinics();
         });
+    }
+    public void setPatient(Patient patient) { ///////////// جديد
+        this.currentPatient = patient;
+        if (patientNameLabel != null) {
+            patientNameLabel.setText("Welcome, " + patient.getName());
+        }
     }
 
     private void loadSpecialties() {
@@ -252,7 +259,7 @@ public class PatientController {
 
         for (Clinic c : clinics) {
             try {
-                String deptName = "General";
+                String deptName = c.getDepartmentName() != null ? c.getDepartmentName() : "General";
                 Department dept = departmentService.getAllDepartments().stream()
                         .filter(d -> d.getID() == c.getDepartmentID())
                         .findFirst()
@@ -384,146 +391,108 @@ public class PatientController {
     // ==================== SETTINGS & PROFILE ====================
     @FXML
     private void handleSettings() {
-        clinicInfoBox.setVisible(false);
-        appointmentsBox.setVisible(false);
-        reviewsBox.setVisible(false);
-        reportBox.setVisible(false);
-        loadCurrentUserSettings();
-        settingsBox.setVisible(true);
+        if (mainContentPane != null) mainContentPane.setVisible(false);
+        if (settingsBox != null) {
+            settingsBox.setVisible(true);
+            loadCurrentUserSettings(); // ← نستدعيها هنا بعد ما نتأكد إنه مش null
+        } else {
+            showAlert("Error", "Settings UI not loaded.");
+        }
     }
 
     private void loadCurrentUserSettings() {
         if (currentPatient != null) {
-            nameField.setText(currentPatient.getName());
+            // ✅ نحمل الـ name ونعرضه كـ username
+            usernameField.setText(currentPatient.getName() != null ? currentPatient.getName() : "");
+
             emailField.setText(currentPatient.getEmail());
             phoneField.setText(currentPatient.getPhone());
             genderField.setText(currentPatient.getGender());
             dobField.setText(currentPatient.getDateOfBirth() != null ?
                     currentPatient.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "—");
-            usernameField.setEditable(false);
+
+            // ✅ نسمح بتعديل username (اللي هو name فعليًا)
+            usernameField.setEditable(true);
+
+            // باقي الحقول read-only
+            emailField.setEditable(false);
+            phoneField.setEditable(false);
             genderField.setEditable(false);
             dobField.setEditable(false);
+            emailField.setOpacity(0.7);
+            phoneField.setOpacity(0.7);
+            genderField.setOpacity(0.7);
+            dobField.setOpacity(0.7);
         }
     }
-
     @FXML
     private void handleSettingsCancel() {
-        settingsBox.setVisible(false);
-        clinicInfoBox.setVisible(true);
+        if (settingsBox != null) settingsBox.setVisible(false);
+
+        if (mainContentPane != null) {
+            mainContentPane.setVisible(true);
+        } else if (clinicInfoBox != null) {
+            clinicInfoBox.setVisible(true);
+        }
     }
 
     @FXML
     private void handleSettingsSave() {
         try {
-            String newName = nameField.getText().trim();
+            String newUsername = usernameField.getText().trim();
             String currentPass = currentPasswordField.getText();
             String newPass = newPasswordField.getText();
             String confirmPass = confirmPasswordField.getText();
 
-            if (!newName.equals(currentPatient.getName())) {
-                currentPatient.setName(newName);
+            if (newUsername.isEmpty()) {
+                showAlert("Error", "Username cannot be empty.");
+                return;
             }
+
+            PatientDAO patientDAO = new PatientDAO();
+            if (!newUsername.equals(currentPatient.getName())) {
+                if (patientDAO.isNameTaken(newUsername, currentPatient.getID())) {
+                    showAlert("Error", "This username is already taken.");
+                    return;
+                }
+            }
+
+
+            if (!newUsername.equals(currentPatient.getName())) {
+                currentPatient.setName(newUsername);
+            }
+
 
             if (!newPass.isEmpty()) {
                 if (currentPass.isEmpty()) {
-                    showAlert("Error", "Please enter current password.");
+                    showAlert("Error", "Enter current password.");
                     return;
                 }
                 if (!newPass.equals(confirmPass)) {
-                    showAlert("Error", "New passwords do not match.");
+                    showAlert("Error", "Passwords don’t match.");
                     return;
                 }
                 if (!currentPass.equals(currentPatient.getPassword())) {
-                    showAlert("Error", "Current password is incorrect.");
+                    showAlert("Error", "Current password is wrong.");
                     return;
                 }
                 currentPatient.setPassword(newPass);
             }
 
-            new PatientDAO().update(currentPatient);
-            showAlert("Success", "Profile updated successfully!");
+            patientDAO.update(currentPatient);
+            if (patientNameLabel != null) {
+                patientNameLabel.setText("Welcome, " + currentPatient.getName());
+            }
+
+            showAlert("Success", "Profile updated!");
             handleSettingsCancel();
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Failed to update profile.");
+            showAlert("Error", "Update failed."+ e.getMessage());
+
         }
     }
-
-    // ==================== APPOINTMENTS & RATINGS ====================
-    private HBox createAppointmentCardForPatient(Appointment a) {
-        TimeSlot slot = a.getAppointmentDateTime();
-        if (slot == null || a.getClinic() == null) return new HBox();
-
-        Clinic clinic = a.getClinic();
-        // ✅ خدّي القيمة من الـ enum مباشرةً (أفضل من toString())
-        Status status = a.getStatus();
-
-        VBox card = new VBox(10);
-        card.setPrefWidth(300);
-        card.setPadding(new Insets(15));
-        card.setStyle("-fx-background-color: white; " +
-                "-fx-border-radius: 12; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2); " +
-                "-fx-border-width: 1px; " +
-                "-fx-border-color: " + getStatusBorderColor(status.name()) + ";");
-
-        HBox header = new HBox(10);
-        Label clinicLabel = new Label("🏥 " + clinic.getName());
-        clinicLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #34495E;");
-        Button mapBtn = new Button("📍");
-        mapBtn.setTooltip(new Tooltip("Open location"));
-        mapBtn.setStyle("-fx-background-color: #15BF8F; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2 6;");
-        mapBtn.setOnAction(e -> openGoogleMaps(clinic.getAddress()));
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        header.getChildren().addAll(clinicLabel, spacer, mapBtn);
-
-        Label doctorLabel = new Label("👨‍⚕️ Dr. " + clinic.getDoctorName());
-        Label dateLabel = new Label("📅 " + slot.getDate() + " | ⏰ " +
-                slot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm a")));
-        Label priceLabel = new Label("💰 " + String.format("%.2f EGP", clinic.getPrice()));
-        Label statusLabel = new Label("📌 " + status); // ← هنا بيظهر "Completed" أو "Booked" حسب الـ enum.toString()
-        statusLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + getStatusColor(status.name()) + ";");
-
-        HBox actions = new HBox(8);
-        actions.setAlignment(Pos.CENTER_LEFT);
-
-        // ✅ زر الإلغاء: يظهر فقط لو الحالة = Booked
-        if (status == Status.Booked) {
-            Button cancelBtn = new Button("❌ Cancel");
-            cancelBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 12px;");
-            cancelBtn.setOnAction(e -> confirmCancelAndRate(a));
-            actions.getChildren().add(cancelBtn);
-        }
-
-        // ✅ ✅ ✅ الزرار الوحيد المطلوب: يظهر **فقط لو الحالة = Completed**
-        if (status == Status.Completed) {
-            try {
-                Rating existingRating = new RatingDAO().getRatingByPatientAndClinic(
-                        currentPatient.getID(), clinic.getID());
-                Button rateBtn = new Button(existingRating == null ? "⭐ Add Rating" : "🔄 Update Rating");
-                rateBtn.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 12px;");
-                rateBtn.setOnAction(e -> showRatingDialog(clinic, existingRating));
-                actions.getChildren().add(rateBtn);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        // ✅ Follow-up: يظهر لو Booked أو Completed فقط
-        if (clinic.getConsultationPrice() > 0 &&
-                (status == Status.Booked || status == Status.Completed)) {
-            Button returnBtn = new Button("🔁 Request Follow-up");
-            returnBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12px;");
-            returnBtn.setOnAction(e -> showAlert("Success", "Follow-up request sent to Dr. " + clinic.getDoctorName()));
-            actions.getChildren().add(returnBtn);
-        }
-
-        card.getChildren().addAll(header, doctorLabel, dateLabel, priceLabel, statusLabel, actions);
-        return new HBox(card);
-    }
-
     // ==================== HELPERS ====================
     private void openGoogleMaps(String address) {
         if (address == null || address.trim().isEmpty()) return;
@@ -680,5 +649,85 @@ public class PatientController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    // ==================== APPOINTMENT CARDS ====================
+    private HBox createAppointmentCardForPatient(Appointment a) {
+        TimeSlot slot = a.getAppointmentDateTime();
+        if (slot == null || a.getClinic() == null) return new HBox();
+
+        Clinic clinic;
+        try {
+            clinic = clinicService.getClinicByPractitionerId(a.getClinic().getID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new HBox(new Label("⚠️ Clinic data unavailable"));
+        }
+        Status status = a.getStatus();
+
+        VBox card = new VBox(10);
+        card.setPrefWidth(300);
+        card.setPadding(new Insets(15));
+        card.setStyle("-fx-background-color: white; " +
+                "-fx-border-radius: 12; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2); " +
+                "-fx-border-width: 1px; " +
+                "-fx-border-color: " + getStatusBorderColor(status.name()) + ";");
+
+        HBox header = new HBox(10);
+        Label clinicLabel = new Label("🏥 " + clinic.getName());
+        clinicLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #34495E;");
+        System.out.println(">>> Clinic ID: " + clinic.getID() + " | Name: ["+ clinic.getName() + "] | Doctor: " + clinic.getDoctorName());
+        Button mapBtn = new Button("📍");
+        mapBtn.setTooltip(new Tooltip("Open location"));
+        mapBtn.setStyle("-fx-background-color: #15BF8F; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2 6;");
+        mapBtn.setOnAction(e -> openGoogleMaps(clinic.getAddress()));
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        header.getChildren().addAll(clinicLabel, spacer, mapBtn);
+
+        Label doctorLabel = new Label("👨‍⚕️ Dr. " + clinic.getDoctorName());
+
+        Label dateLabel = new Label("📅 " + slot.getDate() + " | ⏰ " +
+                slot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm a")));
+        Label priceLabel = new Label("💰 " + String.format("%.2f EGP", clinic.getPrice()));
+        Label statusLabel = new Label("📌 " + status);
+        statusLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + getStatusColor(status.name()) + ";");
+
+        HBox actions = new HBox(8);
+        actions.setAlignment(Pos.CENTER_LEFT);
+
+        // زر الإلغاء: يظهر فقط لو الحالة = Booked
+        if (status == Status.Booked) {
+            Button cancelBtn = new Button("❌ Cancel");
+            cancelBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 12px;");
+            cancelBtn.setOnAction(e -> confirmCancelAndRate(a));
+            actions.getChildren().add(cancelBtn);
+        }
+
+        // ✅ زر التقييم: يظهر فقط لو الحالة = Completed
+        if (status == Status.Completed) {
+            try {
+                Rating existingRating = new RatingDAO().getRatingByPatientAndClinic(
+                        currentPatient.getID(), clinic.getID());
+                Button rateBtn = new Button(existingRating == null ? "⭐ Add Rating" : "🔄 Update Rating");
+                rateBtn.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 12px;");
+                rateBtn.setOnAction(e -> showRatingDialog(clinic, existingRating));
+                actions.getChildren().add(rateBtn);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // زر المتابعة لو مسموح
+        if (clinic.getConsultationPrice() > 0 &&
+                (status == Status.Booked || status == Status.Completed)) {
+            Button returnBtn = new Button("🔁 Request Follow-up");
+            returnBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12px;");
+            returnBtn.setOnAction(e -> showAlert("Success", "Follow-up request sent to Dr. " + clinic.getDoctorName()));
+            actions.getChildren().add(returnBtn);
+        }
+
+        card.getChildren().addAll(header, doctorLabel, dateLabel, priceLabel, statusLabel, actions);
+        return new HBox(card);
     }
 }
