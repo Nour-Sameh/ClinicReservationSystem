@@ -21,7 +21,7 @@
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.RegisterController"
-            style="-fx-background-image: url('images/homepage.png');
+            style="-fx-background-image: url('images/ha.jpg');
                    -fx-background-size: cover;
                    -fx-background-position: center;
                    -fx-background-repeat: no-repeat;">

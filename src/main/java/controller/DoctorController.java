@@ -85,6 +85,7 @@ public class DoctorController {
     @FXML private PasswordField confirmPasswordField;
     @FXML private Button deleteClinicButton;
     private Button activeButton = null;
+    @FXML private VBox waitingListBox;
 
     private final NotificationService notificationService = new NotificationService();
     private Practitioner currentDoctor;
@@ -1155,7 +1156,6 @@ public class DoctorController {
         }
     }
     @FXML
-    private VBox waitingListBox; // ← عرّفه في FXML (أو أنشئه ديناميكيًا)
 
     private void loadWaitingListForClinic() {
         waitingListBox.getChildren().clear();
@@ -1323,8 +1323,17 @@ public class DoctorController {
         clinicInfoBox.setVisible(false);
         appointmentsBox.setVisible(false);
         reviewsBox.setVisible(false);
-        // ... وأظهر waitingListBox
+        reportBox.setVisible(false);
+        settingsBox.setVisible(false);
+
+        if (waitingListBox == null) {
+            System.err.println("❌ waitingListBox is null! Check FXML fx:id.");
+            return;
+        }
+
         waitingListBox.setVisible(true);
+        waitingListBox.setManaged(true);
+
         loadWaitingListForClinic();
     }
 }

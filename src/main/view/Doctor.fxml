@@ -17,7 +17,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<AnchorPane prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #f0f4f3;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DoctorController">
+<AnchorPane prefHeight="600.0" prefWidth="980.0" style="-fx-background-color: #f0f4f3;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DoctorController">
 
     <!-- Top Green Header -->
 <!--    <HBox layoutY="0" prefHeight="60.0" prefWidth="850.0" style="-fx-background-color: #15BF8F;">-->
@@ -34,7 +34,7 @@
 <!--                <Font name="System Bold" size="38.0" />-->
 <!--            </font></Button>-->
 <!--    </HBox>-->
-    <HBox layoutY="0" prefHeight="60.0" prefWidth="850.0" alignment="CENTER_LEFT"
+    <HBox layoutY="0" prefHeight="60.0" prefWidth="980.0" alignment="CENTER_LEFT"
           style="-fx-background-color: linear-gradient(to right, #15BF8F, #0C7E5F);">
         <padding>
             <Insets bottom="10" left="20" right="20" top="10" />
@@ -57,7 +57,7 @@
 
     <!-- Navigation Bar -->
     <HBox alignment="CENTER" layoutX="23.0" layoutY="60.0"
-          prefHeight="73.0" prefWidth="804.0"
+          prefHeight="73.0" prefWidth="950.0"
           spacing="20"
           style="-fx-background-color: #F5FAF9; -fx-padding: 20; -fx-background-radius: 15;">
 
@@ -171,7 +171,7 @@
 
 
     <!-- Clinic Info ScrollPane -->
-    <ScrollPane fx:id="mainClinicScrollPane" fitToWidth="true" hbarPolicy="NEVER" layoutX="50.0" layoutY="150.0" prefHeight="400.0" prefWidth="750.0">
+    <ScrollPane fx:id="mainClinicScrollPane" fitToWidth="true" hbarPolicy="NEVER" layoutX="50.0" layoutY="150.0" prefHeight="400.0" prefWidth="890.0">
       <content>
            <VBox fx:id="clinicInfoBox" prefHeight="358.0" prefWidth="545.0" spacing="20" style="-fx-background-color: white;            -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 2);">
                <padding>
@@ -225,7 +225,7 @@
     </ScrollPane>
 
     <!-- Appointments Box -->
-    <VBox fx:id="appointmentsBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="750" spacing="15" style="-fx-background-color: white;            -fx-border-radius: 12; -fx-background-radius: 12;            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
+    <VBox fx:id="appointmentsBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="890" spacing="15" style="-fx-background-color: white;            -fx-border-radius: 12; -fx-background-radius: 12;            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
         <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="📅 Select Date:" />
@@ -244,7 +244,7 @@
     </VBox>
 
     <!-- Reviews Box -->
-    <VBox fx:id="reviewsBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="750" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
+    <VBox fx:id="reviewsBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="890" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
         <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #FF9800;" text="Reviews" />
@@ -258,14 +258,14 @@
     </VBox>
 
     <!-- ✅ Full Report Box -->
-    <VBox fx:id="reportBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="750" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
+    <VBox fx:id="reportBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="890" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
         <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
             <VBox fx:id="reportContent" spacing="15" />
         </ScrollPane>
     </VBox>
     <!-- Logout -->
-    <Button fx:id="logoutButton" layoutX="652.0" layoutY="557.0"
+    <Button fx:id="logoutButton" layoutX="830.0" layoutY="557.0"
             text="Logout"
             style="-fx-background-color: #0C7E5F;
                -fx-text-fill: white;

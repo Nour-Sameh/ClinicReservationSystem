@@ -11,7 +11,7 @@
 <AnchorPane prefHeight="500.0" prefWidth="600.0"
             xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.HomeController"
-            style="-fx-background-image: url('images/homepage.png');
+            style="-fx-background-image: url('images/ha.jpg');
                    -fx-background-size: cover;
                    -fx-background-position: center;
                    -fx-background-repeat: no-repeat;">
@@ -19,19 +19,19 @@
     <children>
         <VBox alignment="CENTER" spacing="20.0" layoutX="100" layoutY="50" prefWidth="400.0">
             <!-- Clinic Logo -->
-            <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="200.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@/images/clinic logo.png" />
+                    <Image url="@/images/clinc.png" />
                 </image>
             </ImageView>
 
-            <!-- Welcome Text -->
-            <Text wrappingWidth="400.0" textAlignment="CENTER"
-                  text="Welcome to DocDesk" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+<!--            &lt;!&ndash; Welcome Text &ndash;&gt;-->
+<!--            <Text wrappingWidth="400.0" textAlignment="CENTER"-->
+<!--                  text="Welcome to DocDesk" style="-fx-font-size: 18px; -fx-font-weight: bold;" />-->
 
             <!-- Buttons -->
             <VBox spacing="15.0" alignment="CENTER">
-                <Button fx:id="loginButton" text="Login" prefWidth="200.0" prefHeight="45.0"
+                <Button fx:id="loginButton" text="Login" prefWidth="250.0" prefHeight="45.0"
                         style="-fx-background-color: #15BF8F; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 25; -fx-border-radius: 25; -fx-font-size: 16;"
                         onAction="#handleLogin" onMouseEntered="#onHoverIn" onMouseExited="#onHoverOut">
                     <effect>
@@ -39,7 +39,7 @@
                     </effect>
                 </Button>
 
-                <Button fx:id="registerButton" text="Register" prefWidth="200.0" prefHeight="45.0"
+                <Button fx:id="registerButton" text="Register" prefWidth="250.0" prefHeight="45.0"
                         style="-fx-background-color: white; -fx-border-color: #15BF8F; -fx-border-radius: 25; -fx-background-radius: 25; -fx-text-fill: #15BF8F; -fx-font-weight: bold; -fx-font-size: 16;"
                         onAction="#handleRegister" onMouseEntered="#onHoverIn" onMouseExited="#onHoverOut">
                     <effect>
@@ -47,7 +47,7 @@
                     </effect>
                 </Button>
 
-                <Button fx:id="exitButton" text="Exit" prefWidth="200.0" prefHeight="45.0"
+                <Button fx:id="exitButton" text="Exit" prefWidth="250.0" prefHeight="45.0"
                         style="-fx-background-color: white; -fx-border-color: #ff5555; -fx-border-radius: 25; -fx-background-radius: 25; -fx-text-fill: #ff5555; -fx-font-weight: bold; -fx-font-size: 16;"
                         onAction="#handleExit" onMouseEntered="#onHoverIn" onMouseExited="#onHoverOut">
                     <effect>
