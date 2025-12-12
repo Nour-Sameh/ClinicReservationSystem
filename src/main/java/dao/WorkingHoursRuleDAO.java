@@ -21,7 +21,7 @@ public class WorkingHoursRuleDAO {
     }
 
     public void insertRule(int scheduleId, DayOfWeek day, LocalTime start, LocalTime end) throws SQLException {
-        String sql = "INSERT INTO workinghoursrules (schedule_id, day, start_time, end_time) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO WorkingHoursRules (schedule_id, day, start_time, end_time) VALUES (?, ?, ?, ?)";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -34,7 +34,7 @@ public class WorkingHoursRuleDAO {
     }
 
     public WorkingHoursRule getById(int id) throws SQLException {
-        String sql = "SELECT * FROM workinghoursrules WHERE id = ?";
+        String sql = "SELECT * FROM WorkingHoursRules WHERE id = ?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -47,7 +47,7 @@ public class WorkingHoursRuleDAO {
     }
 
     public List<WorkingHoursRule> getAll() throws SQLException {
-        String sql = "SELECT * FROM workinghoursrules";
+        String sql = "SELECT * FROM WorkingHoursRules";
         List<WorkingHoursRule> list = new ArrayList<>();
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -61,7 +61,7 @@ public class WorkingHoursRuleDAO {
     }
 
     public List<WorkingHoursRule> getByScheduleId(int scheduleId) throws SQLException {
-        String sql = "SELECT * FROM workinghoursrules WHERE schedule_id = ?";
+        String sql = "SELECT * FROM WorkingHoursRules WHERE schedule_id = ?";
         List<WorkingHoursRule> list = new ArrayList<>();
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -75,7 +75,7 @@ public class WorkingHoursRuleDAO {
     }
 
     public void delete(int id) throws SQLException {
-        String sql = "DELETE FROM workinghoursrules WHERE id = ?";
+        String sql = "DELETE FROM WorkingHoursRules WHERE id = ?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -85,7 +85,7 @@ public class WorkingHoursRuleDAO {
     }
 
     public void deleteByScheduleId(int scheduleId) throws SQLException {
-        String sql = "DELETE FROM workinghoursrules WHERE schedule_id = ?";
+        String sql = "DELETE FROM WorkingHoursRules WHERE schedule_id = ?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 

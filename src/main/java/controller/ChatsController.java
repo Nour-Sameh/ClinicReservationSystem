@@ -334,7 +334,7 @@ public class ChatsController implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Patient.fxml"));
                 Parent root = loader.load();
                 PatientController controller = loader.getController();
-                controller.setPatientName(currentPatient.getName(), currentPatient);
+                controller.setPatient(currentPatient);
                 stage.setScene(new Scene(root));
                 stage.setTitle("Patient Dashboard — " + currentPatient.getName());
             } else if (mode == Mode.PRACTITIONER && currentPractitioner != null) {

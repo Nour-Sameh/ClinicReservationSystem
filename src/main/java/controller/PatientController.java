@@ -14,12 +14,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.*;
-import service.ClinicService;
-import service.DepartmentService;
-import service.PatientService;
-import service.PractitionerService;
+import service.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -61,7 +60,9 @@ public class PatientController {
     private final ClinicService clinicService = new ClinicService();
     private final DepartmentService departmentService = new DepartmentService();
     private final PractitionerService practitionerService = new PractitionerService();
-
+    private final RatingService ratingService = new RatingService();
+    private Parent patientDashboardView;
+    private Button activeButton = null;
     // ==================== FXML NAVIGATION ====================
     @FXML
     private void handleNavigation(ActionEvent event) {
@@ -182,6 +183,7 @@ public class PatientController {
         loadSpecialties();
         Platform.runLater(() -> {
             createSearchView();
+            patientDashboardView = searchView; // ★★ احفظه هنا ★★
             mainContentPane.getChildren().setAll(searchView);
             AnchorPane.setTopAnchor(searchView, 0.0);
             AnchorPane.setBottomAnchor(searchView, 0.0);
@@ -190,11 +192,17 @@ public class PatientController {
             loadAllClinics();
         });
     }
-    public void setPatient(Patient patient) { ///////////// جديد
+    public void setPatient(Patient patient) {
         this.currentPatient = patient;
-        if (patientNameLabel != null) {
-            patientNameLabel.setText("Welcome, " + patient.getName());
-        }
+        System.out.println("✅ currentPatient set: " + (patient != null ? patient.getName() : "null"));
+
+        // ★★ الآن نبدأ نحمّل البيانات الشخصية ★★
+        Platform.runLater(() -> {
+            // مثلاً: عرض اسم المريض في الهيدر
+            if (patientNameLabel != null) {
+                patientNameLabel.setText("Hello " + patient.getName());
+            }
+        });
     }
 
     private void loadSpecialties() {
@@ -252,7 +260,47 @@ public class PatientController {
             clinicsContainer.getChildren().add(new Label("Error loading clinics."));
         }
     }
+    private HBox createRatingView(double rating) {
+        HBox container = new HBox(3);
+        final String FULL_STAR = "★", EMPTY_STAR = "☆";
+        final String GOLD = "#FFD700", LIGHT_GRAY = "#CCCCCC";
 
+        // تأمين القيمة بين 0 و5
+        rating = Math.max(0, Math.min(5, rating));
+        double rounded = Math.round(rating * 2) / 2.0; // التقريب لنصف نجمة
+        int full = (int) rounded;
+        boolean half = (rounded - full) == 0.5;
+
+        // النجوم
+        for (int i = 0; i < 5; i++) {
+            Text t = new Text();
+            t.setFont(Font.font(16));
+            if (i < full) {
+                t.setText(FULL_STAR);
+                t.setStyle("-fx-fill: " + GOLD);
+            } else if (i == full && half) {
+                t.setText(FULL_STAR);
+                t.setStyle("-fx-fill: " + GOLD + "; -fx-opacity: 0.5;");
+            } else {
+                t.setText(EMPTY_STAR);
+                t.setStyle("-fx-fill: " + LIGHT_GRAY);
+            }
+            container.getChildren().add(t);
+        }
+
+        // الرقم بجانب النجوم
+        if (rating > 0) {
+            Label num = new Label(String.format(" (%.1f)", rounded));
+            num.setStyle("-fx-font-size: 14px; -fx-text-fill: #555; -fx-padding: 0 0 0 3;");
+            container.getChildren().add(num);
+        } else {
+            Label na = new Label(" (—)");
+            na.setStyle("-fx-font-size: 14px; -fx-text-fill: #999; -fx-padding: 0 0 0 3;");
+            container.getChildren().add(na);
+        }
+
+        return container;
+    }
     private void loadClinics(List<Clinic> clinics) {
         if (clinicsContainer == null) return;
         clinicsContainer.getChildren().clear();
@@ -296,9 +344,18 @@ public class PatientController {
                 String dur = (c.getSchedule() != null) ? c.getSchedule().getSlotDurationInMinutes() + " min slots" : "N/A";
                 Label slot = new Label(dur);
                 slot.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
-                Label price = new Label(String.format("⭐ %.1f | %.2f EGP", c.getAvgRating(), c.getPrice()));
-                price.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
-                details.getChildren().addAll(slot, price);
+
+                double avgRat=ratingService.calculateAverageRating(c.getID());
+                HBox ratingView = createRatingView(avgRat);
+
+                // 2. عمل label للسعر
+                Label priceLabel = new Label(String.format(" | %.2f EGP", c.getPrice()));
+                priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+
+                // 3. دمجهم في HBox واحد
+                HBox ratingAndPrice = new HBox(5, ratingView, priceLabel);
+                priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+                details.getChildren().addAll(slot, ratingAndPrice);
 
                 Label days = new Label("Working Hours: " + (c.getAvailableDaysString().isEmpty() ? "N/A" : c.getAvailableDaysString()));
                 days.setStyle("-fx-font-size: 14px; -fx-text-fill: #2ECC71; -fx-font-weight: bold;");
@@ -494,15 +551,52 @@ public class PatientController {
         }
     }
     // ==================== HELPERS ====================
+//    private void openGoogleMaps(String address) {
+//        if (address == null || address.trim().isEmpty()) return;
+//        try {
+//            String encoded = java.net.URLEncoder.encode(address.trim(), "UTF-8").replace("+", "%20");
+//            java.awt.Desktop.getDesktop().browse(new java.net.URI(
+//                    "https://www.google.com/maps/search/?api=1&query=" + encoded));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            showAlert("Error", "Failed to open map.");
+//        }
+//    }
     private void openGoogleMaps(String address) {
-        if (address == null || address.trim().isEmpty()) return;
+        if (address == null || address.trim().isEmpty()) {
+            showAlert("تنبيه", "العنوان فارغ. لا يمكن فتح الخريطة.");
+            return;
+        }
+
         try {
-            String encoded = java.net.URLEncoder.encode(address.trim(), "UTF-8").replace("+", "%20");
-            java.awt.Desktop.getDesktop().browse(new java.net.URI(
-                    "https://www.google.com/maps/search/?api=1&query=" + encoded));
+            // ترميز العنوان بشكل صحيح (نستخدم %20 بدل + لتوافق أفضل مع Google Maps)
+            String encoded = java.net.URLEncoder.encode(address.trim(), "UTF-8")
+                    .replace("+", "%20");
+
+            String url = "https://www.google.com/maps/search/?api=1&query=" + encoded;
+
+            // ✅ التحقق من دعم فتح المتصفح
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+                    desktop.browse(new java.net.URI(url));
+                    return; // نجاح
+                }
+            }
+
+            // إذا وصلنا هنا: النظام لا يدعم فتح المتصفح
+            // نعرض الرابط للمستخدم ليفتحه يدويًا
+            String msg = "لا يمكن فتح الخريطة تلقائيًا على هذا الجهاز.\n"
+                    + "انسخ الرابط التالي والصقه في متصفحك:\n\n"
+                    + url;
+            showAlert("معلومة", msg);
+
+        } catch (java.net.URISyntaxException e) {
+            showAlert("خطأ", "رابط غير صالح: " + e.getMessage());
+        } catch (java.io.IOException e) {
+            showAlert("خطأ", "فشل فتح المتصفح: " + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to open map.");
+            showAlert("خطأ", "حدث خطأ غير متوقع: " + e.getMessage());
         }
     }
 
@@ -620,17 +714,6 @@ public class PatientController {
         dialog.showAndWait();
     }
 
-    // ==================== NAV & PROFILE ====================
-    public void setPatientName(String name, Patient patient) {
-        if (patientNameLabel != null) {
-            patientNameLabel.setText("Welcome, " + (name != null ? name : "Patient"));
-        }
-        this.currentPatient = patient;
-        if (settingsBox.isVisible()) {
-            loadCurrentUserSettings();
-        }
-    }
-
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
@@ -653,15 +736,25 @@ public class PatientController {
     // ==================== APPOINTMENT CARDS ====================
     private HBox createAppointmentCardForPatient(Appointment a) {
         TimeSlot slot = a.getAppointmentDateTime();
-        if (slot == null || a.getClinic() == null) return new HBox();
+        Clinic appointmentClinic = a.getClinic();
+        if (slot == null || appointmentClinic == null ) {
+            return new HBox(new Label("⚠️ Incomplete appointment data"));
+        }
 
         Clinic clinic;
         try {
-            clinic = clinicService.getClinicByPractitionerId(a.getClinic().getID());
+            int doctorId = a.getClinic().getDoctorID();
+            clinic = clinicService.getClinicByPractitionerId(doctorId);
+            if (clinic == null) {
+                // مهم: الخدمة قد تُرجع null بدل ما ترمي exception!
+                return new HBox(new Label("⚠️ Clinic not found for this appointment"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return new HBox(new Label("⚠️ Clinic data unavailable"));
+            return new HBox(new Label("⚠️ Failed to load clinic info"));
         }
+
+        // ✅ من هنا وأنت متأكد إن `clinic != null`
         Status status = a.getStatus();
 
         VBox card = new VBox(10);
@@ -685,7 +778,7 @@ public class PatientController {
         HBox.setHgrow(spacer, Priority.ALWAYS);
         header.getChildren().addAll(clinicLabel, spacer, mapBtn);
 
-        Label doctorLabel = new Label("👨‍⚕️ Dr. " + clinic.getDoctorName());
+        Label doctorLabel = new Label("👤 Dr. " + clinic.getDoctorName());
 
         Label dateLabel = new Label("📅 " + slot.getDate() + " | ⏰ " +
                 slot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm a")));
@@ -729,5 +822,59 @@ public class PatientController {
 
         card.getChildren().addAll(header, doctorLabel, dateLabel, priceLabel, statusLabel, actions);
         return new HBox(card);
+    }
+    @FXML
+    private void HoverNavButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        if (btn != activeButton) { // ما نغيرش اللون لو الزرار active
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, #e2f5f0, #cdeee7);" +
+                    "-fx-text-fill: #333; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                    "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                    "-fx-border-color: #a3c5c0; -fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0.3, 0, 1);");
+        }
+    }
+
+    @FXML
+    private void ResetNavButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        if (btn != activeButton) { // ما نرجعش اللون لو الزرار active
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);" +
+                    "-fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                    "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                    "-fx-border-color: #c8d6d5; -fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);");
+        }
+    }
+    @FXML
+    private void PressNavButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        // نجعل الزرار active عند الضغط
+        if (activeButton != null && activeButton != btn) {
+            // رجع الزرار السابق لحالته الطبيعية
+            activeButton.setStyle("-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);" +
+                    "-fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                    "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                    "-fx-border-color: #c8d6d5; -fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);");
+        }
+        activeButton = btn; // تعيين الزرار الحالي كـ active
+
+        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #b9e5db, #9ad7cd);" +
+                "-fx-text-fill: #222; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                "-fx-border-color: #7ab7ad; -fx-border-width: 1;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.3, 0, 1);");
+    }
+    @FXML
+    private void HoverLogoutButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        btn.setStyle("-fx-background-color: #0FAF88; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
+    }
+
+    @FXML
+    private void ResetLogoutButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        btn.setStyle("-fx-background-color: #0C7E5F; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
     }
 }

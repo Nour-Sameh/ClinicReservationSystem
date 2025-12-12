@@ -1,9 +1,6 @@
 
 package controller;
-import dao.AppointmentDAO;
-import dao.DepartmentDAO;
-import dao.PractitionerDAO;
-import dao.RatingDAO;
+import dao.*;
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
@@ -24,9 +21,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import model.*;
+import service.NotificationService;
 import service.PractitionerService;
 import util.ExcelExporter;
 import util.PDFExporter;
+
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -44,7 +44,7 @@ import javafx.application.Platform;
 
 
 public class DoctorController {
-
+    @FXML private Label patientNameLabel;
     @FXML private Label clinicNameLabel;
     @FXML private Label specialtyLabel;
     @FXML private Label addressLabel;
@@ -53,7 +53,7 @@ public class DoctorController {
     @FXML private Label welcomeLabel;
     @FXML private Button editButton;
     @FXML private Button logoutButton;
-
+    @FXML private Label debugLabel;  // ← أضف هذا السطر مع باقي الـ @FXML
     @FXML private VBox clinicInfoBox;
     @FXML private VBox appointmentsBox;
     @FXML private VBox appointmentsList;
@@ -76,7 +76,6 @@ public class DoctorController {
     @FXML private Button settingsButton;
     @FXML private VBox settingsBox;
     @FXML private TextField usernameField;
-    @FXML private TextField nameField;
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
     @FXML private TextField genderField;
@@ -85,8 +84,9 @@ public class DoctorController {
     @FXML private PasswordField newPasswordField;
     @FXML private PasswordField confirmPasswordField;
     @FXML private Button deleteClinicButton;
+    private Button activeButton = null;
 
-
+    private final NotificationService notificationService = new NotificationService();
     private Practitioner currentDoctor;
     private final DepartmentDAO departmentDAO = new DepartmentDAO();
     private final PractitionerService practitionerService = new PractitionerService();
@@ -304,18 +304,15 @@ public class DoctorController {
                 }
 
                 if (datesWithAppointments.contains(item)) {
-                    // ✅ يوم فيه مواعيد: مفعّل + لون جميل
                     setStyle("-fx-background-color: #d0f0d0; -fx-text-fill: #2e7d32;");
-                    setDisable(false);
+                    //setDisable(false);
                 } else {
-                    // ❌ يوم فاضي: معطّل + لون باهت
                     setStyle("-fx-background-color: #f0f0f0; -fx-text-fill: #aaa;");
-                    setDisable(true);
+                    //setDisable(true);
                 }
             }
         });
 
-        // اختيار تلقائي لأول يوم فيه مواعيد (اختياري لكن لطيف)
         if (!datesWithAppointments.isEmpty()) {
             LocalDate first = datesWithAppointments.stream().min(LocalDate::compareTo).orElse(null);
             appointmentsCalendar.setValue(first);
@@ -398,11 +395,15 @@ public class DoctorController {
         patientLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
 
         String timeText = slot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm a"));
-        // ✅ حساب وقت الانتهاء (استنادًا لمدة السلوت)
+
         int durationMinutes = a.getClinic() != null && a.getClinic().getSchedule() != null
                 ? a.getClinic().getSchedule().getSlotDurationInMinutes()
                 : 30;
-        LocalDateTime endTime = LocalDateTime.from(slot.getStartTime().plusMinutes(durationMinutes));
+
+        LocalDateTime endTime = slot.getDate()
+                .atTime(slot.getStartTime())
+                .plusMinutes(durationMinutes);
+
         String endTimeText = endTime.format(DateTimeFormatter.ofPattern("hh:mm a"));
         Label timeLabel = new Label("⏰ " + timeText + " – " + endTimeText);
         timeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #666;");
@@ -410,40 +411,22 @@ public class DoctorController {
         Label statusLabel = new Label("📌 " + a.getStatus());
         statusLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #555;");
 
+        Label expiryLabel = null;
+
         if (a.getConsultationExpiryDate() != null) {
-            Label expiryLabel = new Label("⏳ Valid until: " +
+            expiryLabel = new Label("⏳ Valid until: " +
                     a.getConsultationExpiryDate().format(DateTimeFormatter.ofPattern("dd/MM")));
             expiryLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #888;");
-            box.getChildren().add(expiryLabel);
+            box.getChildren().add(expiryLabel); // ← إضافته هنا كافية
         }
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // ✅ زر الإلغاء (يبقى ظاهرًا دائمًا — الدكتور حر يلغي أي وقت)
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
                 "-fx-font-size: 11px; -fx-padding: 3 10; -fx-background-radius: 4;");
-        cancelBtn.setOnAction(e -> {
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Cancel Appointment");
-            confirm.setHeaderText("Cancel by Doctor?");
-            confirm.setContentText("Are you sure you want to cancel this appointment?");
-
-            confirm.showAndWait().ifPresent(res -> {
-                if (res == ButtonType.OK) {
-                    a.cancelByDoctor();
-                    try {
-                        new AppointmentDAO().updateStatus(a.getId(), a.getStatus());
-                        appointmentsList.getChildren().remove(box);
-                        showAlert("Success", "Appointment cancelled by doctor.");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        showAlert("Error", "Failed to cancel appointment.");
-                    }
-                }
-            });
-        });
+        cancelBtn.setOnAction(e -> confirmAndCancelAppointment(a));
 
         LocalDateTime now = LocalDateTime.now();
         boolean isOverdueAndBooked = a.getStatus() == Status.Booked && now.isAfter(endTime);
@@ -511,9 +494,23 @@ public class DoctorController {
                 box.getChildren().addAll(completeBtn, absentBtn);
             }
         }
+        box.getChildren().addAll(
+                patientLabel,
+                new Region(), // مسافة صغيرة
+                timeLabel,
+                new Region(),
+                statusLabel
+        );
+
+        if (a.getConsultationExpiryDate() != null) {
+            box.getChildren().add(expiryLabel);
+        }
 
         box.getChildren().addAll(spacer, cancelBtn);
+
         return box;
+//        box.getChildren().addAll(spacer, cancelBtn);
+//        return box;
     }
     @FXML
     private void filterAppointmentsByDate() {
@@ -674,26 +671,50 @@ public class DoctorController {
         });
     }
     private void confirmAndCancelAppointment(Appointment a) {
-        String patientName = (a.getPatient() != null) ? a.getPatient().getName() : "مجهول";
+        String patientName = (a.getPatient() != null) ? a.getPatient().getName() : "Anonymous";
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("إلغاء موعد");
-        confirm.setHeaderText("إلغاء موعد مع " + patientName);
-        confirm.setContentText("هل تريد إلغاء هذا الموعد؟ سيتم إرسال إشعار للمريض.");
+        confirm.setTitle("Cancel Appointment");
+        confirm.setHeaderText("Cancel appointment with " + patientName);
+        confirm.setContentText("Are you sure you want to cancel this appointment?\nA notification email will be sent to the patient.");
 
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
-                    practitionerService.cancelAppointmentAsPractitioner(a.getId(), "اعتذار من العيادة");
-                    new Alert(Alert.AlertType.INFORMATION, "✅ تم إلغاء الموعد بنجاح.").show();
+                    // 1️⃣ إلغاء الحجز عبر الخدمة (يُحدّث الحالة في قاعدة البيانات)
+                    practitionerService.cancelAppointmentAsPractitioner(a.getId(), "Cancellation by doctor");
 
-                    // تحديث اللستة مباشرة
+                    // 2️⃣ ✅ إرسال إيميل عبر NotificationService (مضمون ويدعم HTML)
+                    Patient patient = a.getPatient();
+                    TimeSlot slot = a.getAppointmentDateTime();
+                    if (patient != null && patient.getEmail() != null && !patient.getEmail().trim().isEmpty() && slot != null) {
+                        String subject = "Your Appointment Has Been Cancelled";
+                        String body = String.format(
+                                "<h3>Dear %s,</h3>" +
+                                        "<p>Your appointment with <strong>Dr. %s</strong> has been cancelled by the doctor.</p>" +
+                                        "<ul>" +
+                                        "  <li><strong>Date:</strong> %s</li>" +
+                                        "  <li><strong>Time:</strong> %s</li>" +
+                                        "  <li><strong>Reason:</strong> Cancellation by doctor</li>" +
+                                        "</ul>" +
+                                        "<p>We apologize for any inconvenience.</p>" +
+                                        "<p>Best regards,<br><em>Clinic Management</em></p>",
+                                patient.getName(),
+                                currentDoctor.getName(),
+                                slot.getDate(),
+                                slot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm a"))
+                        );
+                        notificationService.sendEmail(patient.getEmail(), subject, body);
+                    }
+
+                    // 3️⃣ تحديث العرض
+                    new Alert(Alert.AlertType.INFORMATION, "✅ Appointment cancelled successfully.").show();
                     allAppointments = new AppointmentDAO().getAppointmentsByClinicId(currentDoctor.getClinic().getID());
                     LocalDate selectedDate = appointmentsCalendar.getValue();
                     displayAppointments(allAppointments, selectedDate);
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    new Alert(Alert.AlertType.ERROR, "❌ " + ex.getMessage()).show();
+                    new Alert(Alert.AlertType.ERROR, "❌ Failed to cancel appointment: " + ex.getMessage()).show();
                 }
             }
         });
@@ -943,7 +964,7 @@ public class DoctorController {
             phoneField.setOpacity(0.7);
             genderField.setOpacity(0.7);
             dobField.setOpacity(0.7);
-            System.out.println(">>> Doctor Gender: [" + currentDoctor.getGender() + "]");
+            //System.out.println(">>> Doctor Gender: [" + currentDoctor.getGender() + "]");
         }
     }
 
@@ -954,9 +975,10 @@ public class DoctorController {
     }
 
     @FXML
+
     private void handleSettingsSave() {
         try {
-            String newName = nameField.getText().trim();
+            String newName = usernameField.getText().trim();
             String currentPass = currentPasswordField.getText();
             String newPass = newPasswordField.getText();
             String confirmPass = confirmPasswordField.getText();
@@ -1145,7 +1167,60 @@ public class DoctorController {
             con.commit();
         }
     }
+    @FXML
+    private void hoverNavButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        if (btn != activeButton) { // ما نغيرش اللون لو الزرار active
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, #e2f5f0, #cdeee7);" +
+                    "-fx-text-fill: #333; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                    "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                    "-fx-border-color: #a3c5c0; -fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0.3, 0, 1);");
+        }
+    }
 
+    @FXML
+    private void resetNavButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        if (btn != activeButton) { // ما نرجعش اللون لو الزرار active
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);" +
+                    "-fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                    "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                    "-fx-border-color: #c8d6d5; -fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);");
+        }
+    }
 
+    @FXML
+    private void pressNavButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        // نجعل الزرار active عند الضغط
+        if (activeButton != null && activeButton != btn) {
+            // رجع الزرار السابق لحالته الطبيعية
+            activeButton.setStyle("-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);" +
+                    "-fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                    "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                    "-fx-border-color: #c8d6d5; -fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);");
+        }
+        activeButton = btn; // تعيين الزرار الحالي كـ active
+
+        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #b9e5db, #9ad7cd);" +
+                "-fx-text-fill: #222; -fx-font-size: 16px; -fx-font-weight: bold;" +
+                "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
+                "-fx-border-color: #7ab7ad; -fx-border-width: 1;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.3, 0, 1);");
+    }
+    @FXML
+    private void hoverLogoutButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        btn.setStyle("-fx-background-color: #0FAF88; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
+    }
+
+    @FXML
+    private void resetLogoutButton(javafx.scene.input.MouseEvent e) {
+        Button btn = (Button) e.getSource();
+        btn.setStyle("-fx-background-color: #0C7E5F; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
+    }
 
 }

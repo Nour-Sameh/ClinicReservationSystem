@@ -329,10 +329,16 @@ public class ClinicSlotsController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Patient.fxml"));
             Parent root = loader.load();
+
+            PatientController controller = loader.getController();
+            // ★★ هذا هو السر ★★
+            controller.setPatient(this.currentPatient); // ← مرّر نفس المريض اللي جاي من Dashboard
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Patient Dashboard");
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Error", "Failed to load dashboard.", Alert.AlertType.ERROR);

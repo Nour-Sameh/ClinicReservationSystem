@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -102,7 +103,7 @@ public class LoginController {
         Parent root = loader.load();
 
         PatientController controller = loader.getController();
-        controller.setPatientName(patient.getName(), patient); // ✔ نمرر الاسم + كائن المريض
+        controller.setPatient(patient);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
@@ -119,7 +120,7 @@ public class LoginController {
 
         Clinic clinic = clinicService.getClinicByPractitionerId(doctor.getID());
         if (clinic != null) {
-            doctor.setClinic(clinic); // ← هذا هو السر!
+            doctor.setClinic(clinic);
         }
         controller.setDoctor(doctor);
 
@@ -216,6 +217,27 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Could not send email: " + e.getMessage());
+        }
+    }
+    @FXML
+    private void onHoverIn(javafx.scene.input.MouseEvent event) {
+        Button btn = (Button) event.getSource();
+        String style = btn.getStyle();
+        if (style.contains("#15BF8F")) {
+            btn.setStyle(style.replace("#15BF8F", "#12A075"));
+        } else if (style.contains("#ff5555")) {
+            btn.setStyle(style.replace("#ff5555", "#e04444"));
+        }
+    }
+
+    @FXML
+    private void onHoverOut(javafx.scene.input.MouseEvent event) {
+        Button btn = (Button) event.getSource();
+        String style = btn.getStyle();
+        if (style.contains("#12A075")) {
+            btn.setStyle(style.replace("#12A075", "#15BF8F"));
+        } else if (style.contains("#e04444")) {
+            btn.setStyle(style.replace("#e04444", "#ff5555"));
         }
     }
 }

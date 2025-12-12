@@ -62,4 +62,5 @@ public class Practitioner extends User {
             clinic.setPrice(price);
         }
     }
+
 }

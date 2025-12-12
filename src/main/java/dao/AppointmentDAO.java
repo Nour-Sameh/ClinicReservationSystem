@@ -21,10 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- *
- * @author noursameh
- */
 public class AppointmentDAO implements GenericDAO<Appointment> {
 
     private final PatientDAO patientDAO = new PatientDAO();
@@ -269,7 +265,7 @@ public class AppointmentDAO implements GenericDAO<Appointment> {
           AND DAYOFWEEK(ts.appointment_time) = ?
           AND TIME(ts.appointment_time) >= ?
           AND TIME(ts.appointment_time) < ?
-          AND a.status NOT IN ('CANCELLED', 'COMPLETED')
+          AND a.status NOT IN ('Cancelled_by_Patient', 'Cancelled_by_Doctor', 'Completed')
         LIMIT 1
         """;
 
@@ -294,7 +290,7 @@ public class AppointmentDAO implements GenericDAO<Appointment> {
         INNER JOIN TimeSlots t ON a.timeslot_id = t.id
         WHERE a.clinic_id = ?
           AND t.date = ?
-          AND a.status != 'Cancelled'
+          AND a.status NOT IN ('Cancelled_by_Patient', 'Cancelled_by_Doctor')
         """;
 
         List<Appointment> appointments = new ArrayList<>();
@@ -384,12 +380,6 @@ public class AppointmentDAO implements GenericDAO<Appointment> {
             return null;
         }
     }
-    /**
-     * ✅ جلب جميع المواعيد (حتى الملغاة والقديمة) لعيادة محددة — للتقارير
-     */
-    /**
-     * ✅ جلب جميع المواعيد (حتى الملغاة والقديمة) لعيادة محددة — للتقارير
-     */
     public List<Appointment> getAllAppointmentsForReport(int clinicId) throws SQLException {
         String sql = "SELECT * FROM Appointments WHERE clinic_id = ?";
         List<Appointment> appointments = new ArrayList<>();

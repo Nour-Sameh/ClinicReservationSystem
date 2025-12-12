@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jakarta.mail-2.0.2">
+  <library name="itextpdf-5.5.13.4">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/jakarta.mail-2.0.2.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itextpdf-5.5.13.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

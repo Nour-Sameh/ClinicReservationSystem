@@ -158,8 +158,8 @@ public class PatientDAO implements GenericDAO<Patient> {
     public List<Patient> getPatientsWithChatsForPractitioner(int practitionerId) throws SQLException {
         String sql = """
         SELECT DISTINCT p.*
-        FROM patients p
-        INNER JOIN chats c ON p.id = c.patient_id
+        FROM Patients p
+        INNER JOIN Chats c ON p.id = c.patient_id
         WHERE c.practitioner_id = ?
         """;
 
@@ -186,7 +186,7 @@ public class PatientDAO implements GenericDAO<Patient> {
     }
     // PatientDAO.java
     public boolean isNameTaken(String name, int excludePatientId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM patients WHERE name = ? AND id != ?";
+        String sql = "SELECT COUNT(*) FROM Patients WHERE name = ? AND id != ?";
 
         // ✅ try-with-resources: يفتح connection ويقفله تلقائيًا
         try (Connection conn = getConnection();

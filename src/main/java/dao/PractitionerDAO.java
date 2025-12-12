@@ -47,50 +47,33 @@ public class PractitionerDAO implements GenericDAO<Practitioner> {
     @Override
     public void add(Practitioner practitioner) throws SQLException {
         String sql = """
-    INSERT INTO Practitioners (name, phone, email, password, gender, date_of_birth, clinic_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    """;
-        Connection con = null;
-        PreparedStatement ps = null;
-
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        INSERT INTO Practitioners (name, phone, email, password, gender, date_of_birth, clinic_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """;
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, practitioner.getName());
             ps.setString(2, practitioner.getPhone());
             ps.setString(3, practitioner.getEmail());
             ps.setString(4, practitioner.getPassword());
-            ps.setString(5, practitioner.getGender());
-            ps.setDate(6, java.sql.Date.valueOf(practitioner.getDateOfBirth()));
+            ps.setString(5, practitioner.getGender());  // ← 5: gender
+            ps.setDate(6, java.sql.Date.valueOf(practitioner.getDateOfBirth()));  // ← 6: dob
+            // ← 7: clinic_id
             if (practitioner.getClinic() == null) {
                 ps.setNull(7, Types.INTEGER);
             } else {
                 ps.setInt(7, practitioner.getClinic().getID());
             }
 
-            if (practitioner.getClinic() == null) {
-                ps.setNull(5, Types.INTEGER);
-            } else {
-                ps.setInt(5, practitioner.getClinic().getID());
-            }
-
             int rowsAffected = ps.executeUpdate();
-
             if (rowsAffected > 0) {
-                ResultSet rs = null;
-                try {
-                    rs = ps.getGeneratedKeys();
+                try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         practitioner.setId(rs.getInt(1));
                     }
-                } finally {
-                    if (rs != null) rs.close();
                 }
             }
-        } finally {
-            if (ps != null) ps.close();
-            DBConnection.closeConnection(con);
         }
     }
 
@@ -256,7 +239,7 @@ public class PractitionerDAO implements GenericDAO<Practitioner> {
     }
     // DoctorDAO.java
     public boolean isNameTaken(String name, int excludeDoctorId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM doctors WHERE name = ? AND id != ?";
+        String sql = "SELECT COUNT(*) FROM Practitioners WHERE name = ? AND id != ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name.trim());

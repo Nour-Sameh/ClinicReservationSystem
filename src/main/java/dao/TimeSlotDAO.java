@@ -10,10 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author noursameh
- */
+
 public class TimeSlotDAO implements GenericDAO<TimeSlot> {
 
     private TimeSlot extractTimeSlotFromResultSet(ResultSet rs) throws SQLException {

@@ -9,7 +9,7 @@ import jakarta.mail.internet.*;
 public class NotificationService {
 
     private final String SENDER_EMAIL = "dockdisk.clinic@gmail.com";
-    private final String APP_PASSWORD = "olkn-qoxm-cqmo-tkzw"  ;
+    private final String APP_PASSWORD = "olkn qoxm cqmo tkzw"  ;
 
     public void sendEmail(String recipientEmail, String subject, String body) throws MessagingException {
 

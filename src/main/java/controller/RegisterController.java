@@ -177,4 +177,25 @@ public class RegisterController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    @FXML
+    private void onHoverIn(javafx.scene.input.MouseEvent event) {
+        Button btn = (Button) event.getSource();
+        String style = btn.getStyle();
+        if (style.contains("#15BF8F")) {
+            btn.setStyle(style.replace("#15BF8F", "#12A075"));
+        } else if (style.contains("#ff5555")) {
+            btn.setStyle(style.replace("#ff5555", "#e04444"));
+        }
+    }
+
+    @FXML
+    private void onHoverOut(javafx.scene.input.MouseEvent event) {
+        Button btn = (Button) event.getSource();
+        String style = btn.getStyle();
+        if (style.contains("#12A075")) {
+            btn.setStyle(style.replace("#12A075", "#15BF8F"));
+        } else if (style.contains("#e04444")) {
+            btn.setStyle(style.replace("#e04444", "#ff5555"));
+        }
+    }
 }
