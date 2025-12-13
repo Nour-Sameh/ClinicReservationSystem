@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      style="-fx-padding: 0; -fx-spacing: 0;" >
+<HBox spacing="8" alignment="CENTER_LEFT"
+      style="-fx-padding: 6; -fx-background-color: #f0f8f5; -fx-border-color: #d0e3f5;
+      -fx-border-width: 1; -fx-border-radius: 4;">
+
+    <ComboBox fx:id="dayCombo" prefWidth="110" promptText="Day" />
+    <Label text="From:" />
+    <ComboBox fx:id="fromCombo" prefWidth="90" promptText="HH:mm" />
+    <Label text="To:" />
+    <ComboBox fx:id="toCombo" prefWidth="90" promptText="HH:mm" />
+    <Button fx:id="deleteBtn" text="✖"
+            style="-fx-background-color: transparent; -fx-text-fill: #e74c3c;"
+            prefWidth="30" />
+
+</HBox>
+</VBox>

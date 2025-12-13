@@ -151,10 +151,17 @@ public class ClinicSlotsController {
 
                 if (isWorking) {
                     Label msgLabel = new Label("No slots available — all booked.");
-                    msgLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                    msgLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #e6a255; -fx-font-weight: bold;");
 
-                    Button joinWLBtn = new Button("🕒 Join Waiting List");
-                    joinWLBtn.setStyle("-fx-background-color: #1ABC9C; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 20;");
+                    Button joinWLBtn = new Button(" Join Waiting List");
+                    joinWLBtn.setStyle(
+                            "-fx-background-color: #e6a255; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-weight: bold; " +
+                                    "-fx-padding: 8 20; " +
+                                    "-fx-background-radius: 20; " +
+                                    "-fx-cursor: hand;"
+                    );
 
                     joinWLBtn.setOnAction(e -> handleJoinWaitingList(selectedClinic, date));
 
