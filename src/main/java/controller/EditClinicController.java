@@ -262,7 +262,7 @@ public class EditClinicController {
             statusLabel.setStyle("-fx-text-fill: #2e7d32; -fx-font-weight: bold;");
             Platform.runLater(() -> {
                 Stage thisStage = (Stage) clinicNameField.getScene().getWindow();
-                Stage owner = (Stage) thisStage.getOwner(); // الـ dashboard اللي فتح النافذة
+                Stage owner = (Stage) thisStage.getOwner();
                 if (owner != null) {
                     try {
                         Object ownerController = owner.getScene().getRoot().getUserData();

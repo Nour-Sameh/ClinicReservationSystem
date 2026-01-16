@@ -3,7 +3,6 @@
     -fx-background-color: #f7fafc;
 }
 
-/* ICON */
 .icon-circle {
     -fx-background-color: #15BF8F;
     -fx-background-radius: 50;
@@ -11,20 +10,17 @@
 }
 
 
-/* TITLE */
 .title {
     -fx-font-size: 30px;
     -fx-font-weight: bold;
     -fx-text-fill: #2d3748;
 }
 
-/* SUBTITLE */
 .subtitle {
     -fx-font-size: 16px;
     -fx-text-fill: #718096;
 }
 
-/* CARD */
 .card {
     -fx-background-color: white;
     -fx-background-radius: 14;
@@ -32,7 +28,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 8);
 }
 
-/* LOGIN */
 .btn-primary {
     -fx-background-color: #15BF8F;
     -fx-text-fill: white;
@@ -46,7 +41,6 @@
     -fx-background-color: #12a87d;
 }
 
-/* REGISTER */
 .btn-outline {
     -fx-background-color: transparent;
     -fx-border-color: #15BF8F;
@@ -62,7 +56,6 @@
 .btn-outline:hover {
     -fx-background-color: rgba(147, 200, 177, 0.45);
 }
-/* EXIT */
 .btn-exit {
     -fx-background-color: #f1f5f9;
     -fx-text-fill: #334155;

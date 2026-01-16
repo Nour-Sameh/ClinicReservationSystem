@@ -1,5 +1,6 @@
 
 package controller;
+
 import dao.*;
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
@@ -39,57 +40,98 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import javafx.application.Platform;
 
 
-
 public class DoctorController {
-    @FXML private Label clinicNameLabel;
-    @FXML private Label specialtyLabel;
-    @FXML private Label addressLabel;
-    @FXML private Label slotDurationLabel;
-    @FXML private Text scheduleText;
-    @FXML private Label welcomeLabel;
-    @FXML private Button editButton;
-    @FXML private Button logoutButton;
-    @FXML private Label debugLabel;
-    @FXML private VBox clinicInfoBox;
-    @FXML private VBox appointmentsBox;
-    @FXML private VBox appointmentsList;
-    @FXML private HBox starsContainer;
-    @FXML private DatePicker appointmentsCalendar;
-    @FXML private AnchorPane mainContentPane;
-    @FXML private VBox reviewsBox;
-    @FXML private VBox reviewsList;
-    @FXML private Button appointmentsNavButton;
-    @FXML private Button reviewsNavButton;
-    @FXML private Button chatNavButton;
-    @FXML private Label priceLabel;
-    @FXML private Button ClinicInfoMainBox;
-    @FXML private Button cancelAllButton;
-    @FXML private Button exportPDFButton;
-    @FXML private Button exportExcelButton;
-    @FXML private Button reportButton;
-    @FXML private VBox reportBox;
-    @FXML private VBox reportContent;
-    @FXML private Button settingsButton;
-    @FXML private VBox settingsBox;
-    @FXML private TextField usernameField;
-    @FXML private TextField emailField;
-    @FXML private TextField phoneField;
-    @FXML private TextField genderField;
-    @FXML private TextField dobField;
-    @FXML private PasswordField currentPasswordField;
-    @FXML private PasswordField newPasswordField;
-    @FXML private PasswordField confirmPasswordField;
-    @FXML private Button deleteClinicButton;
-    @FXML private VBox waitingListContainer;
+    @FXML
+    private Label clinicNameLabel;
+    @FXML
+    private Label specialtyLabel;
+    @FXML
+    private Label addressLabel;
+    @FXML
+    private Label slotDurationLabel;
+    @FXML
+    private Text scheduleText;
+    @FXML
+    private Label welcomeLabel;
+    @FXML
+    private Button editButton;
+    @FXML
+    private Button logoutButton;
+    @FXML
+    private Label debugLabel;
+    @FXML
+    private VBox clinicInfoBox;
+    @FXML
+    private VBox appointmentsBox;
+    @FXML
+    private VBox appointmentsList;
+    @FXML
+    private HBox starsContainer;
+    @FXML
+    private DatePicker appointmentsCalendar;
+    @FXML
+    private AnchorPane mainContentPane;
+    @FXML
+    private VBox reviewsBox;
+    @FXML
+    private VBox reviewsList;
+    @FXML
+    private Button appointmentsNavButton;
+    @FXML
+    private Button reviewsNavButton;
+    @FXML
+    private Button chatNavButton;
+    @FXML
+    private Label priceLabel;
+    @FXML
+    private Button ClinicInfoMainBox;
+    @FXML
+    private Button cancelAllButton;
+    @FXML
+    private Button exportPDFButton;
+    @FXML
+    private Button exportExcelButton;
+    @FXML
+    private Button reportButton;
+    @FXML
+    private VBox reportBox;
+    @FXML
+    private VBox reportContent;
+    @FXML
+    private Button settingsButton;
+    @FXML
+    private VBox settingsBox;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private TextField phoneField;
+    @FXML
+    private TextField genderField;
+    @FXML
+    private TextField dobField;
+    @FXML
+    private PasswordField currentPasswordField;
+    @FXML
+    private PasswordField newPasswordField;
+    @FXML
+    private PasswordField confirmPasswordField;
+    @FXML
+    private Button deleteClinicButton;
+    @FXML
+    private VBox waitingListContainer;
 
 
     private Button activeButton = null;
-    @FXML private VBox waitingListBox;
+    @FXML
+    private VBox waitingListBox;
     private Stage stage;
     private final NotificationService notificationService = new NotificationService();
     private Practitioner currentDoctor;
@@ -189,11 +231,14 @@ public class DoctorController {
             Text t = new Text();
             t.setFont(Font.font(18));
             if (i < full) {
-                t.setText(FULL_STAR); t.setStyle("-fx-fill: " + GOLD);
+                t.setText(FULL_STAR);
+                t.setStyle("-fx-fill: " + GOLD);
             } else if (i == full && half) {
-                t.setText(FULL_STAR); t.setStyle("-fx-fill: " + GOLD + "; -fx-opacity: 0.5;");
+                t.setText(FULL_STAR);
+                t.setStyle("-fx-fill: " + GOLD + "; -fx-opacity: 0.5;");
             } else {
-                t.setText(EMPTY_STAR); t.setStyle("-fx-fill: " + LIGHT_GRAY);
+                t.setText(EMPTY_STAR);
+                t.setStyle("-fx-fill: " + LIGHT_GRAY);
             }
             starsContainer.getChildren().add(t);
         }
@@ -218,9 +263,12 @@ public class DoctorController {
     }
 
     private void showNoClinic() {
-        clinicNameLabel.setText("—"); specialtyLabel.setText("—");
-        renderRatingStars(0); addressLabel.setText("—");
-        slotDurationLabel.setText("—"); scheduleText.setText("You don't have a clinic yet.");
+        clinicNameLabel.setText("—");
+        specialtyLabel.setText("—");
+        renderRatingStars(0);
+        addressLabel.setText("—");
+        slotDurationLabel.setText("—");
+        scheduleText.setText("You don't have a clinic yet.");
     }
 
 
@@ -270,89 +318,91 @@ public class DoctorController {
         }
     }
 
-private VBox createWaitingCard(WaitingList req) {
-    VBox card = new VBox(8);
-    card.setPadding(new Insets(12));
-    card.setStyle("-fx-background-color: #fdf9f0; -fx-border-color: #f1c40f; -fx-border-width: 1; -fx-border-radius: 8;");
+    private VBox createWaitingCard(WaitingList req) {
+        VBox card = new VBox(8);
+        card.setPadding(new Insets(12));
+        card.setStyle("-fx-background-color: #fdf9f0; -fx-border-color: #f1c40f; -fx-border-width: 1; -fx-border-radius: 8;");
 
-    try {
-        String patientName = "—";
-        int patientId = req.getPatient().getID();
-        if (patientId > 0) {
-            try {
-                Patient p = req.getPatient();
-                patientName = (p != null) ? p.getName() : "Patient #" + patientId;
-            }catch (Exception e) {
-                patientName = "Error loading patient";
+        try {
+            String patientName = "—";
+            int patientId = req.getPatient().getID();
+            if (patientId > 0) {
+                try {
+                    Patient p = req.getPatient();
+                    patientName = (p != null) ? p.getName() : "Patient #" + patientId;
+                } catch (Exception e) {
+                    patientName = "Error loading patient";
+                }
             }
+
+            String timeStr = "—";
+            if (req.getRequestTime() != null) {
+                try {
+                    timeStr = req.getRequestTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                } catch (Exception ignored) {
+                }
+            }
+
+            WaitingStatus statusEnum = req.getStatus();
+            String statusText = (statusEnum != null) ? statusEnum.name() : "UNKNOWN";
+
+            String statusArabic = switch (statusEnum) {
+                case PENDING -> "PENDING";
+                case OFFERED -> "OFFERED";
+                case CONFIRMED -> "CONFIRMED";
+                case EXPIRED -> "EXPIRED";
+                case CANCELLED -> "CANCELLED";
+                default -> "Unkown";
+            };
+
+            String color = switch (statusEnum) {
+                case PENDING -> "#E67E22";
+                case OFFERED -> "#3498DB";
+                case CONFIRMED -> "#27AE60";
+                case EXPIRED, CANCELLED -> "#E74C3C";
+                default -> "#95A5A6";
+            };
+
+            Label pLabel = new Label("👤 " + patientName);
+            pLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+
+            Label timeLabel = new Label("🕒 " + timeStr);
+            Label statusLabel = new Label("📊 " + statusArabic);
+            statusLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + color + ";");
+
+            HBox buttons = new HBox(8);
+            buttons.setAlignment(Pos.CENTER_RIGHT);
+
+            if (statusEnum == WaitingStatus.PENDING) {
+                Button approveBtn = new Button("Aproved ✓ ");
+                Button rejectBtn = new Button("Reject ✗ ");
+
+                approveBtn.setStyle("-fx-background-color: #27AE60; -fx-text-fill: white;");
+                rejectBtn.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white;");
+
+                approveBtn.setOnAction(e -> offerAppointment(req));
+                rejectBtn.setOnAction(e -> cancelRequest(req));
+
+                buttons.getChildren().addAll(approveBtn, rejectBtn);
+            }
+
+            card.getChildren().addAll(pLabel, timeLabel, statusLabel, new Separator(), buttons);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Label errorLabel = new Label("❗ Order display error");
+            errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
+            card.getChildren().add(errorLabel);
         }
 
-        String timeStr = "—";
-        if (req.getRequestTime() != null) {
-            try {
-                timeStr = req.getRequestTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            } catch (Exception ignored) { }
-        }
-
-        WaitingStatus statusEnum = req.getStatus();
-        String statusText = (statusEnum != null) ? statusEnum.name() : "UNKNOWN";
-
-        String statusArabic = switch (statusEnum) {
-            case PENDING -> "PENDING";
-            case OFFERED -> "OFFERED";
-            case CONFIRMED -> "CONFIRMED";
-            case EXPIRED -> "EXPIRED";
-            case CANCELLED -> "CANCELLED";
-            default -> "Unkown";
-        };
-
-        String color = switch (statusEnum) {
-            case PENDING -> "#E67E22";
-            case OFFERED -> "#3498DB";
-            case CONFIRMED -> "#27AE60";
-            case EXPIRED, CANCELLED -> "#E74C3C";
-            default -> "#95A5A6";
-        };
-
-        Label pLabel = new Label("👤 " + patientName);
-        pLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-
-        Label timeLabel = new Label("🕒 " + timeStr);
-        Label statusLabel = new Label("📊 " + statusArabic);
-        statusLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + color + ";");
-
-        HBox buttons = new HBox(8);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
-
-        if (statusEnum == WaitingStatus.PENDING) {
-            Button approveBtn = new Button("Aproved ✓ ");
-            Button rejectBtn = new Button("Reject ✗ ");
-
-            approveBtn.setStyle("-fx-background-color: #27AE60; -fx-text-fill: white;");
-            rejectBtn.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white;");
-
-            approveBtn.setOnAction(e -> offerAppointment(req));
-            rejectBtn.setOnAction(e -> cancelRequest(req));
-
-            buttons.getChildren().addAll(approveBtn, rejectBtn);
-        }
-
-        card.getChildren().addAll(pLabel, timeLabel, statusLabel, new Separator(), buttons);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        Label errorLabel = new Label("❗ Order display error");
-        errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
-        card.getChildren().add(errorLabel);
+        return card;
     }
 
-    return card;
-}
     private void offerAppointment(WaitingList req) {
         try {
             waitingListService.updateStatus(req.getId(), WaitingStatus.OFFERED);
 
-            Patient patient =  patient = req.getPatient();
+            Patient patient = patient = req.getPatient();
             if (patient == null || patient.getEmail() == null || patient.getEmail().trim().isEmpty()) {
                 loadDoctorWaitingList();
                 new Alert(Alert.AlertType.WARNING,
@@ -363,20 +413,131 @@ private VBox createWaitingCard(WaitingList req) {
 
             String subject = "🎉 Appointment Offer – Action Required!";
             String body = String.format("""
-            Dear %s,
-            
-            An appointment slot is now available for you at:
-            **%s**
-            
-            ⏰ Please log in to your account within 10 minutes to confirm.
-            If not confirmed, the offer will expire automatically, and the slot will be given to the next patient.
-            
-            Thank you,
-            Clinic Management Team
-            """,
-                    patient.getName(),
-                    (req.getClinic() != null ? req.getClinic().getName() : "Unknown Clinic")
-            );
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                              <meta charset="UTF-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                              <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+                              <style>
+                                body {
+                                  margin: 0;
+                                  padding: 0;
+                                  background-color: #f8fafc;
+                                  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                                  color: #1e293b;
+                                  line-height: 1.6;
+                                }
+                                .email-container {
+                                  max-width: 650px;
+                                  margin: 40px auto;
+                                  background: #ffffff;
+                                  border-radius: 16px;
+                                  overflow: hidden;
+                                  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+                                  border: 1px solid #e2e8f0;
+                                }
+                                .header {
+                                  background: #f0fdf4;
+                                  padding: 32px 30px 24px;
+                                  text-align: center;
+                                  border-bottom: 1px solid #f1f5f9;
+                                }
+                                .header h1 {
+                                  margin: 0;
+                                  font-size: 22px;
+                                  font-weight: 600;
+                                  color: #16a34a;
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: center;
+                                  gap: 10px;
+                                }
+                                .content {
+                                  padding: 32px;
+                                }
+                                .content p {
+                                  margin: 0 0 18px;
+                                  font-size: 15px;
+                                  color: #334155;
+                                }
+                                .clinic-name {
+                                  font-weight: 600;
+                                  color: #0f172a;
+                                  background: #f8fafc;
+                                  padding: 14px;
+                                  border-radius: 10px;
+                                  margin: 20px 0;
+                                  text-align: center;
+                                  border: 1px solid #e2e8f0;
+                                }
+                                .action-box {
+                                  background: #ecfdf5;
+                                  border-left: 4px solid #34d399;
+                                  padding: 20px;
+                                  border-radius: 0 10px 10px 0;
+                                  margin: 26px 0;
+                                  text-align: center;
+                                }
+                                .action-box p {
+                                  margin: 0;
+                                  font-weight: 600;
+                                  color: #065f46;
+                                  font-size: 16px;
+                                }
+                                .footer {
+                                  padding: 24px 32px;
+                                  background: #f8fafc;
+                                  border-top: 1px solid #e2e8f0;
+                                  text-align: center;
+                                  font-size: 13px;
+                                  color: #64748b;
+                                }
+                                .highlight {
+                                  color: #16a34a;
+                                  font-weight: 600;
+                                }
+                                .timer {
+                                  display: inline-block;
+                                  background: #dcfce7;
+                                  color: #166534;
+                                  padding: 4px 10px;
+                                  border-radius: 6px;
+                                  font-weight: 600;
+                                  margin-top: 8px;
+                                }
+                              </style>
+                            </head>
+                            <body>
+                              <div class="email-container">
+                                <div class="header">
+                                  <h1>🎉 Appointment Offer – Action Required!</h1>
+                                </div>
+                            
+                                <div class="content">
+                                  <p>Hi <strong>%s</strong>,</p>
+                            
+                                  <p>An appointment slot is now available for you at:</p>
+                            
+                                  <div class="clinic-name">%s</div>
+                            
+                                  <div class="action-box">
+                                    <p>⏰ Please log in to your account to confirm your appointment.</p>
+                                    <div class="timer">You have only 10 minutes to confirm!</div>
+                                  </div>
+                            
+                                  <p>If you don’t confirm in time, this slot will be offered to the next patient on the waiting list.</p>
+                                </div>
+                            
+                                <div class="footer">
+                                  <p>Thank you,<br>
+                                     <strong>Clinic Management Team</strong></p>
+                                </div>
+                              </div>
+                            </body>
+                            </html>
+                            """, patient.getName(), (req.getClinic() != null ? req.getClinic().getName() : "Unknown Clinic"))
+                    .stripIndent();
 
             notificationService.sendEmail(patient.getEmail(), subject, body);
 
@@ -409,24 +570,132 @@ private VBox createWaitingCard(WaitingList req) {
 
             String subject = "❌ Your Waiting List Request Has Been Cancelled";
             String body = String.format("""
-            Dear %s,
-            
-            We regret to inform you that your waiting list request for:
-            **%s**
-            
-            has been cancelled.
-            
-            Possible reasons:
-            - The doctor declined the request.
-            - You did not confirm the offered slot within 10 minutes.
-            
-            You may submit a new request anytime.
-            
-            Thank you for your understanding.
-            """,
-                    patient.getName(),
-                    (req.getClinic() != null ? req.getClinic().getName() : "Unknown Clinic")
-            );
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                              <meta charset="UTF-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                              <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+                              <style>
+                                body {
+                                  margin: 0;
+                                  padding: 0;
+                                  background-color: #f8fafc;
+                                  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                                  color: #1e293b;
+                                  line-height: 1.6;
+                                }
+                                .email-container {
+                                  max-width: 650px;
+                                  margin: 40px auto;
+                                  background: #ffffff;
+                                  border-radius: 16px;
+                                  overflow: hidden;
+                                  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+                                  border: 1px solid #e2e8f0;
+                                }
+                                .header {
+                                  background: #fef2f2;
+                                  padding: 32px 30px 24px;
+                                  text-align: center;
+                                  border-bottom: 1px solid #f1f5f9;
+                                }
+                                .header h1 {
+                                  margin: 0;
+                                  font-size: 22px;
+                                  font-weight: 600;
+                                  color: #dc2626;
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: center;
+                                  gap: 10px;
+                                }
+                                .content {
+                                  padding: 32px;
+                                }
+                                .content p {
+                                  margin: 0 0 18px;
+                                  font-size: 15px;
+                                  color: #334155;
+                                }
+                                .clinic-name {
+                                  font-weight: 600;
+                                  color: #0f172a;
+                                  background: #f8fafc;
+                                  padding: 14px;
+                                  border-radius: 10px;
+                                  margin: 20px 0;
+                                  text-align: center;
+                                  border: 1px solid #e2e8f0;
+                                }
+                                .reasons-box {
+                                  background: #fff5f5;
+                                  border-left: 4px solid #f87171;
+                                  padding: 18px;
+                                  border-radius: 0 10px 10px 0;
+                                  margin: 26px 0;
+                                }
+                                .reasons-box h3 {
+                                  margin: 0 0 12px;
+                                  font-size: 15px;
+                                  color: #dc2626;
+                                  font-weight: 600;
+                                }
+                                .reasons-box ul {
+                                  margin: 0;
+                                  padding-left: 22px;
+                                  font-size: 14px;
+                                  color: #475569;
+                                }
+                                .footer {
+                                  padding: 24px 32px;
+                                  background: #f8fafc;
+                                  border-top: 1px solid #e2e8f0;
+                                  text-align: center;
+                                  font-size: 13px;
+                                  color: #64748b;
+                                }
+                                .highlight {
+                                  color: #dc2626;
+                                  font-weight: 600;
+                                }
+                              </style>
+                            </head>
+                            <body>
+                              <div class="email-container">
+                                <div class="header">
+                                  <h1>❌ Your Waiting List Request Was Cancelled</h1>
+                                </div>
+                            
+                                <div class="content">
+                                  <p>Hi <strong>%s</strong>,</p>
+                            
+                                  <p>We’re sorry to inform you that your waiting list request for:</p>
+                            
+                                  <div class="clinic-name">%s</div>
+                            
+                                  <p>has been cancelled.</p>
+                            
+                                  <div class="reasons-box">
+                                    <h3>Possible reasons:</h3>
+                                    <ul>
+                                      <li>The doctor declined the request.</li>
+                                      <li>You didn’t confirm the offered appointment within 10 minutes.</li>
+                                    </ul>
+                                  </div>
+                            
+                                  <p>No worries — you can submit a new request anytime from your patient dashboard.</p>
+                                </div>
+                            
+                                <div class="footer">
+                                  <p>Thank you for your understanding.<br>
+                                     <strong>Clinic Management Team</strong></p>
+                                </div>
+                              </div>
+                            </body>
+                            </html>
+                            """, patient.getName(), (req.getClinic() != null ? req.getClinic().getName() : "Unknown Clinic"))
+                    .stripIndent();
 
             notificationService.sendEmail(patient.getEmail(), subject, body);
 
@@ -436,7 +705,7 @@ private VBox createWaitingCard(WaitingList req) {
                     "✓ Request cancelled and email sent to patient.")
                     .showAndWait();
 
-        }  catch (SQLException | MessagingException e) {
+        } catch (SQLException | MessagingException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,
                     "❌ Failed to cancel request: " + e.getMessage())
@@ -446,33 +715,36 @@ private VBox createWaitingCard(WaitingList req) {
     }
 
 
-@FXML
-private void checkExpiredRequests() {
-    if (currentDoctor == null || currentDoctor.getClinic() == null) return;
+    @FXML
+    private void checkExpiredRequests() {
+        if (currentDoctor == null || currentDoctor.getClinic() == null) return;
 
-    try {
-        int clinicId = currentDoctor.getClinic().getID();
-        waitingListService.expireOldRequests(clinicId);
-        sendEmailToNextPatient(clinicId);
-        loadDoctorWaitingList(); // refresh
+        try {
+            int clinicId = currentDoctor.getClinic().getID();
+            waitingListService.expireOldRequests(clinicId);
+            sendEmailToNextPatient(clinicId);
+            loadDoctorWaitingList(); // refresh
 
-        Alert success = new Alert(Alert.AlertType.INFORMATION);
-        success.setTitle("Updated Done !");
-        success.setHeaderText(null);
-        success.setContentText("✓ done.");
-        success.showAndWait();
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Updated Done !");
+            success.setHeaderText(null);
+            success.setContentText("✓ done.");
+            success.showAndWait();
 
-    } catch (SQLException e) {
-        e.printStackTrace();
-        showErrorAlert("Faild to ubdate " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Faild to ubdate " + e.getMessage());
+        }
     }
-}
+
     private void showErrorAlert(String msg) {
         new Alert(Alert.AlertType.ERROR, msg).showAndWait();
     }
+
     private String safeString(String s, String f) {
         return (s != null && !s.trim().isEmpty()) ? s.trim() : f;
     }
+
     @FXML
     private void handleEdit() {
         if (currentDoctor != null && currentDoctor.getClinic() != null) {
@@ -494,6 +766,7 @@ private void checkExpiredRequests() {
             }
         }
     }
+
     private void sendEmailToNextPatient(int clinicId) {
         try {
             List<WaitingList> pendingRequests = waitingListService.getWaitingListByClinicId(clinicId);
@@ -508,26 +781,26 @@ private void checkExpiredRequests() {
                     String subject = "🎉 Appointment Opportunity Available!";
 
                     String body = """
-                    <html>
-                    <body style="font-family: Arial; line-height: 1.6;">
-
-                        <h2 style="color:#2c7be5;">Hello {name},</h2>
-
-                        <p>
-                            Due to a <strong>cancellation</strong> or an expired request, 
-                            you now have a new opportunity to book an appointment in:
-                        </p>
-
-                        <h3 style="color:#444;">Clinic: {clinicName}</h3>
-
-                        <p>Please log into your account and check your waiting list.</p>
-
-                        <br>
-                        <p style="color:#777;">Thank you!</p>
-
-                    </body>
-                    </html>
-                    """;
+                            <html>
+                            <body style="font-family: Arial; line-height: 1.6;">
+                            
+                                <h2 style="color:#2c7be5;">Hello {name},</h2>
+                            
+                                <p>
+                                    Due to a <strong>cancellation</strong> or an expired request, 
+                                    you now have a new opportunity to book an appointment in:
+                                </p>
+                            
+                                <h3 style="color:#444;">Clinic: {clinicName}</h3>
+                            
+                                <p>Please log into your account and check your waiting list.</p>
+                            
+                                <br>
+                                <p style="color:#777;">Thank you!</p>
+                            
+                            </body>
+                            </html>
+                            """;
 
                     body = body.replace("{name}", patient.getName())
                             .replace("{clinicName}", nextRequest.getClinic().getName());
@@ -561,27 +834,27 @@ private void checkExpiredRequests() {
                         String subject = "❌ Your Appointment Request Was Rejected";
 
                         String body = """
-                        <html>
-                        <body style="font-family: Arial; line-height: 1.6;">
-
-                            <h2 style="color:#d9534f;">Hello {name},</h2>
-
-                            <p>
-                                We regret to inform you that your request for an appointment in:
-                            </p>
-
-                            <h3 style="color:#444;">Clinic: {clinicName}</h3>
-
-                            <p>has been <strong>rejected</strong> by the doctor.</p>
-
-                            <p>You may submit a new request at any time.</p>
-
-                            <br>
-                            <p style="color:#777;">Thank you!</p>
-
-                        </body>
-                        </html>
-                        """;
+                                <html>
+                                <body style="font-family: Arial; line-height: 1.6;">
+                                
+                                    <h2 style="color:#d9534f;">Hello {name},</h2>
+                                
+                                    <p>
+                                        We regret to inform you that your request for an appointment in:
+                                    </p>
+                                
+                                    <h3 style="color:#444;">Clinic: {clinicName}</h3>
+                                
+                                    <p>has been <strong>rejected</strong> by the doctor.</p>
+                                
+                                    <p>You may submit a new request at any time.</p>
+                                
+                                    <br>
+                                    <p style="color:#777;">Thank you!</p>
+                                
+                                </body>
+                                </html>
+                                """;
 
                         body = body.replace("{name}", patient.getName())
                                 .replace("{clinicName}", req.getClinic().getName());
@@ -602,7 +875,8 @@ private void checkExpiredRequests() {
     }
 
 
-    @FXML private void handleLogout() {
+    @FXML
+    private void handleLogout() {
         try {
             Parent r = FXMLLoader.load(getClass().getResource("/home.fxml"));
             Stage s = (Stage) logoutButton.getScene().getWindow();
@@ -639,6 +913,7 @@ private void checkExpiredRequests() {
             new Alert(Alert.AlertType.ERROR, "Cannot open chat: " + e.getMessage()).showAndWait();
         }
     }
+
     @FXML
     private void handleAppointments() {
         clinicInfoBox.setVisible(false);
@@ -886,6 +1161,7 @@ private void checkExpiredRequests() {
         return box;
 
     }
+
     @FXML
     private void filterAppointmentsByDate() {
         if (allAppointments == null) return;
@@ -904,6 +1180,7 @@ private void checkExpiredRequests() {
             welcomeLabel.setText("Welcome, Doctor");
         }
     }
+
     private void loadClinicView() {
         appointmentsBox.setVisible(false);
         clinicInfoBox.setVisible(true);
@@ -929,6 +1206,7 @@ private void checkExpiredRequests() {
             ex.printStackTrace();
         }
     }
+
     @FXML
     private void handleReviews() {
         clinicInfoBox.setVisible(false);
@@ -943,6 +1221,7 @@ private void checkExpiredRequests() {
             showAlert("Error", "Failed to load reviews.");
         }
     }
+
     private void displayRatings(List<Rating> ratings) {
         reviewsList.getChildren().clear();
 
@@ -1001,12 +1280,14 @@ private void checkExpiredRequests() {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);"
         );
     }
+
     public void ClinicInfoBox(ActionEvent actionEvent) {
 
         clinicInfoBox.setVisible(true);
         appointmentsBox.setVisible(false);
         reviewsBox.setVisible(false);
     }
+
     @FXML
     private void handleCancelAllForSelectedDate() {
         LocalDate selectedDate = appointmentsCalendar.getValue();
@@ -1040,6 +1321,7 @@ private void checkExpiredRequests() {
             }
         });
     }
+
     public void refreshClinicInfo() {
         try {
             // إعادة تحميل الدكتور (أو الكلاينك فقط)
@@ -1055,6 +1337,7 @@ private void checkExpiredRequests() {
             e.printStackTrace();
         }
     }
+
     private void confirmAndCancelAppointment(Appointment a) {
         String patientName = (a.getPatient() != null) ? a.getPatient().getName() : "Anonymous";
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1112,6 +1395,7 @@ private void checkExpiredRequests() {
             System.err.println("Failed to send cancellation email to: " + p.getEmail());
         }
     }
+
     @FXML
     private void handleExportExcel() {
         try {
@@ -1127,6 +1411,7 @@ private void checkExpiredRequests() {
             new Alert(Alert.AlertType.ERROR, "Failed to export Excel: " + ex.getMessage()).show();
         }
     }
+
     @FXML
     private void handleExportPDF() {
         try {
@@ -1142,6 +1427,7 @@ private void checkExpiredRequests() {
             new Alert(Alert.AlertType.ERROR, "Failed to export PDF: " + ex.getMessage()).show();
         }
     }
+
     private void openFileSafely(String fileName) {
         java.io.File file = new java.io.File(fileName);
         if (file.exists() && file.isFile()) {
@@ -1160,6 +1446,7 @@ private void checkExpiredRequests() {
             ).show();
         }
     }
+
     @FXML
     private void handleFullReport() {
         try {
@@ -1291,6 +1578,7 @@ private void checkExpiredRequests() {
             showAlert("Error", "Failed to load report: " + e.getMessage());
         }
     }
+
     private void exportFullReport(String type, List<Appointment> appointments, List<Rating> ratings) {
         try {
             String fileName = "Doctor_Full_Report_" + LocalDate.now() + "." + (type.equals("PDF") ? "pdf" : "xlsx");
@@ -1308,6 +1596,7 @@ private void checkExpiredRequests() {
             new Alert(Alert.AlertType.ERROR, "Export Error: " + e.getMessage()).show();
         }
     }
+
     @FXML
     private void handleSettings() {
         clinicInfoBox.setVisible(false);
@@ -1347,7 +1636,7 @@ private void checkExpiredRequests() {
         }
     }
 
-            @FXML
+    @FXML
     private void handleSettingsCancel() {
         settingsBox.setVisible(false);
         clinicInfoBox.setVisible(true);
@@ -1375,7 +1664,8 @@ private void checkExpiredRequests() {
             }
             if (!newName.equals(currentDoctor.getName())) {
                 currentDoctor.setName(newName);
-            }if (!newPass.isEmpty()) {
+            }
+            if (!newPass.isEmpty()) {
                 if (currentPass.isEmpty()) {
                     showAlert("Error", "Please enter your current password.");
                     return;
@@ -1388,7 +1678,8 @@ private void checkExpiredRequests() {
                     showAlert("Error", "Current password is incorrect.");
                     return;
                 }
-                currentDoctor.setPassword(newPass);}
+                currentDoctor.setPassword(newPass);
+            }
 
             doctorDAO.update(currentDoctor);
 
@@ -1399,7 +1690,8 @@ private void checkExpiredRequests() {
             showAlert("Success", "Profile updated successfully!");
             handleSettingsCancel();
 
-        } catch (Exception e) {  e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             showAlert("Error", "Failed to update profile.");
         }
     }
@@ -1433,6 +1725,7 @@ private void checkExpiredRequests() {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void handleDeleteClinic() {
         if (currentDoctor == null || currentDoctor.getClinic() == null) {
@@ -1535,6 +1828,7 @@ private void checkExpiredRequests() {
             con.commit();
         }
     }
+
     @FXML
 
     private void loadWaitingListForClinic() {
@@ -1560,6 +1854,7 @@ private void checkExpiredRequests() {
             waitingListBox.getChildren().add(new Label("❌ Error loading waiting list."));
         }
     }
+
     private HBox createWaitingListCard(WaitingList e) {
         HBox card = new HBox(10);
         card.setPadding(new Insets(8));
@@ -1597,6 +1892,7 @@ private void checkExpiredRequests() {
 
         return card;
     }
+
     private void offerSlotManually(WaitingList entry) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Manual Offer");
@@ -1637,6 +1933,7 @@ private void checkExpiredRequests() {
                 .findFirst()
                 .orElse(null);
     }
+
     @FXML
     private void hoverNavButton(javafx.scene.input.MouseEvent e) {
         Button btn = (Button) e.getSource();
@@ -1652,7 +1949,7 @@ private void checkExpiredRequests() {
     @FXML
     private void resetNavButton(javafx.scene.input.MouseEvent e) {
         Button btn = (Button) e.getSource();
-        if (btn != activeButton) { // ما نرجعش اللون لو الزرار active
+        if (btn != activeButton) {
             btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);" +
                     "-fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold;" +
                     "-fx-padding: 8 24; -fx-background-radius: 25; -fx-border-radius: 25;" +
@@ -1679,6 +1976,7 @@ private void checkExpiredRequests() {
                 "-fx-border-color: #7ab7ad; -fx-border-width: 1;" +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.3, 0, 1);");
     }
+
     @FXML
     private void hoverLogoutButton(javafx.scene.input.MouseEvent e) {
         Button btn = (Button) e.getSource();
@@ -1690,6 +1988,7 @@ private void checkExpiredRequests() {
         Button btn = (Button) e.getSource();
         btn.setStyle("-fx-background-color: #0C7E5F; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
     }
+
     @FXML
     private void handleViewWaitingList() {
         clinicInfoBox.setVisible(false);

@@ -3,7 +3,6 @@
     -fx-font-family: "Segoe UI";
 }
 
-/* ===== Header ===== */
 .header {
     -fx-background-color: linear-gradient(to right, #15BF8F, #0C7E5F);
     -fx-padding: 15 25;
@@ -16,7 +15,6 @@
     -fx-text-fill: white;
 }
 
-/* ===== Buttons ===== */
 .logout-button {
     -fx-background-color: rgba(255,255,255,0.2);
     -fx-text-fill: white;
@@ -44,7 +42,6 @@
     -fx-background-color: #12a97f;
 }
 
-/* ===== Text ===== */
 .main-text {
     -fx-font-size: 22px;
     -fx-font-weight: bold;

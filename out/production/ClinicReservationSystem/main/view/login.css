@@ -3,14 +3,12 @@
     -fx-background-color: #f7fafc;
 }
 
-/* ICON */
 .icon-circle {
     -fx-background-color: #15BF8F;
     -fx-background-radius: 50;
     -fx-alignment: center;
 }
 
-/* TEXT */
 .title {
     -fx-font-size: 30px;
     -fx-font-weight: bold;
@@ -22,7 +20,6 @@
     -fx-text-fill: #718096;
 }
 
-/* CARD */
 .card {
     -fx-background-color: white;
     -fx-background-radius: 16;
@@ -31,7 +28,6 @@
 }
 
 
-/* INPUTS */
 .field-label {
     -fx-font-weight: bold;
     -fx-text-fill: #2d3748;
@@ -46,7 +42,6 @@
     -fx-background-color: white;
 }
 
-/* BUTTONS */
 .btn-primary {
     -fx-background-color: #15BF8F;
     -fx-text-fill: white;
@@ -60,7 +55,6 @@
     -fx-background-color: #12a87d;
 }
 
-/* LINKS */
 .link-btn {
     -fx-background-color: transparent;
     -fx-text-fill: #15BF8F;
@@ -74,7 +68,6 @@
     -fx-font-size: 14px;
 }
 
-/* BACK BUTTON */
 .btn-back {
     -fx-background-color: white;
     -fx-border-color: #15BF8F;

@@ -1,5 +1,3 @@
-// 🌟 WaitingListController.java
-
 package controller;
 
 import javafx.fxml.FXML;
@@ -67,17 +65,14 @@ public class WaitingListController {
         card.setStyle("-fx-background-color: #F8F9FA; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);");
 
         try {
-            // ✅ 1. تحقق من request
             if (request == null) {
                 return createErrorCard("Invalid request object");
             }
 
-            // ✅ 2. Clinic
             Clinic clinic = request.getClinic();
             String clinicName = (clinic != null && clinic.getName() != null) ? clinic.getName() : "Unknown Clinic";
             String doctorName = (clinic != null && clinic.getDoctorName() != null) ? clinic.getDoctorName() : "Unknown Doctor";
 
-            // ✅ 3. Time
             String timeStr = "—";
             try {
                 if (request.getRequestTime() != null) {
@@ -87,10 +82,8 @@ public class WaitingListController {
                 timeStr = "Invalid time";
             }
 
-            // ✅ 4. Status
             String statusStr = (request.getStatus() != null) ? request.getStatus().name() : "UNKNOWN";
 
-            // ✅ إنشاء المكونات بأمان
             Label clinicLabel = new Label("🏥 Clinic: " + clinicName);
             clinicLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1ABC9C;");
 

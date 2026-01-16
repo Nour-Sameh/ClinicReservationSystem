@@ -10,13 +10,11 @@
       alignment="TOP_CENTER"
       style="-fx-padding: 16; -fx-background-color: #f0f4f3;">
 
-    <!-- العنوان -->
     <Label text="Edit Clinic Information"
            style="-fx-font-size: 18px;
                   -fx-font-weight: bold;
                   -fx-text-fill: #2d3748;" />
 
-    <!-- نموذج التعديل (مضغوط) -->
     <VBox spacing="12" style="-fx-background-color: white;
                               -fx-border-radius: 12;
                               -fx-background-radius: 12;
@@ -67,13 +65,11 @@
                               -fx-padding: 6 10;" />
         </GridPane>
 
-        <!-- Consultation Toggle -->
         <CheckBox fx:id="enableConsultationCheckBox"
                   text="Enable Consultation System"
                   onAction="#onConsultationToggle"
                   style="-fx-font-weight: bold; -fx-text-fill: #2d3748;" />
 
-        <!-- Consultation Fields (مضغوط) -->
         <VBox fx:id="consultationFieldsBox" visible="false" managed="false" spacing="8"
               style="-fx-background-color: #f0f9ff;
                      -fx-border-radius: 8;
@@ -105,7 +101,6 @@
                           -fx-wrap-text: true;" />
         </VBox>
 
-        <!-- Working Hours -->
         <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-padding: 6 0 4 0;">
             <Label text="Working Hours"
                    style="-fx-font-weight: bold;
@@ -124,7 +119,6 @@
         </ScrollPane>
     </VBox>
 
-    <!-- أزرار التحكم (مضغوطة) -->
     <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 12 0 0 0;">
         <Button text="Add Rule" onAction="#onAddRule"
                 style="-fx-background-color: #e2e8f0;
@@ -153,7 +147,6 @@
                        -fx-cursor: hand;" />
     </HBox>
 
-    <!-- رسالة الحالة -->
     <Label fx:id="statusLabel"
            style="-fx-font-size: 12px;
                   -fx-text-fill: #e53e3e;

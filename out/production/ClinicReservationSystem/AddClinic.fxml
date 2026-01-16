@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.text.*?>
+
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
@@ -26,7 +25,6 @@
         <center>
             <StackPane fx:id="stepsContainer">
 
-                <!-- ================= STEP 1 ================= -->
                 <VBox fx:id="Step1Container"
                       spacing="22"
                       maxWidth="480"
@@ -119,7 +117,6 @@
                             styleClass="primary-button"/>
                 </VBox>
 
-                <!-- ================= STEP 2 (نفس العناصر) ================= -->
                 <VBox fx:id="Step2Container"
                       spacing="22"
                       maxWidth="480"

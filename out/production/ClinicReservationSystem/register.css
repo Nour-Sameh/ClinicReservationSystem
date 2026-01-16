@@ -3,7 +3,6 @@
     -fx-background-color: #f7fafc;
 }
 
-/* CARD */
 .card {
     -fx-background-color: white;
     -fx-background-radius: 18;
@@ -11,21 +10,18 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 10);
 }
 
-/* ICON */
 .icon-circle {
     -fx-background-color: #15BF8F;
     -fx-background-radius: 50;
     -fx-alignment: center;
 }
 
-/* TITLE */
 .title {
     -fx-font-size: 30px;
     -fx-font-weight: bold;
     -fx-text-fill: #1f2937;
 }
 
-/* INPUTS */
 .input {
     -fx-pref-width: 360;
     -fx-pref-height: 44;
@@ -39,7 +35,6 @@
     -fx-border-color: #15BF8F;
 }
 
-/* SMALL INPUTS */
 .input-small {
     -fx-pref-width: 170;
     -fx-pref-height: 44;
@@ -49,7 +44,6 @@
     -fx-background-radius: 8;
 }
 
-/* BUTTONS */
 .btn-primary {
     -fx-background-color: #15BF8F;
     -fx-text-fill: white;
@@ -63,7 +57,6 @@
     -fx-background-color: #12a87d;
 }
 
-/* LINKS */
 .link-btn {
     -fx-background-color: transparent;
     -fx-text-fill: #15BF8F;
@@ -77,7 +70,6 @@
     -fx-font-size: 14px;
 }
 
-/* BACK BUTTON */
 .btn-back {
     -fx-background-color: white;
     -fx-border-color: #15BF8F;

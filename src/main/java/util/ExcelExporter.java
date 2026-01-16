@@ -14,7 +14,6 @@ public class ExcelExporter {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Appointments");
 
-            // Header
             Row header = sheet.createRow(0);
             String[] headers = {"ID", "Patient", "Date", "Time", "Status", "Type"};
             for (int i = 0; i < headers.length; i++) {
@@ -23,7 +22,6 @@ public class ExcelExporter {
                 cell.setCellStyle(createHeaderStyle(workbook));
             }
 
-            // Data
             int rowNum = 1;
             for (Appointment a : appointments) {
                 Row row = sheet.createRow(rowNum++);
@@ -45,12 +43,10 @@ public class ExcelExporter {
                 row.createCell(5).setCellValue(a.getAppointmentType().name());
             }
 
-            // Auto-size columns
             for (int i = 0; i < headers.length; i++) {
                 sheet.autoSizeColumn(i);
             }
 
-            // Save
             try (FileOutputStream out = new FileOutputStream(fileName)) {
                 workbook.write(out);
             }
