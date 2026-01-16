@@ -5,201 +5,248 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="980.0" style="-fx-background-color: #f0f4f3;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DoctorController">
+<AnchorPane style="-fx-background-color: #f0f4f3;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DoctorController">
 
     <!-- Top Green Header -->
-<!--    <HBox layoutY="0" prefHeight="60.0" prefWidth="850.0" style="-fx-background-color: #15BF8F;">-->
-<!--        <padding>-->
-<!--            <Insets bottom="10" left="20" right="20" top="10" />-->
-<!--        </padding>-->
-<!--        <Label fx:id="welcomeLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome, Dr. [Name]" />-->
-<!--        <Region HBox.hgrow="ALWAYS" />-->
-<!--        <Button fx:id="settingsButton" onAction="#handleSettings" prefHeight="41.0" prefWidth="61.0"-->
-<!--                style="-fx-background-color: #15BF8F; -fx-text-fill: #555;-->
-<!--                 -fx-font-size: 16px; -fx-padding: 8 15; -fx-background-radius: 25;"-->
-<!--                text="⚙" textAlignment="CENTER">-->
-<!--            <font>-->
-<!--                <Font name="System Bold" size="38.0" />-->
-<!--            </font></Button>-->
-<!--    </HBox>-->
-    <HBox alignment="CENTER_LEFT" layoutY="0" prefHeight="60.0" prefWidth="980.0" style="-fx-background-color: linear-gradient(to right, #15BF8F, #0C7E5F);">
+    <HBox fx:id="headerBox"
+          AnchorPane.topAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          prefHeight="60.0"
+          style="-fx-background-color: linear-gradient(to right, #15BF8F, #0C7E5F);">
         <padding>
             <Insets bottom="10" left="20" right="20" top="10" />
         </padding>
-
         <Label fx:id="welcomeLabel" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome, Dr. [Name]" />
         <Region HBox.hgrow="ALWAYS" />
-
-        <Button fx:id="settingsButton" onAction="#handleSettings" prefHeight="41.0" prefWidth="61.0" style="-fx-background-color: white;                    -fx-text-fill: #0C7E5F;                    -fx-font-size: 20px;                    -fx-background-radius: 50;                    -fx-cursor: hand;                 " text="⚙" />
+        <Button fx:id="settingsButton" onAction="#handleSettings"
+                style="-fx-background-color: white; -fx-text-fill: #0C7E5F; -fx-font-size: 20px; -fx-background-radius: 50; -fx-cursor: hand;"
+                text="⚙" />
     </HBox>
-
 
     <!-- Navigation Bar -->
-    <HBox alignment="CENTER" layoutX="23.0" layoutY="60.0" prefHeight="73.0" prefWidth="950.0" spacing="20" style="-fx-background-color: #F5FAF9; -fx-padding: 20; -fx-background-radius: 15;">
+    <HBox fx:id="navBar"
+          AnchorPane.topAnchor="65"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          prefHeight="73.0"
+          spacing="20"
+          alignment="CENTER"
+          style="-fx-background-color: #F5FAF9; -fx-padding: 20; -fx-background-radius: 15;">
 
         <!-- Clinic Info -->
-        <Button fx:id="ClinicInfoMainBox" onAction="#ClinicInfoBox" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton" style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);                    -fx-text-fill: #444;                    -fx-font-size: 16px;                    -fx-font-weight: bold;                    -fx-padding: 8 20;                    -fx-background-radius: 25;                    -fx-border-radius: 25;                    -fx-border-color: #c8d6d5;                    -fx-border-width: 1;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);" text="MyClinic" />
+        <Button fx:id="ClinicInfoMainBox" onAction="#ClinicInfoBox" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton"
+                style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3); -fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #c8d6d5; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);"
+                text="MyClinic" />
 
         <!-- Appointments -->
-        <Button fx:id="appointmentsNavButton" onAction="#handleAppointments" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton" style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);                    -fx-text-fill: #444;                    -fx-font-size: 16px;                    -fx-font-weight: bold;                    -fx-padding: 8 20;                    -fx-background-radius: 25;                    -fx-border-radius: 25;                    -fx-border-color: #c8d6d5;                    -fx-border-width: 1;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);" text="Appointments" />
+        <Button fx:id="appointmentsNavButton" onAction="#handleAppointments" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton"
+                style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3); -fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #c8d6d5; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);"
+                text="Appointments" />
 
         <!-- Reviews -->
-        <Button fx:id="reviewsNavButton" onAction="#handleReviews" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton" style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);                    -fx-text-fill: #444;                    -fx-font-size: 16px;                    -fx-font-weight: bold;                    -fx-padding: 8 20;                    -fx-background-radius: 25;                    -fx-border-radius: 25;                    -fx-border-color: #c8d6d5;                    -fx-border-width: 1;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);" text="Reviews" />
+        <Button fx:id="reviewsNavButton" onAction="#handleReviews" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton"
+                style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3); -fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #c8d6d5; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);"
+                text="Reviews" />
 
         <!-- Chat -->
-        <Button fx:id="chatNavButton" onAction="#handleChat" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton" style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);                    -fx-text-fill: #444;                    -fx-font-size: 16px;                    -fx-font-weight: bold;                    -fx-padding: 8 20;                    -fx-background-radius: 25;                    -fx-border-radius: 25;                    -fx-border-color: #c8d6d5;                    -fx-border-width: 1;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);" text="Chat" />
+        <Button fx:id="chatNavButton" onAction="#handleChat" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton"
+                style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3); -fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #c8d6d5; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);"
+                text="Chat" />
 
         <!-- Report -->
-        <Button fx:id="reportButton" onAction="#handleFullReport" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton" style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);                    -fx-text-fill: #444;                    -fx-font-size: 16px;                    -fx-font-weight: bold;                    -fx-padding: 8 20;                    -fx-background-radius: 25;                    -fx-border-radius: 25;                    -fx-border-color: #c8d6d5;                    -fx-border-width: 1;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);" text="📊 Report" />
-        <Button fx:id="waitingListNavButton" onAction="#onWaitingListClicked" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton" style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);                -fx-text-fill: #444;                -fx-font-size: 16px;                -fx-font-weight: bold;                -fx-padding: 8 20;                -fx-background-radius: 25;                -fx-border-radius: 25;                -fx-border-color: #c8d6d5;                -fx-border-width: 1;                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);" text="⏳ Waiting List" />
+        <Button fx:id="reportButton" onAction="#handleFullReport" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton"
+                style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3); -fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #c8d6d5; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);"
+                text="Report" />
 
+        <!-- Waiting List -->
+        <Button fx:id="waitingListNavButton" onAction="#onWaitingListClicked" onMouseEntered="#hoverNavButton" onMouseExited="#resetNavButton" onMousePressed="#pressNavButton" onMouseReleased="#hoverNavButton"
+                style="-fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3); -fx-text-fill: #444; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #c8d6d5; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);"
+                text="Waiting List" />
     </HBox>
 
-
     <!-- Clinic Info ScrollPane -->
-    <ScrollPane fx:id="mainClinicScrollPane" fitToWidth="true" hbarPolicy="NEVER" layoutX="50.0" layoutY="150.0" prefHeight="400.0" prefWidth="890.0">
-      <content>
-           <VBox fx:id="clinicInfoBox" prefHeight="358.0" prefWidth="545.0" spacing="20" style="-fx-background-color: white;            -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 2);">
-               <padding>
-                   <Insets bottom="20" left="20" right="20" top="20" />
-               </padding>
+    <ScrollPane fx:id="mainClinicScrollPane"
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                AnchorPane.topAnchor="150"
+                AnchorPane.bottomAnchor="60"
+                AnchorPane.leftAnchor="20"
+                AnchorPane.rightAnchor="20">
+        <content>
+            <VBox fx:id="clinicInfoBox" spacing="20" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 2);">
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
 
-               <!-- Clinic Header: Name + Edit -->
-               <HBox alignment="CENTER_LEFT" spacing="10">
-                   <Label fx:id="clinicNameLabel" style="-fx-font-size: 20px;                    -fx-font-weight: bold; -fx-text-fill: #2d3436;" text="Clinic Name" />
-                   <Region HBox.hgrow="ALWAYS" />
-                   <Button fx:id="editButton" onAction="#handleEdit" style="-fx-background-color: #e0f7fa; -fx-text-fill: #00796b;                          -fx-font-size: 13px; -fx-padding: 5 15; -fx-border-radius: 20;                          -fx-background-radius: 20;" text="Edit" />
-               </HBox>
+                <!-- Clinic Header: Name + Edit -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="clinicNameLabel" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2d3436;" text="Clinic Name" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button fx:id="editButton" onAction="#handleEdit"
+                            style="-fx-background-color: #e0f7fa; -fx-text-fill: #00796b; -fx-font-size: 13px; -fx-padding: 5 15; -fx-border-radius: 20; -fx-background-radius: 20;"
+                            text="Edit" />
+                </HBox>
 
-               <!-- Specialty & Rating -->
-               <HBox alignment="CENTER_LEFT" spacing="15">
-                   <Label fx:id="specialtyLabel" style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-font-size: 14px; -fx-padding: 4 12; -fx-border-radius: 20; -fx-background-radius: 20;" text="Neurology" />
-                   <HBox fx:id="starsContainer" alignment="CENTER_LEFT" spacing="3" />
-               </HBox>
+                <!-- Specialty & Rating -->
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label fx:id="specialtyLabel" style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-font-size: 14px; -fx-padding: 4 12; -fx-border-radius: 20; -fx-background-radius: 20;" text="Neurology" />
+                    <HBox fx:id="starsContainer" alignment="CENTER_LEFT" spacing="3" />
+                </HBox>
 
-               <!-- Info -->
-               <HBox alignment="CENTER_LEFT" spacing="8">
-                   <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="📍" />
-                   <Label fx:id="addressLabel" style="-fx-font-size: 15px;" text="123 Host" />
-               </HBox>
+                <!-- Info -->
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="📍" />
+                    <Label fx:id="addressLabel" style="-fx-font-size: 15px;" text="123 Host" />
+                </HBox>
 
-               <HBox alignment="CENTER_LEFT" spacing="8">
-                   <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="⏱️" />
-                   <Label fx:id="slotDurationLabel" style="-fx-font-size: 15px;" text="30 min slots" />
-               </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="⏱️" />
+                    <Label fx:id="slotDurationLabel" style="-fx-font-size: 15px;" text="30 min slots" />
+                </HBox>
 
-               <!--  Price Label -->
-               <HBox alignment="CENTER_LEFT" spacing="8">
-                   <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="💰" />
-                   <Label fx:id="priceLabel" style="-fx-font-size: 15px;" text="Price: 0.00 EGP" />
-               </HBox>
+                <!-- Price Label -->
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="💰" />
+                    <Label fx:id="priceLabel" style="-fx-font-size: 15px;" text="Price: 0.00 EGP" />
+                </HBox>
 
-               <!--  Schedule — Using <Text> for multi-line support -->
-               <VBox prefHeight="117.0" prefWidth="522.0" spacing="6">
-                   <HBox alignment="CENTER_LEFT" spacing="8">
-                       <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="📅" />
-                       <Label style="-fx-font-weight: bold;" text="Working Hours" />
-                   </HBox>
-                   <Text fx:id="scheduleText" style="-fx-font-size: 14px; -fx-fill: #2e7d32; -fx-padding: 10;" text="Sat: 09:00–13:00&#10;Sun: 09:00–13:00" wrappingWidth="483.0">
-                       <VBox.margin>
-                           <Insets bottom="8" left="12" right="12" top="8" />
-                       </VBox.margin>
-                   </Text>
-               </VBox>
-           </VBox>
-      </content>
+                <!-- Schedule -->
+                <VBox spacing="6">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" text="📅" />
+                        <Label style="-fx-font-weight: bold;" text="Working Hours" />
+                    </HBox>
+                    <Text fx:id="scheduleText" style="-fx-font-size: 14px; -fx-fill: #2e7d32; -fx-padding: 10;" text="Sat: 09:00–13:00&#10;Sun: 09:00–13:00" wrappingWidth="483.0">
+                        <VBox.margin>
+                            <Insets bottom="8" left="12" right="12" top="8" />
+                        </VBox.margin>
+                    </Text>
+                </VBox>
+            </VBox>
+        </content>
     </ScrollPane>
 
     <!-- Appointments Box -->
-    <VBox fx:id="appointmentsBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="890" spacing="15" style="-fx-background-color: white;            -fx-border-radius: 12; -fx-background-radius: 12;            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
+    <VBox fx:id="appointmentsBox"
+          AnchorPane.topAnchor="150"
+          AnchorPane.bottomAnchor="60"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20"
+          spacing="15"
+          style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);"
+          visible="false">
         <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="📅 Select Date:" />
             <DatePicker fx:id="appointmentsCalendar" onAction="#filterAppointmentsByDate" />
         </HBox>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="330">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
             <VBox fx:id="appointmentsList" spacing="12">
                 <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
             </VBox>
         </ScrollPane>
         <HBox alignment="BOTTOM_RIGHT" spacing="10" VBox.vgrow="ALWAYS">
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="exportPDFButton" onAction="#handleExportPDF" style="-fx-background-color: #15BF8F; -fx-text-fill: white;                    -fx-font-size: 13px; -fx-padding: 6 14; -fx-background-radius: 6;" text="Export as PDF 📄" />
-            <Button fx:id="exportExcelButton" onAction="#handleExportExcel" style="-fx-background-color: #3498DB; -fx-text-fill: white;                    -fx-font-size: 13px; -fx-padding: 6 14; -fx-background-radius: 6;" text="Export Excel 📊" />
+            <Button fx:id="exportPDFButton" onAction="#handleExportPDF"
+                    style="-fx-background-color: #15BF8F; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 6 14; -fx-background-radius: 6;"
+                    text="Export as PDF 📄" />
+            <Button fx:id="exportExcelButton" onAction="#handleExportExcel"
+                    style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 6 14; -fx-background-radius: 6;"
+                    text="Export Excel 📊" />
         </HBox>
     </VBox>
 
     <!-- Reviews Box -->
-    <VBox fx:id="reviewsBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="890" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
+    <VBox fx:id="reviewsBox"
+          AnchorPane.topAnchor="150"
+          AnchorPane.bottomAnchor="60"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20"
+          spacing="15"
+          style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);"
+          visible="false">
         <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #FF9800;" text="Reviews" />
             <Region HBox.hgrow="ALWAYS" />
         </HBox>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="330">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
             <VBox fx:id="reviewsList" spacing="12">
                 <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
             </VBox>
         </ScrollPane>
     </VBox>
 
-    <!-- ✅ Full Report Box -->
-    <VBox fx:id="reportBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="890" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12;                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
+    <!-- Full Report Box -->
+    <VBox fx:id="reportBox"
+          AnchorPane.topAnchor="150"
+          AnchorPane.bottomAnchor="60"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20"
+          spacing="15"
+          style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);"
+          visible="false">
         <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
             <VBox fx:id="reportContent" spacing="15" />
         </ScrollPane>
     </VBox>
-    <!-- ✅ Waiting List Box (جديد) -->
-    <VBox fx:id="waitingListBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="890" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12;              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
-        <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
 
+    <!-- Waiting List Box -->
+    <VBox fx:id="waitingListBox"
+          AnchorPane.topAnchor="150"
+          AnchorPane.bottomAnchor="60"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20"
+          spacing="15"
+          style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);"
+          visible="false">
+        <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #E67E22;" text="Waiting List ⏳" />
             <Region HBox.hgrow="ALWAYS" />
         </HBox>
-
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="330">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
             <VBox fx:id="waitingListContainer" spacing="12">
                 <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
             </VBox>
         </ScrollPane>
-
     </VBox>
-    <!-- Logout -->
-    <Button fx:id="logoutButton" layoutX="830.0" layoutY="557.0" onAction="#handleLogout" onMouseEntered="#hoverLogoutButton" onMouseExited="#resetLogoutButton" style="-fx-background-color: #0C7E5F;                -fx-text-fill: white;                -fx-font-size: 16px;                -fx-font-weight: bold;                -fx-background-radius: 25;                -fx-border-radius: 25;                -fx-padding: 10 25;                -fx-cursor: hand;" text="Logout" />
-    <VBox fx:id="settingsBox" layoutX="50.0" layoutY="150.0" prefHeight="400" prefWidth="550" spacing="15" style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12;              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" visible="false">
+
+    <!-- Settings Box -->
+    <VBox fx:id="settingsBox"
+          AnchorPane.topAnchor="150"
+          AnchorPane.leftAnchor="50"
+          prefWidth="550"
+          spacing="15"
+          style="-fx-background-color: white; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);"
+          visible="false">
         <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
 
         <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="⚙️ Account Settings" />
 
-        <GridPane alignment="TOP_LEFT" hgap="10" vgap="10">
+        <GridPane hgap="10" vgap="10">
             <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" minWidth="120" />
                 <ColumnConstraints hgrow="ALWAYS" />
             </columnConstraints>
 
-            <!-- Username (اسم الدكتور — هنستخدمه كـ username) -->
             <Label text="Username:" GridPane.rowIndex="0" />
             <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <!-- Email (read-only) -->
             <Label text="Email:" GridPane.rowIndex="2" />
             <TextField fx:id="emailField" editable="false" opacity="0.7" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <!-- Phone (read-only) -->
             <Label text="Phone:" GridPane.rowIndex="3" />
             <TextField fx:id="phoneField" editable="false" opacity="0.7" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-            <!-- Gender (read-only) -->
             <Label text="Gender:" GridPane.rowIndex="4" />
             <TextField fx:id="genderField" editable="false" opacity="0.7" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-            <!-- Date of Birth (read-only) -->
             <Label text="Date of Birth:" GridPane.rowIndex="5" />
             <TextField fx:id="dobField" editable="false" opacity="0.7" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-            <!-- Password Section -->
             <Label style="-fx-font-weight: bold;" text="Change Password:" GridPane.columnSpan="2" GridPane.rowIndex="6" />
 
             <Label text="Current Password:" GridPane.rowIndex="7" />
@@ -223,4 +270,15 @@
             <Button onAction="#handleSettingsSave" style="-fx-background-color: #15BF8F; -fx-text-fill: white; -fx-padding: 5 15;" text="Save Changes" />
         </HBox>
     </VBox>
+
+    <!-- Logout Button (Responsive Bottom-Right) -->
+    <Button fx:id="logoutButton"
+            onAction="#handleLogout"
+            onMouseEntered="#hoverLogoutButton"
+            onMouseExited="#resetLogoutButton"
+            style="-fx-background-color: #0C7E5F; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-border-radius: 25; -fx-padding: 10 25; -fx-cursor: hand;"
+            text="Logout"
+            AnchorPane.bottomAnchor="15"
+            AnchorPane.rightAnchor="15" />
+
 </AnchorPane>

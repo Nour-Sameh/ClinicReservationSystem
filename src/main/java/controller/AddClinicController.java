@@ -77,6 +77,7 @@ public class AddClinicController {
     private Integer tempScheduleId = null;
 
     public void setDoctor(Practitioner doctor) {
+        System.out.println(doctor);
         this.currentDoctor = doctor;
     }
 

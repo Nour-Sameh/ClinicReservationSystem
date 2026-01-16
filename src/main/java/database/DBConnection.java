@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public final class DBConnection {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/clinicdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/clinic_test?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";
     private static final String PASS = "Nour_31456";
 

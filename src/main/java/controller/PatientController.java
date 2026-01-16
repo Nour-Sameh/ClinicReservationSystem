@@ -74,10 +74,19 @@ public class PatientController {
                 searchView.setPadding(new Insets(10, 0, 0, 0));
 
                 Label label = new Label("Search for clinics by specialty");
-                label.setStyle("-fx-font-size: 16px; -fx-text-fill: #333;");
+                label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;");
                 ComboBox<String> combo = new ComboBox<>();
                 combo.getItems().addAll(specialtyCombo.getItems());
                 combo.setValue(specialtyCombo.getValue());
+                combo.setPrefWidth(220);
+                combo.setStyle(
+                        "-fx-background-color: white;" +
+                                "-fx-border-color: #cbd5e0;" +
+                                "-fx-border-radius: 8;" +
+                                "-fx-background-radius: 8;" +
+                                "-fx-padding: 6 12;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);"
+                );
                 combo.setOnAction(e -> {
                     String selected = combo.getSelectionModel().getSelectedItem();
                     if (selected != null) {
@@ -90,7 +99,7 @@ public class PatientController {
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setContent(clinicsContainer);
-                scroll.setPrefHeight(400);
+                scroll.setPrefHeight(600);
 
                 searchView.getChildren().addAll(label, combo, scroll);
                 mainContentPane.getChildren().setAll(searchView);
@@ -218,11 +227,20 @@ public class PatientController {
         searchView.setPadding(new Insets(10, 0, 0, 0));
 
         Label label = new Label("Search for clinics by specialty");
-        label.setStyle("-fx-font-size: 16px; -fx-text-fill: #333;");
+        label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;");
 
         ComboBox<String> combo = new ComboBox<>();
         combo.getItems().addAll(specialtyCombo.getItems());
         combo.setValue(specialtyCombo.getValue());
+        combo.setPrefWidth(220);
+        combo.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-border-color: #cbd5e0;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-padding: 6 12;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);"
+        );
         combo.setOnAction(e -> {
             String selected = combo.getSelectionModel().getSelectedItem();
             if (selected != null) {
@@ -235,7 +253,7 @@ public class PatientController {
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setContent(clinicsContainer);
-        scroll.setPrefHeight(400);
+        scroll.setPrefHeight(520);
 
         searchView.getChildren().addAll(label, combo, scroll);
 

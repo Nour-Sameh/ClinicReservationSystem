@@ -1,0 +1,85 @@
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: #f7fafc;
+}
+
+/* ICON */
+.icon-circle {
+    -fx-background-color: #15BF8F;
+    -fx-background-radius: 50;
+    -fx-alignment: center;
+}
+
+/* TEXT */
+.title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d3748;
+}
+
+.subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #718096;
+}
+
+/* CARD */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 8);
+}
+
+
+/* INPUTS */
+.field-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d3748;
+}
+
+.input {
+    -fx-pref-height: 44;
+    -fx-pref-width: 360;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-background-color: white;
+}
+
+/* BUTTONS */
+.btn-primary {
+    -fx-background-color: #15BF8F;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #12a87d;
+}
+
+/* LINKS */
+.link-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #15BF8F;
+    -fx-font-weight: bold;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+
+.hint-text {
+    -fx-text-fill: #718096;
+    -fx-font-size: 14px;
+}
+
+/* BACK BUTTON */
+.btn-back {
+    -fx-background-color: white;
+    -fx-border-color: #15BF8F;
+    -fx-text-fill: #15BF8F;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}

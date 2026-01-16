@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="549.0" prefWidth="690.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.HomeController">
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="controller.HomeController"
+           stylesheets="@home.css" maxWidth="700">
 
-    <!-- 🖼️ خلفية الصورة مع opacity = 0.7 -->
-    <ImageView fitWidth="690" fitHeight="549" preserveRatio="false" opacity="0.7">
-        <Image url="@images/ha.jpg" />
+    <ImageView fitWidth="1550"
+               fitHeight="800"
+               preserveRatio="false"
+               opacity="0.50">
+        <Image url="@images/backgroundd.png"/>
     </ImageView>
-    <children>
-        <VBox alignment="CENTER" layoutX="145.0" layoutY="96.0" prefWidth="400.0" spacing="20.0">
-            <!-- Clinic Logo -->
-            <ImageView fitHeight="200.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" >
-                <image>
-                    <Image url="@/images/clinc.png" />
-                </image>
+    <!-- PAGE CONTENT -->
+    <VBox alignment="CENTER"
+          spacing="18"
+          maxWidth="500">
+
+        <!-- ICON -->
+        <StackPane styleClass="icon-circle"
+                   minWidth="90"
+                   minHeight="90"
+                   maxWidth="90"
+                   maxHeight="90">
+
+        <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
+                <Image url="@images/clinic logo.png"/>
             </ImageView>
+        </StackPane>
 
-            <!--            &lt;!&ndash; Welcome Text &ndash;&gt;-->
-            <!--            <Text wrappingWidth="400.0" textAlignment="CENTER"-->
-            <!--                  text="Welcome to DocDesk" style="-fx-font-size: 18px; -fx-font-weight: bold;" />-->
+        <!-- TITLE -->
+        <Label text="Weekly Clinic System"
+               styleClass="title"/>
 
-            <!-- Buttons -->
-            <VBox alignment="CENTER" prefWidth="300" spacing="18">
-                <Button fx:id="loginButton" onAction="#handleLogin" onMouseEntered="#onHoverIn" onMouseExited="#onHoverOut" prefHeight="45" prefWidth="250" style="                             -fx-background-color: #15BF8F;                             -fx-text-fill: white;                             -fx-font-weight: bold;                             -fx-font-size: 17px;                             -fx-background-radius: 30;                             -fx-border-radius: 30;                             -fx-cursor: hand;                         " text="Login">
-                    <effect>
-                        <DropShadow color="#00640040" offsetX="0" offsetY="5" radius="10" />
-                    </effect>
-                </Button>
+        <!-- SUBTITLE -->
+        <Label text="Manage appointments and clinics with ease"
+               styleClass="subtitle"
+               wrapText="true"
+               textAlignment="CENTER"/>
 
-                <Button fx:id="registerButton" onAction="#handleRegister" onMouseEntered="#onHoverIn" onMouseExited="#onHoverOut" prefHeight="45" prefWidth="250" style="                             -fx-background-color: transparent;                             -fx-border-color: #15BF8F;                             -fx-border-width: 2.5;                             -fx-border-radius: 30;                             -fx-background-radius: 30;                             -fx-text-fill: #15BF8F;                             -fx-font-weight: bold;                             -fx-font-size: 17px;                             -fx-cursor: hand;                         " text="Register">
-                    <effect>
-                        <DropShadow color="#00640025" offsetX="0" offsetY="4" radius="8" />
-                    </effect>
-                </Button>
+        <!-- CARD -->
+        <VBox spacing="16"
+              alignment="CENTER"
+              maxWidth="420"
+              styleClass="card">
 
-                <Button fx:id="exitButton" onAction="#handleExit" onMouseEntered="#onHoverIn" onMouseExited="#onHoverOut" prefHeight="45" prefWidth="250" style="                             -fx-background-color: #ff5555;                             -fx-text-fill: white;                             -fx-font-weight: bold;                             -fx-font-size: 17px;                             -fx-background-radius: 30;                             -fx-border-radius: 30;                             -fx-cursor: hand;                         " text="Exit">
-                    <effect>
-                        <DropShadow color="#cc000030" offsetX="0" offsetY="4" radius="8" />
-                    </effect>
-                </Button>
-            </VBox>
+            <Button text="Login"
+                    prefHeight="50"
+                    prefWidth="360"
+                    styleClass="btn-primary"
+                    onAction="#handleLogin"/>
+
+            <Button text="Register"
+                    prefHeight="50"
+                    prefWidth="360"
+                    styleClass="btn-outline"
+                    onAction="#handleRegister"/>
+
+            <Button text="Exit"
+                    prefHeight="48"
+                    prefWidth="360"
+                    styleClass="btn-exit"
+                    onAction="#handleExit"/>
         </VBox>
-    </children>
-</AnchorPane>
+
+    </VBox>
+
+</StackPane>

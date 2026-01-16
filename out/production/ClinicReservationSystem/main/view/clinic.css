@@ -1,0 +1,57 @@
+.root {
+    -fx-background-color: #f6f7fb;
+    -fx-font-family: "Segoe UI";
+}
+
+/* ===== Header ===== */
+.header {
+    -fx-background-color: linear-gradient(to right, #15BF8F, #0C7E5F);
+    -fx-padding: 15 25;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.header-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* ===== Buttons ===== */
+.logout-button {
+    -fx-background-color: rgba(255,255,255,0.2);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 6 18;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
+.logout-button:hover {
+    -fx-background-color: rgba(255,255,255,0.35);
+}
+
+.primary-button {
+    -fx-background-color: #15BF8F;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 40;
+    -fx-background-radius: 30;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #12a97f;
+}
+
+/* ===== Text ===== */
+.main-text {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.sub-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #777;
+}

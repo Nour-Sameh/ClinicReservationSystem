@@ -4,186 +4,187 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/25"
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<ScrollPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.AddClinicController"
             fitToWidth="true"
-            maxHeight="600"
-            style="-fx-background: white;">
+            maxHeight="800"
+            stylesheets="@addClinic.css"
+            styleClass="root-scroll">
 
-    <BorderPane fx:id="contentPane" style="-fx-padding: 20;">
+    <ImageView fitWidth="1550"
+               fitHeight="800"
+               preserveRatio="false"
+               opacity="0.50">
+        <Image url="@images/backgroundd.png"/>
+    </ImageView>
 
-        <!-- Center: Steps Container -->
+    <BorderPane fx:id="contentPane" styleClass="page-root">
+
         <center>
             <StackPane fx:id="stepsContainer">
 
-                <!-- STEP 1: Working Days & Schedule -->
-                <VBox fx:id="Step1Container" spacing="20" maxWidth="450">
+                <!-- ================= STEP 1 ================= -->
+                <VBox fx:id="Step1Container"
+                      spacing="22"
+                      maxWidth="480"
+                      styleClass="card">
 
-                    <VBox spacing="10">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-                            <Label text="Add Your Clinic" textFill="#222"
-                                   style="-fx-font-size: 24; -fx-font-weight: bold;" />
-                            <Region HBox.hgrow="ALWAYS" />
-                            <Button text="Back" fx:id="backButtonStep1" onAction="#handleBackStep1"
-                                    style="-fx-background-color: white; -fx-border-color: #15BF8F;
-                                           -fx-text-fill: #15BF8F;" maxWidth="120"/>
-                        </HBox>
-                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Add Your Clinic" styleClass="title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Back"
+                                fx:id="backButtonStep1"
+                                onAction="#handleBackStep1"
+                                styleClass="outline-button"/>
+                    </HBox>
 
                     <Label text="Step 1: Select Working Days &amp; Slot Duration"
-                           style="-fx-font-size: 18; -fx-font-weight: bold;" />
+                           styleClass="section-title"/>
 
-                    <VBox spacing="10">
-                        <Label text="Slot Duration (minutes)" style="-fx-font-weight: bold;" />
-                        <TextField fx:id="slotDurationField" promptText="e.g. 15, 20, 30" prefWidth="200" />
+                    <VBox spacing="6">
+                        <Label text="Slot Duration (minutes)" styleClass="field-label"/>
+                        <TextField fx:id="slotDurationField"
+                                   promptText="e.g. 15, 20, 30"
+                                   prefWidth="200"
+                                   styleClass="text-field"/>
                     </VBox>
 
-                    <Label text="Select Working Days &amp; Times" style="-fx-font-weight: bold;" />
+                    <Label text="Select Working Days &amp; Times" styleClass="field-label"/>
+
                     <VBox spacing="12">
-                        <!-- Saturday -->
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="satCheck" text="Saturday" />
-                            <Label text="From:" />
-                            <TextField fx:id="satStart" prefWidth="70" promptText="09:00" />
-                            <Label text="To:" />
-                            <TextField fx:id="satEnd" prefWidth="70" promptText="17:00" />
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="day-row">
+                            <CheckBox fx:id="satCheck" text="Saturday"/>
+                            <Label text="From:"/>
+                            <TextField fx:id="satStart" prefWidth="70" promptText="09:00" styleClass="time-field"/>
+                            <Label text="To:"/>
+                            <TextField fx:id="satEnd" prefWidth="70" promptText="17:00" styleClass="time-field"/>
                         </HBox>
-                        <!-- Sunday -->
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="sunCheck" text="Sunday" />
-                            <Label text="From:" />
-                            <TextField fx:id="sunStart" prefWidth="70" promptText="09:00" />
-                            <Label text="To:" />
-                            <TextField fx:id="sunEnd" prefWidth="70" promptText="17:00" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="day-row">
+                            <CheckBox fx:id="sunCheck" text="Sunday"/>
+                            <Label text="From:"/>
+                            <TextField fx:id="sunStart" prefWidth="70" promptText="09:00" styleClass="time-field"/>
+                            <Label text="To:"/>
+                            <TextField fx:id="sunEnd" prefWidth="70" promptText="17:00" styleClass="time-field"/>
                         </HBox>
-                        <!-- Monday -->
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="monCheck" text="Monday" />
-                            <Label text="From:" />
-                            <TextField fx:id="monStart" prefWidth="70" promptText="09:00" />
-                            <Label text="To:" />
-                            <TextField fx:id="monEnd" prefWidth="70" promptText="17:00" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="day-row">
+                            <CheckBox fx:id="monCheck" text="Monday"/>
+                            <Label text="From:"/>
+                            <TextField fx:id="monStart" prefWidth="70" promptText="09:00" styleClass="time-field"/>
+                            <Label text="To:"/>
+                            <TextField fx:id="monEnd" prefWidth="70" promptText="17:00" styleClass="time-field"/>
                         </HBox>
-                        <!-- Tuesday -->
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="tueCheck" text="Tuesday" />
-                            <Label text="From:" />
-                            <TextField fx:id="tueStart" prefWidth="70" promptText="09:00" />
-                            <Label text="To:" />
-                            <TextField fx:id="tueEnd" prefWidth="70" promptText="17:00" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="day-row">
+                            <CheckBox fx:id="tueCheck" text="Tuesday"/>
+                            <Label text="From:"/>
+                            <TextField fx:id="tueStart" prefWidth="70" promptText="09:00" styleClass="time-field"/>
+                            <Label text="To:"/>
+                            <TextField fx:id="tueEnd" prefWidth="70" promptText="17:00" styleClass="time-field"/>
                         </HBox>
-                        <!-- Wednesday -->
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="wedCheck" text="Wednesday" />
-                            <Label text="From:" />
-                            <TextField fx:id="wedStart" prefWidth="70" promptText="09:00" />
-                            <Label text="To:" />
-                            <TextField fx:id="wedEnd" prefWidth="70" promptText="17:00" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="day-row">
+                            <CheckBox fx:id="wedCheck" text="Wednesday"/>
+                            <Label text="From:"/>
+                            <TextField fx:id="wedStart" prefWidth="70" promptText="09:00" styleClass="time-field"/>
+                            <Label text="To:"/>
+                            <TextField fx:id="wedEnd" prefWidth="70" promptText="17:00" styleClass="time-field"/>
                         </HBox>
-                        <!-- Thursday -->
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="thuCheck" text="Thursday" />
-                            <Label text="From:" />
-                            <TextField fx:id="thuStart" prefWidth="70" promptText="09:00" />
-                            <Label text="To:" />
-                            <TextField fx:id="thuEnd" prefWidth="70" promptText="17:00" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="day-row">
+                            <CheckBox fx:id="thuCheck" text="Thursday"/>
+                            <Label text="From:"/>
+                            <TextField fx:id="thuStart" prefWidth="70" promptText="09:00" styleClass="time-field"/>
+                            <Label text="To:"/>
+                            <TextField fx:id="thuEnd" prefWidth="70" promptText="17:00" styleClass="time-field"/>
                         </HBox>
-                        <!-- Friday -->
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="friCheck" text="Friday" />
-                            <Label text="From:" />
-                            <TextField fx:id="friStart" prefWidth="70" promptText="09:00" />
-                            <Label text="To:" />
-                            <TextField fx:id="friEnd" prefWidth="70" promptText="17:00" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="day-row">
+                            <CheckBox fx:id="friCheck" text="Friday"/>
+                            <Label text="From:"/>
+                            <TextField fx:id="friStart" prefWidth="70" promptText="09:00" styleClass="time-field"/>
+                            <Label text="To:"/>
+                            <TextField fx:id="friEnd" prefWidth="70" promptText="17:00" styleClass="time-field"/>
                         </HBox>
                     </VBox>
 
-                    <Button text="Next" fx:id="nextButton" onAction="#handleNextStep"
-                            style="-fx-background-color: #15BF8F; -fx-text-fill: white;
-                                   -fx-font-weight: bold;"
-                            prefWidth="200" />
-
+                    <Button text="Next"
+                            fx:id="nextButton"
+                            onAction="#handleNextStep"
+                            prefWidth="200"
+                            styleClass="primary-button"/>
                 </VBox>
 
-                <!-- STEP 2: Clinic Info -->
-                <VBox fx:id="Step2Container" spacing="20" alignment="TOP_LEFT" maxWidth="450" visible="false">
+                <!-- ================= STEP 2 (نفس العناصر) ================= -->
+                <VBox fx:id="Step2Container"
+                      spacing="22"
+                      maxWidth="480"
+                      visible="false"
+                      styleClass="card">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Add Your Clinic" styleClass="title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Back"
+                                fx:id="backButtonStep2"
+                                onAction="#handleBackStep2"
+                                styleClass="outline-button"/>
+                    </HBox>
+
+                    <Label text="Step 2: Clinic Information" styleClass="section-title"/>
 
                     <VBox spacing="10">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-                            <Label text="Add Your Clinic" textFill="#222"
-                                   style="-fx-font-size: 24; -fx-font-weight: bold;" />
-                            <Region HBox.hgrow="ALWAYS" />
-                            <Button text="Back" fx:id="backButtonStep2" onAction="#handleBackStep2"
-                                    style="-fx-background-color: white; -fx-border-color: #15BF8F;
-                                           -fx-text-fill: #15BF8F;" maxWidth="120"/>
-                        </HBox>
-                    </VBox>
+                        <Label text="Clinic Name" styleClass="field-label"/>
+                        <TextField fx:id="nameField" promptText="Clinic Name" styleClass="text-field"/>
 
-                    <Label text="Step 2: Clinic Information"
-                           style="-fx-font-size: 18; -fx-font-weight: bold;" />
-
-                    <VBox spacing="15">
-                        <Label text="Clinic Name" style="-fx-font-weight: bold;" />
-                        <TextField fx:id="nameField" promptText="Clinic Name" prefWidth="300" />
-
-                        <Label text="Clinic Address" style="-fx-font-weight: bold;" />
+                        <Label text="Clinic Address" styleClass="field-label"/>
                         <HBox spacing="10">
-                            <TextField fx:id="addressField" promptText=" (e.g.:Nasr City, Cairo)" prefWidth="300" />
-                            <Button fx:id="openMapButton" text="📍"
-                                    style="-fx-background-color: #4285f4; -fx-text-fill: white;"
-                                    onAction="#handleOpenMap">
-                                <tooltip>
-                                    <Tooltip text="Open location on google maps" />
-                                </tooltip>
-                            </Button>
-                        </HBox>
-                        <Label fx:id="addressStatusLabel" text="" style="-fx-font-size: 12; -fx-text-fill: #666;" />
+                            <TextField fx:id="addressField"
+                                       promptText="Nasr City, Cairo"
+                                       styleClass="text-field"/>
+                            <Button fx:id="openMapButton" text="📍" onAction="#handleOpenMap" styleClass="icon-button"/>
 
-                        <Label text="Visit Price (EGP)" style="-fx-font-weight: bold;" />
-                        <TextField fx:id="priceField" promptText="e.g. 500.00" prefWidth="300" />
-                    </VBox>
-
-                    <VBox spacing="15">
-                        <Label text="Department" style="-fx-font-weight: bold;" />
-                        <ComboBox fx:id="departmentComboBox" prefWidth="300" promptText="Select Department" />
-                    </VBox>
-
-                    <!-- ✅ Consultation System Section -->
-                    <VBox spacing="15">
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <CheckBox fx:id="enableConsultationCheck" text="Enable Consultation System" />
-                            <Label fx:id="consultationHintLabel"
-                                   text="💡 Patients can book consultations within this period after a visit."
-                                   style="-fx-font-size: 12; -fx-text-fill: #666;"
-                                   visible="false" />
                         </HBox>
 
-                        <HBox fx:id="consultationFieldsBox"
-                              spacing="20"
-                              visible="false"
-                              managed="false"
-                              alignment="CENTER_LEFT">
-                            <VBox spacing="5">
-                                <Label text="Consultation Price (EGP)" style="-fx-font-size: 13;" />
-                                <TextField fx:id="consultationPriceField" promptText="e.g. 200.00" prefWidth="140" />
-                            </VBox>
-                            <VBox spacing="5">
-                                <Label text="Consultation Validity (Days)" style="-fx-font-size: 13;" />
-                                <TextField fx:id="consultationValidityField" promptText="e.g. 7" prefWidth="100" />
-                            </VBox>
-                        </HBox>
+                        <Label fx:id="addressStatusLabel" styleClass="hint-text"/>
+
+                        <Label text="Visit Price (EGP)" styleClass="field-label"/>
+                        <TextField fx:id="priceField" promptText="e.g. 500" styleClass="text-field"/>
                     </VBox>
 
-                    <Button text="Add Clinic" fx:id="addClinicButton" onAction="#handleAddClinic"
-                            style="-fx-background-color: #15BF8F; -fx-text-fill: white;
-                                   -fx-font-weight: bold;"
-                            prefWidth="200" />
+                    <Label text="Department" styleClass="field-label"/>
+                    <ComboBox fx:id="departmentComboBox" prefWidth="300"/>
 
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <CheckBox fx:id="enableConsultationCheck" text="Enable Consultation System"/>
+                        <Label fx:id="consultationHintLabel" styleClass="hint-text" visible="false"/>
+                    </HBox>
+
+                    <HBox fx:id="consultationFieldsBox"
+                          spacing="20"
+                          visible="false"
+                          managed="false">
+                        <VBox>
+                            <Label text="Consultation Price" styleClass="field-label"/>
+                            <TextField fx:id="consultationPriceField" styleClass="text-field"/>
+                        </VBox>
+                        <VBox>
+                            <Label text="Validity (Days)" styleClass="field-label"/>
+                            <TextField fx:id="consultationValidityField" styleClass="text-field"/>
+                        </VBox>
+                    </HBox>
+
+                    <Button text="Add Clinic"
+                            fx:id="addClinicButton"
+                            onAction="#handleAddClinic"
+                            styleClass="primary-button"/>
                 </VBox>
 
             </StackPane>
         </center>
-
     </BorderPane>
 </ScrollPane>

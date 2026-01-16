@@ -1,0 +1,81 @@
+.root-scroll {
+    -fx-background-color: transparent;
+}
+
+.page-root {
+    -fx-background-color: #f5f7fb;
+    -fx-padding: 30;
+}
+
+.card {
+    -fx-background-color: white;
+    -fx-padding: 28;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 6);
+}
+
+.title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #222;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555;
+}
+
+.text-field {
+    -fx-pref-height: 40;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #ddd;
+}
+
+.time-field {
+    -fx-pref-width: 80;
+    -fx-pref-height: 36;
+}
+
+.primary-button {
+    -fx-background-color: #15BF8F;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 10 40;
+}
+
+.primary-button:hover {
+    -fx-background-color: #12a97f;
+}
+
+.outline-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #15BF8F;
+    -fx-text-fill: #15BF8F;
+    -fx-border-radius: 20;
+    -fx-padding: 6 16;
+}
+
+.outline-button:hover {
+    -fx-background-color: #12a97f;
+    -fx-text-fill: white;
+}
+
+.icon-button {
+    -fx-background-color: #4285f4;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+}
+
+.hint-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #777;
+}

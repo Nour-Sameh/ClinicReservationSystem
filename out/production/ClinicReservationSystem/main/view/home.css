@@ -1,0 +1,76 @@
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: #f7fafc;
+}
+
+/* ICON */
+.icon-circle {
+    -fx-background-color: #15BF8F;
+    -fx-background-radius: 50;
+    -fx-alignment: center;
+}
+
+
+/* TITLE */
+.title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d3748;
+}
+
+/* SUBTITLE */
+.subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #718096;
+}
+
+/* CARD */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-padding: 26;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 8);
+}
+
+/* LOGIN */
+.btn-primary {
+    -fx-background-color: #15BF8F;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #12a87d;
+}
+
+/* REGISTER */
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-border-color: #15BF8F;
+    -fx-border-width: 1.5;
+    -fx-text-fill: #15BF8F;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+}
+
+.btn-outline:hover {
+    -fx-background-color: rgba(147, 200, 177, 0.45);
+}
+/* EXIT */
+.btn-exit {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #334155;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.btn-exit:hover {
+    -fx-background-color: rgba(186, 103, 103, 0.31);
+}

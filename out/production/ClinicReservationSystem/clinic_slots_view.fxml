@@ -10,100 +10,89 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0"
-            xmlns="http://javafx.com/javafx/25"
+<?import javafx.scene.layout.Region?>
+<AnchorPane xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.ClinicSlotsController"
-            style="-fx-background-color: WHITE;"> <!-- ✅ خلفية الصفحة كاملة = أبيض -->
+            style="-fx-background-color: #f0f4f3;">
 
-    <children>
+        <HBox fx:id="headerBox"
+              AnchorPane.topAnchor="0"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0"
+              prefHeight="60.0"
+              alignment="CENTER_LEFT"
+        style="-fx-background-color: #15BF8F; -fx-padding: 10 20;">
 
-        <!-- 🔹 Header (يظل أخضر) -->
-        <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="800.0"
-              style="-fx-background-color: #15BF8F; -fx-padding: 0 20;">
-            <children>
+        <Button fx:id="backButton" text="← Back" onAction="#handleBack"
+                style="-fx-background-color: white;
+                       -fx-text-fill: #0C7E5F;
+                       -fx-font-weight: bold;
+                       -fx-background-radius: 6;
+                       -fx-border-color: transparent;
+                       -fx-padding: 6 16;"/>
 
-                <!-- 🟢 Back Button -->
-                <Button fx:id="backButton" text="← Back" onAction="#handleBack"
-                        style="-fx-background-color: white;
-                               -fx-text-fill: #0C7E5F;
-                               -fx-font-weight: bold;
-                               -fx-background-radius: 6;
-                               -fx-border-color: transparent;
-                               -fx-padding: 5 15;"/>
+        <Label text="Available Slots"
+               style="-fx-text-fill: WHITE; -fx-font-weight: bold; -fx-font-size: 20px;"
+               HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets left="30.0" />
+            </HBox.margin>
+        </Label>
+    </HBox>
 
-                <!-- 🏥 Title -->
-                <Label text=" Available Slots" style="-fx-text-fill: WHITE;" HBox.hgrow="ALWAYS">
-                    <font>
-                        <Font name="System Bold" size="22.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets left="20.0" />
-                    </HBox.margin>
-                </Label>
+    <ScrollPane AnchorPane.topAnchor="60"
+                AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0"
+                fitToWidth="true"
+                hbarPolicy="NEVER">
 
-            </children>
-        </HBox>
+        <VBox fx:id="mainVBox"
+              alignment="TOP_CENTER"
+              spacing="16"
+              style="-fx-padding: 20 16 20 16;">
 
-        <!-- 🔽 Scrollable Body -->
-        <ScrollPane layoutY="60.0" prefHeight="540.0" prefWidth="800.0"
-                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0"
-                    style="-fx-background-color: transparent;"
-                    fitToWidth="true" hbarPolicy="NEVER">
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  style="-fx-background-color: white;
+                         -fx-border-radius: 12;
+                         -fx-background-radius: 12;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);
+                         -fx-padding: 16;">
 
-            <content>
-                <!-- 🟢 هذا الـ VBox هو اللي يحتوي على الـ Clinic Info + Title + Slots Container -->
-                <VBox alignment="TOP_CENTER" fx:id="mainVBox" prefWidth="780.0" spacing="25.0"
-                      style="-fx-background-color: #15BF8F;"> <!-- ✅ خلفية الجزء العلوي = أخضر -->
+                <Label fx:id="clinicNameLabel"
+                       text="[Clinic Name Placeholder]"
+                       style="-fx-text-fill: #0C7E5F; -fx-font-weight: bold; -fx-font-size: 20px;" />
 
-                    <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                    </padding>
+                <Region HBox.hgrow="ALWAYS" />
 
-                    <!-- 📌 Clinic Information Card + Date Selection (يظل أخضر كجزء من الـ mainVBox) -->
-                    <HBox alignment="CENTER_LEFT" spacing="25.0"
-                          style="-fx-background-color: white;
-                                 -fx-border-radius: 12;
-                                 -fx-background-radius: 12;
-                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 7, 0, 0, 3);
-                                 -fx-padding: 18;">
+                <Label text="Select Date:"
+                       style="-fx-text-fill: #444; -fx-font-size: 15px;" />
 
-                        <Label fx:id="clinicNameLabel" text="[Clinic Name Placeholder]"
-                               style="-fx-text-fill: #0C7E5F;">
-                            <font>
-                                <Font name="System Bold" size="22.0" />
-                            </font>
-                            <HBox.margin>
-                                <Insets right="40.0" />
-                            </HBox.margin>
-                        </Label>
+                <DatePicker fx:id="datePicker" onAction="#handleDateChange"
+                            style="-fx-background-color: white;
+                                   -fx-border-color: #cbd5e0;
+                                   -fx-border-radius: 6;
+                                   -fx-background-radius: 6;
+                                   -fx-padding: 4 8;" />
+            </HBox>
 
-                        <Label text="Select Date:" style="-fx-text-fill: #444444;">
-                            <font>
-                                <Font size="16.0" />
-                            </font>
-                        </Label>
+            <!-- 🕒 Title -->
+            <Label text="Available Time Slots:"
+                   style="-fx-text-fill: #2d3748; -fx-font-weight: bold; -fx-font-size: 18px;"
+                   alignment="CENTER_LEFT"
+                   maxWidth="1.7976931348623157E308" />
 
-                        <!-- 📅 Date Picker -->
-                        <DatePicker fx:id="datePicker" onAction="#handleDateChange"
-                                    style="-fx-background-color: white;
-                                           -fx-border-color: #0C7E5F;
-                                           -fx-border-radius: 6;
-                                           -fx-background-radius: 6;"/>
+            <!-- 🗂️ Slots Container (أبيض، بدون خلفية خضراء) -->
+            <VBox fx:id="slotsContainer"
+                  spacing="10"
+                  style="-fx-background-color: white;
+                         -fx-border-radius: 12;
+                         -fx-background-radius: 12;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);
+                         -fx-padding: 16;" />
 
-                    </HBox>
-
-                    <!-- 🕒 Title (يظل على خلفية خضراء) -->
-                    <Label style="-fx-text-fill: WHITE; -fx-font-size: 18px; -fx-font-weight: bold;"
-                           text="Available Time Slots:" />
-
-                    <!-- 🗂️ Slots Container (هنا نخليه أبيض) -->
-                    <VBox fx:id="slotsContainer" alignment="TOP_CENTER" prefWidth="780.0" spacing="12.0"
-                          style="-fx-background-color: WHITE; -fx-padding: 10;" />
-
-                </VBox>
-            </content>
-        </ScrollPane>
-    </children>
+        </VBox>
+    </ScrollPane>
 </AnchorPane>

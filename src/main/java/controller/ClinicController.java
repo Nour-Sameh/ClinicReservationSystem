@@ -21,6 +21,7 @@ public class ClinicController {
 
     public void setDoctor(Practitioner doctor) {
         this.doctor = doctor;
+        System.out.printf(String.valueOf(doctor));
         if (doctor != null) {
             welcomeLabel.setText("Welcome, Dr. " + doctor.getName());
         }
