@@ -808,13 +808,13 @@ public class PatientController {
             }
         }
 
-        if (clinic.getConsultationPrice() > 0 &&
-                (status == Status.Booked || status == Status.Completed)) {
-            Button returnBtn = new Button("🔁 Request Follow-up");
-            returnBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12px;");
-            returnBtn.setOnAction(e -> showAlert("Success", "Follow-up request sent to Dr. " + clinic.getDoctorName()));
-            actions.getChildren().add(returnBtn);
-        }
+//        if (clinic.getConsultationPrice() > 0 &&
+//                (status == Status.Booked || status == Status.Completed)) {
+//            Button returnBtn = new Button("🔁 Request Follow-up");
+//            returnBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12px;");
+//            returnBtn.setOnAction(e -> showAlert("Success", "Follow-up request sent to Dr. " + clinic.getDoctorName()));
+//            actions.getChildren().add(returnBtn);
+//        }
 
         card.getChildren().addAll(header, doctorLabel, dateLabel, priceLabel, statusLabel, actions);
         return new HBox(card);

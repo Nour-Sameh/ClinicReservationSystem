@@ -12,11 +12,16 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.ImageView?>
 <AnchorPane prefHeight="465.0" prefWidth="760.0" style="-fx-background-color: #f7f7f7;"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.ChatsController">
-
+    <ImageView fitWidth="1550"
+               fitHeight="800"
+               preserveRatio="false"
+               opacity="0.50">
+    </ImageView>
     <HBox layoutX="0.0" layoutY="0.0" prefHeight="465.0" prefWidth="760.0"
           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -55,7 +60,7 @@
                       style="-fx-border-color: transparent; -fx-background-color: white;"/>
         </VBox>
 
-        <VBox prefHeight="465.0" prefWidth="480.0" spacing="10.0">
+        <VBox prefHeight="465.0" prefWidth="1000.0" spacing="10.0">
             <padding>
                 <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
             </padding>

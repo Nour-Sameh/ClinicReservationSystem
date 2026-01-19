@@ -5,8 +5,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <AnchorPane style="-fx-background-color: #f0f4f3;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DoctorController">
-
+    <ImageView fitWidth="1550"
+               fitHeight="800"
+               preserveRatio="false"
+               opacity="0.50">
+    </ImageView>
     <!-- Top Green Header -->
     <HBox fx:id="headerBox"
           AnchorPane.topAnchor="0"

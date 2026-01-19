@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Patient;
 import model.Practitioner;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -97,12 +98,17 @@ public class RegisterController {
             );
             return;
         }
-
-
         if (dob.isAfter(LocalDate.now())) {
             showAlert("Error", "Date of birth cannot be in the future.");
             return;
         }
+
+        // age number validation
+        if(age < 0 || age > 120|| ObjectUtils.isEmpty(age)) {
+            showAlert("Error", "Please enter a valid date of birth.");
+            return;
+        }
+
 
         if (patientCheck.isSelected()) {
             if (age < 18) {

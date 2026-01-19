@@ -10,11 +10,16 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.image.ImageView?>
 <AnchorPane xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.ClinicSlotsController"
             style="-fx-background-color: #f0f4f3;">
-
+    <ImageView fitWidth="1550"
+               fitHeight="800"
+               preserveRatio="false"
+               opacity="0.50">
+    </ImageView>
     <HBox fx:id="headerBox"
           AnchorPane.topAnchor="0"
           AnchorPane.leftAnchor="0"
