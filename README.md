@@ -1,15 +1,8 @@
 
-<p align="center">
-  <img src="src/main/view/images/clinc.png" width="300"/>
-</p>
 
 # 🏥 Clinic Reservation System
 
  A **desktop-based clinic management application** built with **JavaFX** and **MySQL**, designed to streamline appointment booking, patient–doctor communication, and clinic administration.
-
-
-
-> **Note:** The application name and logo were sourced from publicly available online resources and are used for **demonstration and educational purposes only**. All branding rights belong to their respective owners.
 
 ---
 
