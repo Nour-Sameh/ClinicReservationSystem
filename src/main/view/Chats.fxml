@@ -56,8 +56,13 @@
             </HBox>
 
             <ListView fx:id="chatListView" onMouseClicked="#onChatSelect"
-                      prefHeight="420.0"
-                      style="-fx-border-color: transparent; -fx-background-color: white;"/>
+                      prefHeight="700.0"
+                      prefWidth="500.0"
+                      style="-fx-border-color: transparent; -fx-background-color: white; -fx-padding: 5;">
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </ListView>
         </VBox>
 
         <VBox prefHeight="465.0" prefWidth="1000.0" spacing="10.0">

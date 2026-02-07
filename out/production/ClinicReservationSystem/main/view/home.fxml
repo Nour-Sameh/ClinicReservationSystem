@@ -33,7 +33,7 @@
         </StackPane>
 
         <!-- TITLE -->
-        <Label text="Weekly Clinic System"
+        <Label text="Clinic Reservation System"
                styleClass="title"/>
 
         <!-- SUBTITLE -->

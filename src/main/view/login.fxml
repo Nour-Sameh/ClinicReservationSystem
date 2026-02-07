@@ -4,91 +4,55 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/17"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="controller.LoginController"
-           stylesheets="@login.css">
+<StackPane stylesheets="@login.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
 
-    <ImageView fitWidth="1550"
-               fitHeight="800"
-               preserveRatio="false"
-               opacity="0.50">
-        <Image url="@images/backgroundd.png"/>
+    <ImageView fitHeight="800" fitWidth="1550" opacity="0.50" preserveRatio="false">
+        <Image url="@images/backgroundd.png" />
     </ImageView>
     <!-- Back Button -->
     <AnchorPane>
-        <Button text="← Back"
-                onAction="#handleBack"
-                styleClass="btn-back"
-                AnchorPane.topAnchor="25"
-                AnchorPane.leftAnchor="25"/>
+        <Button layoutY="81.0" onAction="#handleBack" prefHeight="48.0" prefWidth="126.0" styleClass="btn-back" text="← Back" AnchorPane.leftAnchor="25" AnchorPane.topAnchor="81.0" />
     </AnchorPane>
 
     <!-- CENTER CARD -->
-    <VBox alignment="CENTER"
-          maxWidth="420"
-          maxHeight="600"
-          spacing="18"
-          styleClass="card">
+    <VBox alignment="CENTER" maxHeight="600" maxWidth="420" spacing="18" styleClass="card">
 
         <!-- ICON -->
-        <StackPane styleClass="icon-circle"
-                   minWidth="90"
-                   minHeight="90"
-                   maxWidth="90"
-                   maxHeight="90">
-            <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
-                <Image url="@images/clinic logo.png"/>
+        <StackPane maxHeight="90" maxWidth="90" minHeight="90" minWidth="90" styleClass="icon-circle">
+            <ImageView fitHeight="60" fitWidth="60" preserveRatio="true">
+                <Image url="@images/clinic logo.png" />
             </ImageView>
         </StackPane>
 
         <!-- TITLE -->
-        <Label text="Welcome Back"
-               styleClass="title"/>
+        <Label styleClass="title" text="Welcome Back" />
 
         <!-- SUBTITLE -->
-        <Label text="Login to access your account"
-               styleClass="subtitle"
-               wrapText="true"
-               textAlignment="CENTER"/>
+        <Label styleClass="subtitle" text="Login to access your account" textAlignment="CENTER" wrapText="true" />
 
         <!-- FORM -->
-        <VBox spacing="14" alignment="CENTER">
+        <VBox alignment="CENTER" spacing="14">
 
-            <VBox spacing="6" alignment="CENTER_LEFT">
-                <Label text="Email" styleClass="field-label"/>
-                <TextField fx:id="emailField"
-                           promptText="email or phone number"
-                           styleClass="input"/>
+            <VBox alignment="CENTER_LEFT" spacing="6">
+                <Label styleClass="field-label" text="Email" />
+                <TextField fx:id="emailField" promptText="email or phone number" styleClass="input" />
             </VBox>
 
-            <VBox spacing="6" alignment="CENTER_LEFT">
-                <Label text="Password" styleClass="field-label"/>
-                <PasswordField fx:id="passwordField"
-                               promptText="••••••••"
-                               styleClass="input"/>
+            <VBox alignment="CENTER_LEFT" spacing="6">
+                <Label styleClass="field-label" text="Password" />
+                <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="input" />
             </VBox>
 
-            <Button text="Login"
-                    prefWidth="360"
-                    prefHeight="48"
-                    styleClass="btn-primary"
-                    onAction="#handleLogin"/>
+            <Button onAction="#handleLogin" prefHeight="48" prefWidth="360" styleClass="btn-primary" text="Login" />
 
             <HBox alignment="CENTER" spacing="5">
-                <Label text="Forgot your password?"
-                       styleClass="hint-text"/>
-                <Button text="Reset"
-                        onAction="#handleForgotPassword"
-                        styleClass="link-btn"/>
+                <Label styleClass="hint-text" text="Forgot your password?" />
+                <Button onAction="#handleForgotPassword" styleClass="link-btn" text="Reset" />
             </HBox>
 
             <HBox alignment="CENTER" spacing="5">
-                <Label text="Don't have an account?"
-                       styleClass="hint-text"/>
-                <Button text="Register here"
-                        onAction="#handleRegister"
-                        styleClass="link-btn"/>
+                <Label styleClass="hint-text" text="Don't have an account?" />
+                <Button onAction="#handleRegister" styleClass="link-btn" text="Register here" />
             </HBox>
 
         </VBox>

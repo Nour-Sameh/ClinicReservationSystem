@@ -68,13 +68,12 @@ public class EditClinicController {
                     deleteBtn
             );
 
-            if (isNew) {
-                deleteBtn.setOnAction(e -> {
-                    rulesContainer.getChildren().remove(container);
-                    ruleRows.remove(this);
-                });
-            } else {
-                deleteBtn.setDisable(true);
+            deleteBtn.setOnAction(e -> {
+                rulesContainer.getChildren().remove(container);
+                ruleRows.remove(this);
+            });
+
+            if (!isNew) {
                 container.setStyle("-fx-padding: 8 10 8 10; -fx-background-color: #f0f7ff; -fx-border-color: #d0e3f5; -fx-border-width: 1; -fx-border-radius: 6; -fx-effect: none;");
             }
         }
@@ -112,7 +111,7 @@ public class EditClinicController {
 
     @FXML
     public void initialize() {
-        //  لا حاجة لـ setValueFactory لأن consultationDaysField دلوقتي TextField
+
     }
 
     public void setClinic(Clinic clinic, Practitioner doctor) {
@@ -132,8 +131,8 @@ public class EditClinicController {
                 && clinic.getConsultationDurationDays() > 0;
         enableConsultationCheckBox.setSelected(hasConsultation);
         consultationPriceField.setText(String.format("%.2f", clinic.getConsultationPrice()));
-        consultationDaysField.setText(String.valueOf(clinic.getConsultationDurationDays())); // ← ✅ setText بدل getValueFactory
-        onConsultationToggle(); // تحديث ظهور الحقول
+        consultationDaysField.setText(String.valueOf(clinic.getConsultationDurationDays()));
+        onConsultationToggle();
     }
 
     private void loadExistingRulesToUI() {
@@ -186,8 +185,8 @@ public class EditClinicController {
                 showAlert("Error", "Name must be at least 3 letters and cannot be only numbers.");
                 return;
             }
-            if (!address.matches("\\d+-[a-zA-Z]+")) {
-                showAlert("Error", "Address must be digits, followed by '-', then letters only (e.g., 123-ABC).");
+            if (address.length()>7) {
+                showAlert("Error", "Address must be more detailed ");
                 return;
             }
             int slotDuration;

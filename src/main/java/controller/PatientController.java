@@ -5,6 +5,7 @@ import dao.PatientDAO;
 import dao.RatingDAO;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.event.ActionEvent;
@@ -25,6 +26,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatientController {
@@ -36,12 +38,12 @@ public class PatientController {
     @FXML private Button chatNavButton;
     @FXML private VBox clinicsContainer;
     @FXML private Button logoutButton;
+    @FXML private ScrollPane settingsScrollPane;
     @FXML private ComboBox<String> specialtyCombo;
     @FXML private Label patientNameLabel;
     @FXML private Button settingsButton;
     @FXML private VBox settingsBox;
     @FXML private TextField usernameField;
-    @FXML private TextField nameField;
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
     @FXML private TextField genderField;
@@ -50,9 +52,6 @@ public class PatientController {
     @FXML private PasswordField newPasswordField;
     @FXML private PasswordField confirmPasswordField;
     @FXML private VBox clinicInfoBox;
-    @FXML private VBox appointmentsBox;
-    @FXML private VBox reviewsBox;
-    @FXML private VBox reportBox;
 
     private VBox searchView;
 
@@ -70,21 +69,27 @@ public class PatientController {
 
         if ("searchNavButton".equals(buttonId)) {
             try {
-                VBox searchView = new VBox(10);
+                VBox searchView = new VBox(20);
                 searchView.setPadding(new Insets(10, 0, 0, 0));
+
+                HBox titleAndFilter = new HBox(20);
+                titleAndFilter.setAlignment(Pos.CENTER_LEFT);
+                titleAndFilter.setPadding(new Insets(10, 0, 10, 0));
 
                 Label label = new Label("Search for clinics by specialty");
                 label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;");
+
                 ComboBox<String> combo = new ComboBox<>();
                 combo.getItems().addAll(specialtyCombo.getItems());
                 combo.setValue(specialtyCombo.getValue());
-                combo.setPrefWidth(220);
+                combo.setPrefWidth(240);
                 combo.setStyle(
                         "-fx-background-color: white;" +
                                 "-fx-border-color: #cbd5e0;" +
                                 "-fx-border-radius: 8;" +
                                 "-fx-background-radius: 8;" +
-                                "-fx-padding: 6 12;" +
+                                "-fx-padding: 8 12;" +
+                                "-fx-font-size: 14px;" +
                                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);"
                 );
                 combo.setOnAction(e -> {
@@ -95,13 +100,17 @@ public class PatientController {
                     }
                 });
 
+                titleAndFilter.getChildren().addAll(label, combo);
+
                 ScrollPane scroll = new ScrollPane();
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setContent(clinicsContainer);
                 scroll.setPrefHeight(600);
+                scroll.setStyle("-fx-background-color: transparent;");
 
-                searchView.getChildren().addAll(label, combo, scroll);
+                searchView.getChildren().addAll(titleAndFilter, scroll);
+
                 mainContentPane.getChildren().setAll(searchView);
                 AnchorPane.setTopAnchor(searchView, 0.0);
                 AnchorPane.setBottomAnchor(searchView, 0.0);
@@ -110,7 +119,6 @@ public class PatientController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else if ("appointmentsNavButton".equals(buttonId)) {
             try {
                 Label header = new Label("📅 My Appointments");
@@ -190,7 +198,7 @@ public class PatientController {
         loadSpecialties();
         Platform.runLater(() -> {
             createSearchView();
-            patientDashboardView = searchView; // ★★ احفظه هنا ★★
+            patientDashboardView = searchView;
             mainContentPane.getChildren().setAll(searchView);
             AnchorPane.setTopAnchor(searchView, 0.0);
             AnchorPane.setBottomAnchor(searchView, 0.0);
@@ -223,8 +231,12 @@ public class PatientController {
     }
 
     private void createSearchView() {
-        searchView = new VBox(10);
+        searchView = new VBox(20);
         searchView.setPadding(new Insets(10, 0, 0, 0));
+
+        HBox titleAndFilter = new HBox(20);
+        titleAndFilter.setAlignment(Pos.CENTER_LEFT);
+        titleAndFilter.setPadding(new Insets(10, 0, 10, 0));
 
         Label label = new Label("Search for clinics by specialty");
         label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;");
@@ -232,13 +244,14 @@ public class PatientController {
         ComboBox<String> combo = new ComboBox<>();
         combo.getItems().addAll(specialtyCombo.getItems());
         combo.setValue(specialtyCombo.getValue());
-        combo.setPrefWidth(220);
+        combo.setPrefWidth(240);
         combo.setStyle(
                 "-fx-background-color: white;" +
                         "-fx-border-color: #cbd5e0;" +
                         "-fx-border-radius: 8;" +
                         "-fx-background-radius: 8;" +
-                        "-fx-padding: 6 12;" +
+                        "-fx-padding: 8 12;" +  // زود الـ padding
+                        "-fx-font-size: 14px;" +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);"
         );
         combo.setOnAction(e -> {
@@ -249,13 +262,16 @@ public class PatientController {
             }
         });
 
+        titleAndFilter.getChildren().addAll(label, combo);
+
         ScrollPane scroll = new ScrollPane();
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setContent(clinicsContainer);
         scroll.setPrefHeight(520);
+        scroll.setStyle("-fx-background-color: transparent;");
 
-        searchView.getChildren().addAll(label, combo, scroll);
+        searchView.getChildren().addAll(titleAndFilter, scroll);
 
         AnchorPane.setTopAnchor(searchView, 0.0);
         AnchorPane.setLeftAnchor(searchView, 0.0);
@@ -377,13 +393,61 @@ public class PatientController {
                 AnchorPane.setBottomAnchor(btns, 15.0);
 
                 Button chatBtn = new Button("Start Chat");
-                chatBtn.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-text-fill: #333; -fx-border-radius: 5;");
                 chatBtn.setPrefSize(120, 35);
+
+                String chatNormal =
+                        "-fx-background-color: white;" +
+                                "-fx-border-color: #ddd;" +
+                                "-fx-text-fill: #333;" +
+                                "-fx-border-radius: 5;" +
+                                "-fx-background-radius: 5;" +
+                                "-fx-cursor: hand;";
+
+                String chatHover =
+                        "-fx-background-color: #f8f9fa;" +
+                                "-fx-border-color: #bbb;" +
+                                "-fx-text-fill: #111;" +
+                                "-fx-border-radius: 5;" +
+                                "-fx-background-radius: 5;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-scale-x: 1.05;" +
+                                "-fx-scale-y: 1.05;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);";
+
+                chatBtn.setStyle(chatNormal);
+
+                chatBtn.setOnMouseEntered(e -> chatBtn.setStyle(chatHover));
+                chatBtn.setOnMouseExited(e -> chatBtn.setStyle(chatNormal));
+
                 chatBtn.setOnAction(e -> openChatScreen(c));
 
                 Button slotsBtn = new Button("View Slots");
-                slotsBtn.setStyle("-fx-background-color: #1ABC9C; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 5;");
                 slotsBtn.setPrefSize(120, 35);
+
+                String slotsNormal =
+                        "-fx-background-color: #1ABC9C;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-border-radius: 5;" +
+                                "-fx-background-radius: 5;" +
+                                "-fx-cursor: hand;";
+
+                String slotsHover =
+                        "-fx-background-color: #159a80;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-border-radius: 5;" +
+                                "-fx-background-radius: 5;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-scale-x: 1.05;" +
+                                "-fx-scale-y: 1.05;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(26,188,156,0.6), 10, 0, 0, 3);";
+
+                slotsBtn.setStyle(slotsNormal);
+
+                slotsBtn.setOnMouseEntered(e -> slotsBtn.setStyle(slotsHover));
+                slotsBtn.setOnMouseExited(e -> slotsBtn.setStyle(slotsNormal));
+
                 slotsBtn.setOnAction(e -> {
                     try {
                         handleViewSlots(c);
@@ -392,6 +456,7 @@ public class PatientController {
                         showAlert("Error", "Could not open slots view.");
                     }
                 });
+
 
                 btns.getChildren().addAll(chatBtn, slotsBtn);
                 card.getChildren().add(btns);
@@ -456,6 +521,8 @@ public class PatientController {
 
     @FXML
     private void handleSettings() {
+        settingsScrollPane.setVisible(true);
+        settingsBox.setVisible(true);
         if (mainContentPane != null) mainContentPane.setVisible(false);
         if (settingsBox != null) {
             settingsBox.setVisible(true);
@@ -472,8 +539,7 @@ public class PatientController {
             emailField.setText(currentPatient.getEmail());
             phoneField.setText(currentPatient.getPhone());
             genderField.setText(currentPatient.getGender());
-            dobField.setText(currentPatient.getDateOfBirth() != null ?
-                    currentPatient.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "—");
+            dobField.setText(currentPatient.getDateOfBirth() != null ? currentPatient.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "—");
 
             usernameField.setEditable(true);
 
@@ -489,6 +555,7 @@ public class PatientController {
     }
     @FXML
     private void handleSettingsCancel() {
+        settingsScrollPane.setVisible(false);
         if (settingsBox != null) settingsBox.setVisible(false);
 
         if (mainContentPane != null) {
@@ -500,18 +567,19 @@ public class PatientController {
 
     @FXML
     private void handleSettingsSave() {
+
         try {
             String newUsername = usernameField.getText().trim();
             String currentPass = currentPasswordField.getText();
             String newPass = newPasswordField.getText();
             String confirmPass = confirmPasswordField.getText();
-
             if (newUsername.isEmpty()) {
                 showAlert("Error", "Username cannot be empty.");
                 return;
             }
 
             PatientDAO patientDAO = new PatientDAO();
+
             if (!newUsername.equals(currentPatient.getName())) {
                 if (patientDAO.isNameTaken(newUsername, currentPatient.getID())) {
                     showAlert("Error", "This username is already taken.");
@@ -519,40 +587,55 @@ public class PatientController {
                 }
             }
 
+            boolean wantsToChangePassword = !newPass.isEmpty();
+            boolean wantsToChangeUsername = !newUsername.equals(currentPatient.getName());
 
-            if (!newUsername.equals(currentPatient.getName())) {
-                currentPatient.setName(newUsername);
-            }
-
-
-            if (!newPass.isEmpty()) {
+            if (wantsToChangePassword || wantsToChangeUsername) {
                 if (currentPass.isEmpty()) {
-                    showAlert("Error", "Enter current password.");
-                    return;
-                }
-                if (!newPass.equals(confirmPass)) {
-                    showAlert("Error", "Passwords don’t match.");
+                    showAlert("Error", "Please enter your current password to make changes.");
                     return;
                 }
                 if (!currentPass.equals(currentPatient.getPassword())) {
-                    showAlert("Error", "Current password is wrong.");
+                    showAlert("Error", "Current password is incorrect.");
                     return;
                 }
+            }
+
+            if (wantsToChangePassword) {
+                if (!newPass.equals(confirmPass)) {
+                    showAlert("Error", "New passwords don't match.");
+                    return;
+                }
+
+                if (newPass.length() < 6) {
+                    showAlert("Error", "New password must be at least 6 characters.");
+                    return;
+                }
+
                 currentPatient.setPassword(newPass);
             }
 
+            if (wantsToChangeUsername) {
+                currentPatient.setName(newUsername);
+            }
+
             patientDAO.update(currentPatient);
+
             if (patientNameLabel != null) {
                 patientNameLabel.setText("Welcome, " + currentPatient.getName());
             }
 
-            showAlert("Success", "Profile updated!");
+            showAlert("Success", "Profile updated successfully!");
+            settingsScrollPane.setVisible(false);
             handleSettingsCancel();
+
+            currentPasswordField.clear();
+            newPasswordField.clear();
+            confirmPasswordField.clear();
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Update failed."+ e.getMessage());
-
+            showAlert("Error", "Update failed: " + e.getMessage());
         }
     }
 //    private void openGoogleMaps(String address) {
@@ -641,74 +724,273 @@ public class PatientController {
     }
 
     private void showRatingDialog(Clinic clinic, Rating existingRating) {
+
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle(existingRating == null ? "Add Rating" : "Update Rating");
-        dialog.setHeaderText("How was your experience with " + clinic.getName() + "?");
+        dialog.setTitle("");
+        dialog.setHeaderText(null);
+        dialog.setGraphic(null);
 
-        VBox content = new VBox(15);
-        content.setPadding(new Insets(15));
+        VBox content = new VBox(20);
+        content.setPadding(new Insets(30));
+        content.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 15;"
+        );
 
-        Label q1 = new Label("⭐ Please rate:");
-        HBox starsBox = new HBox(5);
+        /* ================= HEADER ================= */
+
+        VBox headerBox = new VBox(8);
+        headerBox.setAlignment(Pos.CENTER);
+
+        Label iconLabel = new Label(existingRating == null ? "★" : "🌟");
+        iconLabel.setStyle(
+                "-fx-font-size: 48px;" +
+                        "-fx-text-fill: #15BF8F;"
+        );
+
+        Label titleLabel = new Label("How was your experience?");
+        titleLabel.setStyle(
+                "-fx-font-size: 20px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #2d3436;"
+        );
+
+        Label clinicLabel = new Label(clinic.getName());
+        clinicLabel.setStyle(
+                "-fx-font-size: 15px;" +
+                        "-fx-text-fill: #15BF8F;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        headerBox.getChildren().addAll(iconLabel, titleLabel, clinicLabel);
+
+        /* ================= RATING ================= */
+
+        VBox ratingCard = new VBox(15);
+        ratingCard.setPadding(new Insets(20));
+        ratingCard.setStyle(
+                "-fx-background-color: #f8f9fa;" +
+                        "-fx-background-radius: 12;"
+        );
+
+        Label q1 = new Label("Please rate:");
+        q1.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #495057;"
+        );
+
+        HBox starsBox = new HBox(10);
+        starsBox.setAlignment(Pos.CENTER);
+
         ToggleGroup group = new ToggleGroup();
-        RadioButton[] stars = new RadioButton[5];
+        List<Label> starLabels = new ArrayList<>();
+
         for (int i = 0; i < 5; i++) {
-            stars[i] = new RadioButton("★");
-            stars[i].setToggleGroup(group);
-            stars[i].setUserData(5 - i);
-            starsBox.getChildren().add(stars[i]);
+            final int index = i;
+
+            RadioButton rb = new RadioButton();
+            rb.setToggleGroup(group);
+            rb.setUserData(i + 1);
+            rb.setOpacity(0);
+            rb.setMaxSize(0, 0);
+
+            Label star = new Label("☆");
+            star.setFont(Font.font(32));
+            star.setStyle("-fx-text-fill: #ced4da;");
+            star.setCursor(Cursor.HAND);
+
+            star.setOnMouseClicked(e -> {
+                int score = index + 1;
+                for (int j = 0; j < 5; j++) {
+                    RadioButton r = (RadioButton) group.getToggles().get(j);
+                    Label lbl = starLabels.get(j);
+                    boolean selected = (j + 1) <= score;
+                    r.setSelected(selected);
+                    lbl.setText(selected ? "★" : "☆");
+                    lbl.setStyle(
+                            "-fx-text-fill: " + (selected ? "#FFD700" : "#ced4da") + ";"
+                    );
+                }
+            });
+
+            star.setOnMouseEntered(e -> {
+                if (!rb.isSelected()) {
+                    star.setScaleX(1.2);
+                    star.setScaleY(1.2);
+                }
+            });
+
+            star.setOnMouseExited(e -> {
+                star.setScaleX(1);
+                star.setScaleY(1);
+            });
+
+            starLabels.add(star);
+            starsBox.getChildren().addAll(rb, star);
         }
 
+        // existing rating
         if (existingRating != null) {
-            int prevScore = existingRating.getScore();
-            if (prevScore >= 1 && prevScore <= 5) {
-                stars[5 - prevScore].setSelected(true);
+            int prev = existingRating.getScore();
+            for (int i = 0; i < 5; i++) {
+                boolean selected = (i + 1) <= prev;
+                RadioButton rb = (RadioButton) group.getToggles().get(i);
+                Label lbl = starLabels.get(i);
+                rb.setSelected(selected);
+                lbl.setText(selected ? "★" : "☆");
+                lbl.setStyle(
+                        "-fx-text-fill: " + (selected ? "#FFD700" : "#ced4da") + ";"
+                );
             }
-        } else {
-            stars[0].setSelected(true);
         }
 
-        Label q2 = new Label("💬 Optional comment:");
+        ratingCard.getChildren().addAll(q1, starsBox);
+
+        /* ================= COMMENT ================= */
+
+        VBox commentCard = new VBox(10);
+        commentCard.setPadding(new Insets(20));
+        commentCard.setStyle(
+                "-fx-background-color: #f8f9fa;" +
+                        "-fx-background-radius: 12;"
+        );
+
+        Label q2 = new Label("Optional comment:");
+        q2.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #495057;"
+        );
+
         TextArea commentArea = new TextArea();
-        commentArea.setPrefRowCount(3);
         commentArea.setPromptText("Tell us more...");
+        commentArea.setPrefRowCount(4);
+        commentArea.setWrapText(true);
+        commentArea.setStyle(
+                "-fx-background-radius: 8;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-border-color: #ced4da;" +
+                        "-fx-padding: 10;"
+        );
+
         if (existingRating != null && existingRating.getComment() != null) {
             commentArea.setText(existingRating.getComment());
         }
 
-        ButtonType submitBtn = new ButtonType(existingRating == null ? "Add" : "Update", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(submitBtn, ButtonType.CANCEL);
-        content.getChildren().addAll(q1, starsBox, q2, commentArea);
+        commentCard.getChildren().addAll(q2, commentArea);
+
+        content.getChildren().addAll(headerBox, ratingCard, commentCard);
+
+        /* ================= BUTTONS ================= */
+
+        ButtonType submitBtn = new ButtonType(
+                existingRating == null ? "Submit Rating" : "Update Rating",
+                ButtonBar.ButtonData.OK_DONE
+        );
+        ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        dialog.getDialogPane().getButtonTypes().addAll(submitBtn, cancelBtn);
         dialog.getDialogPane().setContent(content);
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == submitBtn) {
+        Platform.runLater(() -> {
+            Button submit = (Button) dialog.getDialogPane().lookupButton(submitBtn);
+
+            submit.setStyle(
+                    "-fx-background-color: #15BF8F;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-size: 15px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 150px;" +
+                            "-fx-min-height: 45px;" +
+                            "-fx-background-radius: 8;"
+            );
+
+            submit.setOnMouseEntered(e -> submit.setStyle(
+                    "-fx-background-color: #12a97c;" +   // أغمق شوية
+                            "-fx-text-fill: white;" +
+                            "-fx-font-size: 15px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 150px;" +
+                            "-fx-min-height: 45px;" +
+                            "-fx-background-radius: 8;" +
+                            "-fx-effect: dropshadow(gaussian, rgba(18,169,124,0.6), 12, 0, 0, 3);" +
+                            "-fx-scale-x: 1.05;" +
+                            "-fx-scale-y: 1.05;"
+            ));
+
+            submit.setOnMouseExited(e -> submit.setStyle(
+                    "-fx-background-color: #15BF8F;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-size: 15px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 150px;" +
+                            "-fx-min-height: 45px;" +
+                            "-fx-background-radius: 8;"
+            ));
+
+
+            Button cancel = (Button) dialog.getDialogPane().lookupButton(cancelBtn);
+
+            cancel.setStyle(
+                    "-fx-background-color: #f1f3f5;" +
+                            "-fx-text-fill: #212529;" +
+                            "-fx-font-size: 14px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 120px;" +
+                            "-fx-min-height: 45px;" +
+                            "-fx-background-radius: 8;"
+            );
+
+            cancel.setOnMouseEntered(e -> cancel.setStyle(
+                    "-fx-background-color: #e9ecef;" +
+                            "-fx-text-fill: #212529;" +
+                            "-fx-font-size: 14px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 120px;" +
+                            "-fx-min-height: 45px;" +
+                            "-fx-background-radius: 8;" +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3);" +
+                            "-fx-scale-x: 1.03;" +
+                            "-fx-scale-y: 1.03;"
+            ));
+
+            cancel.setOnMouseExited(e -> cancel.setStyle(
+                    "-fx-background-color: #f1f3f5;" +
+                            "-fx-text-fill: #212529;" +
+                            "-fx-font-size: 14px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 120px;" +
+                            "-fx-min-height: 45px;" +
+                            "-fx-background-radius: 8;"
+            ));
+
+        });
+
+        dialog.setResultConverter(btn -> {
+            if (btn == submitBtn) {
                 RadioButton selected = (RadioButton) group.getSelectedToggle();
                 int score = selected != null ? (int) selected.getUserData() : 5;
                 String comment = commentArea.getText().trim();
 
                 try {
-                    RatingDAO ratingDAO = new RatingDAO();
+                    RatingDAO dao = new RatingDAO();
                     if (existingRating == null) {
-                        Rating newRating = new Rating(
+                        dao.add(new Rating(
                                 currentPatient, clinic, score,
                                 comment.isEmpty() ? null : comment,
                                 LocalDateTime.now()
-                        );
-                        ratingDAO.add(newRating);
+                        ));
                     } else {
                         existingRating.setScore(score);
                         existingRating.setComment(comment.isEmpty() ? null : comment);
-                        ratingDAO.update(existingRating);
+                        dao.update(existingRating);
                     }
-                    Platform.runLater(() -> showAlert("Success", existingRating == null ?
-                            "Rating added!" : "Rating updated!"));
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    Platform.runLater(() -> showAlert("Error", "Failed to save rating."));
                 }
             }
-            return dialogButton;
+            return btn;
         });
 
         dialog.showAndWait();
@@ -771,7 +1053,24 @@ public class PatientController {
         System.out.println(">>> Clinic ID: " + clinic.getID() + " | Name: ["+ clinic.getName() + "] | Doctor: " + clinic.getDoctorName());
         Button mapBtn = new Button("📍");
         mapBtn.setTooltip(new Tooltip("Open location"));
-        mapBtn.setStyle("-fx-background-color: #15BF8F; -fx-text-fill: white; -fx-font-size: 10px; -fx-padding: 2 6;");
+        String mapNormal =
+                "-fx-background-color: #15BF8F;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-padding: 2 6;" +
+                        "-fx-background-radius: 5;";
+
+        String mapHover =
+                "-fx-background-color: #12a97c;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-padding: 2 6;" +
+                        "-fx-background-radius: 5;" +
+                        "-fx-scale-x: 1.1;" +
+                        "-fx-scale-y: 1.1;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(21,191,143,0.6), 8, 0, 0, 2);";
+
+        applyHover(mapBtn, mapNormal, mapHover);
         mapBtn.setOnAction(e -> openGoogleMaps(clinic.getAddress()));
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -790,7 +1089,26 @@ public class PatientController {
 
         if (status == Status.Booked) {
             Button cancelBtn = new Button("❌ Cancel");
-            cancelBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 12px;");
+
+            String cancelNormal =
+                    "-fx-background-color: #e74c3c;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-size: 12px;" +
+                            "-fx-background-radius: 6;";
+
+            String cancelHover =
+                    "-fx-background-color: #c0392b;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-size: 12px;" +
+                            "-fx-background-radius: 6;" +
+                            "-fx-scale-x: 1.05;" +
+                            "-fx-scale-y: 1.05;" +
+                            "-fx-effect: dropshadow(gaussian, rgba(231,76,60,0.6), 10, 0, 0, 3);";
+
+            applyHover(cancelBtn, cancelNormal, cancelHover);
+
+            cancelBtn.setOnAction(e -> confirmCancelAndRate(a));
+
             cancelBtn.setOnAction(e -> confirmCancelAndRate(a));
             actions.getChildren().add(cancelBtn);
         }
@@ -800,7 +1118,26 @@ public class PatientController {
                 Rating existingRating = new RatingDAO().getRatingByPatientAndClinic(
                         currentPatient.getID(), clinic.getID());
                 Button rateBtn = new Button(existingRating == null ? "⭐ Add Rating" : "🔄 Update Rating");
-                rateBtn.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 12px;");
+
+                String rateNormal =
+                        "-fx-background-color: #f39c12;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-background-radius: 6;";
+
+                String rateHover =
+                        "-fx-background-color: #e67e22;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-background-radius: 6;" +
+                                "-fx-scale-x: 1.05;" +
+                                "-fx-scale-y: 1.05;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(243,156,18,0.6), 10, 0, 0, 3);";
+
+                applyHover(rateBtn, rateNormal, rateHover);
+
+                rateBtn.setOnAction(e -> showRatingDialog(clinic, existingRating));
+
                 rateBtn.setOnAction(e -> showRatingDialog(clinic, existingRating));
                 actions.getChildren().add(rateBtn);
             } catch (SQLException ex) {
@@ -819,6 +1156,18 @@ public class PatientController {
         card.getChildren().addAll(header, doctorLabel, dateLabel, priceLabel, statusLabel, actions);
         return new HBox(card);
     }
+    private void applyHover(
+            Button btn,
+            String normalStyle,
+            String hoverStyle
+    ) {
+        btn.setStyle(normalStyle);
+        btn.setCursor(Cursor.HAND);
+
+        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+        btn.setOnMouseExited(e -> btn.setStyle(normalStyle));
+    }
+
     @FXML
     private void HoverNavButton(javafx.scene.input.MouseEvent e) {
         Button btn = (Button) e.getSource();
@@ -869,5 +1218,58 @@ public class PatientController {
     private void ResetLogoutButton(javafx.scene.input.MouseEvent e) {
         Button btn = (Button) e.getSource();
         btn.setStyle("-fx-background-color: #0C7E5F; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
+    }
+    @FXML
+    private void hoverSettingsButton() {
+        settingsButton.setStyle(
+                "-fx-background-color: #15BF8F;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 20px;" +
+                        "-fx-background-radius: 50;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);"
+        );
+    }
+
+    @FXML
+    private void resetSettingsButton() {
+        settingsButton.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-text-fill: #0C7E5F;" +
+                        "-fx-font-size: 20px;" +
+                        "-fx-background-radius: 50;" +
+                        "-fx-cursor: hand;"
+        );
+    }
+    @FXML
+    private void hoverLogoutButton() {
+        logoutButton.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-text-fill: #0C7E5F;" +
+                        "-fx-font-size: 15px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 25;" +
+                        "-fx-border-radius: 25;" +
+                        "-fx-padding: 10 25;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-border-color: white;" +
+                        "-fx-border-width: 2;"
+        );
+    }
+
+    @FXML
+    private void resetLogoutButton() {
+        logoutButton.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 15px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 25;" +
+                        "-fx-border-radius: 25;" +
+                        "-fx-padding: 10 25;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-border-color: white;" +
+                        "-fx-border-width: 2;"
+        );
     }
 }

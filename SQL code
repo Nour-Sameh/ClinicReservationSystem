@@ -1,0 +1,230 @@
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO,ALLOW_INVALID_DATES';
+
+USE `clinic_test`;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- =============== 1. Departments (5) ===============
+INSERT INTO `Departments` (`name`) VALUES
+('Family Medicine'), ('Internal Medicine'), ('Pediatrics'), ('Dentistry'), ('Dermatology');
+
+-- =============== 2. Schedules (3) ===============
+INSERT INTO `Schedules` (`slot_duration_in_minutes`) VALUES
+(20), (30), (45);
+
+-- =============== 3. WorkingHoursRules ===============
+INSERT INTO `WorkingHoursRules` (`schedule_id`, `day`, `start_time`, `end_time`) VALUES
+(1, 'SUNDAY', '09:00', '17:00'),
+(1, 'MONDAY', '09:00', '17:00'),
+(1, 'TUESDAY', '09:00', '17:00'),
+(1, 'WEDNESDAY', '09:00', '17:00'),
+(1, 'THURSDAY', '09:00', '17:00'),
+(2, 'SATURDAY', '10:00', '16:00'),
+(2, 'SUNDAY', '10:00', '16:00'),
+(2, 'TUESDAY', '10:00', '16:00'),
+(2, 'THURSDAY', '10:00', '16:00'),
+(3, 'MONDAY', '08:00', '14:00'),
+(3, 'WEDNESDAY', '08:00', '14:00'),
+(3, 'FRIDAY', '16:00', '20:00');
+
+-- =============== 4. Patients (10) ===============
+INSERT INTO `Patients` (`name`, `phone`, `email`, `password`, `gender`, `date_of_birth`) VALUES
+('Ahmed Mohamed', '+201012345601', 'ahmed.m@example.com', 'pass123', 'Male', '1992-03-15'),
+('Sara Khalid', '+201012345602', 'sara.k@example.com', 'pass123', 'Female', '1995-07-22'),
+('Youssef Ali', '+201012345603', 'youssef.a@example.com', 'pass123', 'Male', '1988-11-05'),
+('Nourhan Samir', '+201012345604', 'nourhan.s@example.com', 'pass123', 'Female', '2000-01-30'),
+('Omar Fathy', '+201012345605', 'omar.f@example.com', 'pass123', 'Male', '1996-04-14'),
+('Layla Hisham', '+201012345606', 'layla.h@example.com', 'pass123', 'Female', '1991-09-19'),
+('Karim Adel', '+201012345607', 'karim.a@example.com', 'pass123', 'Male', '1985-12-03'),
+('Mariam Tarek', '+201012345608', 'mariam.t@example.com', 'pass123', 'Female', '1999-06-25'),
+('Hassan Ramadan', '+201012345609', 'hassan.r@example.com', 'pass123', 'Male', '1975-02-28'),
+('Amina Zaki', '+201012345610', 'amina.z@example.com', 'pass123', 'Female', '1987-08-11');
+
+-- =============== 5. Clinics (10) ===============
+INSERT INTO `Clinics` (
+  `department_id`, `name`, `address`, `price`, `schedule_id`,
+  `doctor_name`, `consultation_price`, `consultation_duration_days`, `avg_rating`
+) VALUES
+(1, 'Ahmed Mohamed Clinic', 'Dokki, Cairo', 200.00, 1, 'Ahmed Mohamed', 300.00, 7, 4.7),
+(3, 'Sara Khalid Clinic', 'Smouha, Alexandria', 180.00, 2, 'Sara Khalid', 250.00, 5, 4.9),
+(2, 'Youssef Ali Clinic', 'Nasr City, Cairo', 150.00, 3, 'Youssef Ali', 200.00, 7, 4.5),
+(4, 'Nourhan Samir Clinic', '6th of October', 250.00, 1, 'Nourhan Samir', 350.00, 10, 4.8),
+(5, 'Omar Fathy Clinic', 'Heliopolis, Cairo', 170.00, 2, 'Omar Fathy', 220.00, 6, 4.3),
+(1, 'Layla Hisham Clinic', 'Zamalek, Cairo', 300.00, 3, 'Layla Hisham', 400.00, 14, 4.6),
+(2, 'Karim Adel Clinic', 'Maadi, Cairo', 190.00, 1, 'Karim Adel', 260.00, 5, 4.4),
+(3, 'Mariam Tarek Clinic', 'Sheraton, Cairo', 220.00, 2, 'Mariam Tarek', 300.00, 7, 4.7),
+(4, 'Hassan Ramadan Clinic', 'Garden City, Cairo', 350.00, 3, 'Hassan Ramadan', 500.00, 14, 4.9),
+(5, 'Amina Zaki Clinic', 'Mohandessin, Cairo', 210.00, 1, 'Amina Zaki', 280.00, 7, 4.5);
+
+-- =============== 6. Practitioners (10) ===============
+INSERT INTO `Practitioners` (`name`, `phone`, `email`, `password`, `gender`, `date_of_birth`, `clinic_id`) VALUES
+('Ahmed Mohamed', '+201112220001', 'ahmed.p@example.com', 'pass456', 'Male', '1975-05-10', 1),
+('Sara Khalid', '+201112220002', 'sara.p@example.com', 'pass456', 'Female', '1980-02-14', 2),
+('Youssef Ali', '+201112220003', 'youssef.p@example.com', 'pass456', 'Male', '1972-11-25', 3),
+('Nourhan Samir', '+201112220004', 'nourhan.p@example.com', 'pass456', 'Female', '1985-07-03', 4),
+('Omar Fathy', '+201112220005', 'omar.p@example.com', 'pass456', 'Male', '1978-03-18', 5),
+('Layla Hisham', '+201112220006', 'layla.p@example.com', 'pass456', 'Female', '1982-09-30', 6),
+('Karim Adel', '+201112220007', 'karim.p@example.com', 'pass456', 'Male', '1970-12-05', 7),
+('Mariam Tarek', '+201112220008', 'mariam.p@example.com', 'pass456', 'Female', '1987-04-22', 8),
+('Hassan Ramadan', '+201112220009', 'hassan.p@example.com', 'pass456', 'Male', '1968-01-15', 9),
+('Amina Zaki', '+201112220010', 'amina.p@example.com', 'pass456', 'Female', '1979-06-11', 10);
+
+-- Link clinics to doctors
+SET SQL_SAFE_UPDATES = 0;
+UPDATE `Clinics` c
+JOIN `Practitioners` p ON c.id = p.clinic_id
+SET c.doctor_id = p.id;
+SET SQL_SAFE_UPDATES = 1;
+
+-- =============== 7. TimeSlots — 2 Weeks Only (2025-12-16 to 2025-12-29) ===============
+DROP TEMPORARY TABLE IF EXISTS tmp_days;
+CREATE TEMPORARY TABLE tmp_days (n INT);
+INSERT INTO tmp_days VALUES (0),(1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13);
+
+DROP TEMPORARY TABLE IF EXISTS tmp_slots;
+CREATE TEMPORARY TABLE tmp_slots (slot_num INT);
+INSERT INTO tmp_slots VALUES
+(0),(1),(2),(3),(4),(5),(6),(7),(8),(9),
+(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),
+(20),(21),(22),(23),(24),(25),(26),(27),(28),(29);
+
+INSERT INTO `TimeSlots` (`clinic_id`, `date`, `day`, `start_time`, `end_time`, `is_booked`, `is_cancelled`)
+SELECT
+  c.id,
+  DATE_ADD('2025-12-16', INTERVAL d.n DAY),
+  CASE DAYNAME(DATE_ADD('2025-12-16', INTERVAL d.n DAY))
+    WHEN 'Sunday' THEN 'SUNDAY'
+    WHEN 'Monday' THEN 'MONDAY'
+    WHEN 'Tuesday' THEN 'TUESDAY'
+    WHEN 'Wednesday' THEN 'WEDNESDAY'
+    WHEN 'Thursday' THEN 'THURSDAY'
+    WHEN 'Friday' THEN 'FRIDAY'
+    WHEN 'Saturday' THEN 'SATURDAY'
+  END,
+  SEC_TO_TIME(TIME_TO_SEC(w.start_time) + s.slot_duration_in_minutes * sl.slot_num * 60),
+  SEC_TO_TIME(TIME_TO_SEC(w.start_time) + s.slot_duration_in_minutes * (sl.slot_num + 1) * 60),
+  CASE WHEN RAND() < 0.5 THEN 1 ELSE 0 END,
+  CASE WHEN RAND() < 0.1 THEN 1 ELSE 0 END
+FROM `Clinics` c
+JOIN `Schedules` s ON c.schedule_id = s.id
+JOIN `WorkingHoursRules` w ON s.id = w.schedule_id
+CROSS JOIN tmp_days d
+CROSS JOIN tmp_slots sl
+WHERE
+  w.day = CASE DAYNAME(DATE_ADD('2025-12-16', INTERVAL d.n DAY))
+    WHEN 'Sunday' THEN 'SUNDAY'
+    WHEN 'Monday' THEN 'MONDAY'
+    WHEN 'Tuesday' THEN 'TUESDAY'
+    WHEN 'Wednesday' THEN 'WEDNESDAY'
+    WHEN 'Thursday' THEN 'THURSDAY'
+    WHEN 'Friday' THEN 'FRIDAY'
+    WHEN 'Saturday' THEN 'SATURDAY'
+  END
+  AND SEC_TO_TIME(TIME_TO_SEC(w.start_time) + s.slot_duration_in_minutes * (sl.slot_num + 1) * 60) <= w.end_time;
+
+-- =============== 8. Appointments (300) ===============
+-- =============== 8. Appointments (300) — FIXED ===============
+INSERT INTO `Appointments` (
+  `patient_id`, `clinic_id`, `timeslot_id`,
+  `status`, `appointment_type`, `consultation_expiry_date`
+)
+SELECT
+  p.id,
+  ts.clinic_id,
+  ts.id,
+  CASE
+    WHEN RAND() < 0.15 THEN 'Cancelled_by_Patient'
+    WHEN RAND() < 0.1 THEN 'Cancelled_by_Doctor'
+    WHEN RAND() < 0.05 THEN 'No-Show'
+    WHEN RAND() < 0.5 THEN 'Completed'
+    ELSE 'Booked'
+  END,
+  @apt_type := CASE WHEN RAND() < 0.25 THEN 'CONSULTATION' ELSE 'VISIT' END,
+  CASE
+    WHEN @apt_type = 'CONSULTATION' AND RAND() < 0.3
+    THEN DATE_ADD(CURDATE(), INTERVAL FLOOR(3 + RAND() * 10) DAY)
+    ELSE NULL
+  END
+FROM `TimeSlots` ts
+JOIN `Patients` p ON p.id = MOD(ts.id, 10) + 1
+WHERE ts.is_booked = 1
+ORDER BY RAND()
+LIMIT 300;
+-- =============== 9. Ratings (100) ===============
+INSERT INTO `Ratings` (`patient_id`, `clinic_id`, `score`, `comment`, `created_at`)
+SELECT
+  p.id,
+  c.id,
+  FLOOR(3 + RAND() * 3),
+  CASE FLOOR(RAND() * 3)
+    WHEN 0 THEN 'Good service.'
+    WHEN 1 THEN 'Doctor was professional and clear.'
+    WHEN 2 THEN 'Highly satisfied with the consultation.'
+  END,
+  DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 90) DAY)
+FROM `Patients` p
+JOIN `Clinics` c
+ORDER BY RAND()
+LIMIT 100;
+
+-- =============== 10. Chats (50) ===============
+INSERT INTO `Chats` (`patient_id`, `practitioner_id`)
+SELECT DISTINCT
+  p.id,
+  pr.id
+FROM `Patients` p
+JOIN `Practitioners` pr
+ORDER BY RAND()
+LIMIT 50;
+
+-- =============== 11. Messages (200) ===============
+SET SQL_SAFE_UPDATES = 0;
+INSERT INTO `Messages` (`chat_id`, `sender_type`, `sender_id`, `receiver_id`, `message_text`, `timestamp`)
+SELECT
+  ch.id,
+  CASE WHEN RAND() < 0.5 THEN 'Patient' ELSE 'Practitioner' END,
+  CASE WHEN RAND() < 0.5 THEN ch.patient_id ELSE ch.practitioner_id END,
+  CASE WHEN RAND() < 0.5 THEN ch.practitioner_id ELSE ch.patient_id END,
+  CASE FLOOR(RAND() * 3)
+    WHEN 0 THEN 'Hi, I have a question.'
+    WHEN 1 THEN 'Thank you for your help!'
+    WHEN 2 THEN 'When is my next appointment?'
+  END,
+  DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 10 * 86400) SECOND)
+FROM `Chats` ch
+CROSS JOIN (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) n
+ORDER BY RAND()
+LIMIT 200;
+SET SQL_SAFE_UPDATES = 1;
+
+-- =============== 12. WaitingList (80) — Random pairs ===============
+INSERT INTO `WaitingList` (`patient_id`, `clinic_id`, `date`, `status`, `expires_at`)
+SELECT
+  p.id,
+  c.id,
+  DATE_ADD(CURDATE(), INTERVAL FLOOR(1 + RAND() * 10) DAY),
+  CASE FLOOR(RAND() * 5)
+    WHEN 0 THEN 'PENDING'
+    WHEN 1 THEN 'OFFERED'
+    WHEN 2 THEN 'CONFIRMED'
+    WHEN 3 THEN 'EXPIRED'
+    ELSE 'CANCELLED'
+  END,
+  CASE WHEN RAND() < 0.25
+       THEN DATE_ADD(NOW(), INTERVAL FLOOR(6 + RAND() * 18) HOUR)
+       ELSE NULL END
+FROM `Patients` p
+CROSS JOIN `Clinics` c
+ORDER BY RAND()
+LIMIT 80;
+
+-- Finalize
+SET FOREIGN_KEY_CHECKS = 1;
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+SELECT '✅ Done: 10 patients, 10 doctors, ~2.5K slots, 300 appointments, 100 ratings, 200 messages, 80 waiting list.' AS success;
+

@@ -35,10 +35,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.mail.*;
@@ -56,15 +53,15 @@ public class DoctorController {
     @FXML
     private Label slotDurationLabel;
     @FXML
-    private Text scheduleText;
+    private VBox scheduleText;
+    @FXML
+    private ScrollPane settingsScrollPane;
     @FXML
     private Label welcomeLabel;
     @FXML
     private Button editButton;
     @FXML
     private Button logoutButton;
-    @FXML
-    private Label debugLabel;
     @FXML
     private VBox clinicInfoBox;
     @FXML
@@ -89,16 +86,6 @@ public class DoctorController {
     private Button chatNavButton;
     @FXML
     private Label priceLabel;
-    @FXML
-    private Button ClinicInfoMainBox;
-    @FXML
-    private Button cancelAllButton;
-    @FXML
-    private Button exportPDFButton;
-    @FXML
-    private Button exportExcelButton;
-    @FXML
-    private Button reportButton;
     @FXML
     private VBox reportBox;
     @FXML
@@ -127,7 +114,6 @@ public class DoctorController {
     private Button deleteClinicButton;
     @FXML
     private VBox waitingListContainer;
-
 
     private Button activeButton = null;
     @FXML
@@ -217,7 +203,8 @@ public class DoctorController {
         int duration = (clinic.getSchedule() != null) ? clinic.getSchedule().getSlotDurationInMinutes() : 30;
         slotDurationLabel.setText(duration + " min slots");
         priceLabel.setText(String.format("Price: %.2f EGP", clinic.getPrice()));
-        scheduleText.setText(buildScheduleText(clinic));
+//        scheduleText.setText(buildScheduleText(clinic))
+        updateScheduleCards(clinic);
     }
 
     private void renderRatingStars(double rating) {
@@ -247,19 +234,84 @@ public class DoctorController {
         starsContainer.getChildren().add(n);
     }
 
-    private String buildScheduleText(Clinic c) {
-        if (c.getSchedule() == null || c.getSchedule().getWeeklyRules() == null || c.getSchedule().getWeeklyRules().isEmpty()) {
-            return "No working hours";
-        }
-        StringBuilder sb = new StringBuilder();
-        var rules = c.getSchedule().getWeeklyRules();
-        for (int i = 0; i < rules.size(); i++) {
-            if (i > 0) sb.append("\n");
-            sb.append(rules.get(i).getDay().toString().substring(0, 3))
-                    .append(": ").append(rules.get(i).getStartTime())
-                    .append("–").append(rules.get(i).getEndTime());
-        }
-        return sb.toString();
+//    private String buildScheduleText(Clinic c) {
+//        if (c.getSchedule() == null || c.getSchedule().getWeeklyRules() == null || c.getSchedule().getWeeklyRules().isEmpty()) {
+//            return "No working hours";
+//        }
+//        StringBuilder sb = new StringBuilder();
+//        var rules = c.getSchedule().getWeeklyRules();
+//        for (int i = 0; i < rules.size(); i++) {
+//            if (i > 0) sb.append("\n");
+//            sb.append(rules.get(i).getDay().toString().substring(0, 3))
+//                    .append(": ").append(rules.get(i).getStartTime())
+//                    .append("–").append(rules.get(i).getEndTime());
+//        }
+//        return sb.toString();
+//    }
+private void updateScheduleCards(Clinic clinic) {
+    scheduleText.getChildren().clear(); // Assuming scheduleText is now a VBox or container
+
+    if (clinic.getSchedule() == null || clinic.getSchedule().getWeeklyRules() == null || clinic.getSchedule().getWeeklyRules().isEmpty()) {
+        Label noHours = new Label("No working hours");
+        noHours.setStyle("-fx-font-size: 14px; -fx-text-fill: #999999; -fx-padding: 20;");
+        scheduleText.getChildren().add(noHours);
+        return;
+    }
+
+    var rules = clinic.getSchedule().getWeeklyRules();
+    for (var rule : rules) {
+        HBox card = createDayCard(rule);
+        scheduleText.getChildren().add(card);
+    }
+}
+
+    private HBox createDayCard(WorkingHoursRule rule) {
+        HBox card = new HBox(15);
+        card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-padding: 12 16;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);" +
+                        "-fx-alignment: center-left;"
+        );
+
+        // Hover effect
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-padding: 12 16;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 3);" +
+                        "-fx-alignment: center-left;" +
+                        "-fx-cursor: hand;"
+        ));
+
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-padding: 12 16;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);" +
+                        "-fx-alignment: center-left;"
+        ));
+
+        // Day label
+        Label dayLabel = new Label(rule.getDay().toString().substring(0, 3).toUpperCase());
+        dayLabel.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #4CAF50;" +
+                        "-fx-min-width: 50px;"
+        );
+
+        // Time label
+        Label timeLabel = new Label(rule.getStartTime() + " – " + rule.getEndTime());
+        timeLabel.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-text-fill: #555555;"
+        );
+
+        card.getChildren().addAll(dayLabel, timeLabel);
+
+        return card;
     }
 
     private void showNoClinic() {
@@ -268,7 +320,6 @@ public class DoctorController {
         renderRatingStars(0);
         addressLabel.setText("—");
         slotDurationLabel.setText("—");
-        scheduleText.setText("You don't have a clinic yet.");
     }
 
 
@@ -1014,39 +1065,40 @@ public class DoctorController {
         if (slot == null) return new HBox();
 
         HBox box = new HBox(10);
-        box.setMinHeight(50);
-        box.setPadding(new Insets(8, 12, 8, 12));
+        box.setMinHeight(60);
+        box.setPadding(new Insets(12, 16, 12, 16));
 
         String bgColor, borderColor;
         switch (a.getStatus()) {
             case Cancelled_by_Patient:
             case Cancelled_by_Doctor:
-                bgColor = "#fdf2f2";
-                borderColor = "#fadbd8";
+                bgColor = "#fef2f2";
+                borderColor = "#f87171";
                 break;
             case Completed:
-                bgColor = "#f6fef9";
-                borderColor = "#d5f5e3";
+                bgColor = "#f0fdf4";
+                borderColor = "#86efac";
                 break;
             case Absent:
                 bgColor = "#fef9e7";
-                borderColor = "#f9e79f";
+                borderColor = "#fbbf24";
                 break;
             default: // Booked
                 bgColor = "#ffffff";
-                borderColor = "#e0e0e0";
+                borderColor = "#e5e7eb";
         }
 
         box.setStyle("-fx-background-color: " + bgColor + "; " +
                 "-fx-border-color: " + borderColor + "; " +
-                "-fx-border-radius: 8; " +
-                "-fx-background-radius: 8; " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 10; " +
+                "-fx-background-radius: 10; " +
                 "-fx-alignment: CENTER_LEFT; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);");
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 2);");
 
         String patientName = (a.getPatient() != null) ? a.getPatient().getName() : "—";
         Label patientLabel = new Label("👤 " + patientName);
-        patientLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
+        patientLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1f2937;");
 
         String timeText = slot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm a"));
 
@@ -1060,52 +1112,95 @@ public class DoctorController {
 
         String endTimeText = endTime.format(DateTimeFormatter.ofPattern("hh:mm a"));
         Label timeLabel = new Label("⏰ " + timeText + " – " + endTimeText);
-        timeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #666;");
+        timeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6b7280;");
 
-        Label statusLabel = new Label("📌 " + a.getStatus());
-        statusLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #555;");
+        // Status Label - ليبل عادي مش زرار
+        String statusText = "";
+        String statusStyle = "";
+
+        switch (a.getStatus()) {
+            case Cancelled_by_Patient:
+            case Cancelled_by_Doctor:
+                statusText = "❌ Cancelled";
+                statusStyle = "-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; " +
+                        "-fx-padding: 6 12; -fx-background-radius: 6; -fx-border-color: #ef4444; " +
+                        "-fx-border-width: 1.5; -fx-border-radius: 6; -fx-font-weight: bold;";
+                break;
+            case Completed:
+                statusText = "✓ Completed";
+                statusStyle = "-fx-background-color: #d1fae5; -fx-text-fill: #059669; " +
+                        "-fx-padding: 6 12; -fx-background-radius: 6; -fx-border-color: #10b981; " +
+                        "-fx-border-width: 1.5; -fx-border-radius: 6; -fx-font-weight: bold;";
+                break;
+            case Absent:
+                statusText = "⚠ Absent";
+                statusStyle = "-fx-background-color: #fef3c7; -fx-text-fill: #d97706; " +
+                        "-fx-padding: 6 12; -fx-background-radius: 6; -fx-border-color: #f59e0b; " +
+                        "-fx-border-width: 1.5; -fx-border-radius: 6; -fx-font-weight: bold;";
+                break;
+            default: // Booked - ليبل عادي بدون بوردر أو background خاص
+                statusText = "📌 Booked";
+                statusStyle = "-fx-text-fill: #1d4ed8; -fx-padding: 6 12; -fx-font-weight: bold;";
+        }
+
+        Label statusLabel = new Label(statusText);
+        statusLabel.setStyle(statusStyle + " -fx-font-size: 13px;");
 
         Label expiryLabel = null;
-
         if (a.getConsultationExpiryDate() != null) {
             expiryLabel = new Label("⏳ Valid until: " +
                     a.getConsultationExpiryDate().format(DateTimeFormatter.ofPattern("dd/MM")));
-            expiryLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #888;");
-            box.getChildren().add(expiryLabel);
+            expiryLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #9ca3af;");
         }
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button cancelBtn = new Button("Cancel");
-        cancelBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
-                "-fx-font-size: 11px; -fx-padding: 3 10; -fx-background-radius: 4;");
-        cancelBtn.setOnAction(e -> confirmAndCancelAppointment(a));
+        cancelBtn.setStyle("-fx-background-color: #dc2626; -fx-text-fill: white; " +
+                "-fx-font-size: 12px; -fx-padding: 6 14; -fx-background-radius: 6; " +
+                "-fx-font-weight: bold; -fx-cursor: hand;");
+        cancelBtn.setOnAction(e -> confirmAndCancelAppointment(a, box, statusLabel, bgColor, borderColor, cancelBtn));
 
         LocalDateTime now = LocalDateTime.now();
         boolean isOverdueAndBooked = a.getStatus() == Status.Booked && now.isAfter(endTime);
 
+        VBox detailsBox = new VBox(2);
+        detailsBox.getChildren().addAll(patientLabel, timeLabel);
+        if (expiryLabel != null) {
+            detailsBox.getChildren().add(expiryLabel);
+        }
+
+        box.getChildren().addAll(detailsBox, spacer, statusLabel);
+
         if (isOverdueAndBooked) {
             Button completeBtn = new Button("✓ Completed");
-            completeBtn.setStyle("-fx-background-color: #2E7D32; -fx-text-fill: white; " +
-                    "-fx-font-size: 11px; -fx-padding: 3 8; -fx-background-radius: 4;");
+            completeBtn.setStyle("-fx-background-color: #059669; -fx-text-fill: white; " +
+                    "-fx-font-size: 12px; -fx-padding: 6 12; -fx-background-radius: 6; " +
+                    "-fx-font-weight: bold; -fx-cursor: hand; -fx-margin: 0 5 0 0;");
+
+            Button absentBtn = new Button("✖ Absent");
+            absentBtn.setStyle("-fx-background-color: #d97706; -fx-text-fill: white; " +
+                    "-fx-font-size: 12px; -fx-padding: 6 12; -fx-background-radius: 6; " +
+                    "-fx-font-weight: bold; -fx-cursor: hand;");
+
             completeBtn.setOnAction(e -> {
                 a.setStatus(Status.Completed);
                 try {
                     new AppointmentDAO().updateStatus(a.getId(), a.getStatus());
                     Platform.runLater(() -> {
-                        box.setStyle(box.getStyle().replace(bgColor, "#f6fef9").replace(borderColor, "#d5f5e3"));
-                        statusLabel.setText("📌 " + a.getStatus());
-                        statusLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #2E7D32;");
+                        box.setStyle(box.getStyle()
+                                .replace(bgColor, "#f0fdf4")
+                                .replace(borderColor, "#86efac"));
+                        statusLabel.setText("✓ Completed");
+                        statusLabel.setStyle("-fx-background-color: #d1fae5; -fx-text-fill: #059669; " +
+                                "-fx-padding: 6 12; -fx-background-radius: 6; -fx-border-color: #10b981; " +
+                                "-fx-border-width: 1.5; -fx-border-radius: 6; -fx-font-weight: bold; -fx-font-size: 13px;");
+
+                        // إزالة أزرار Complete و Absent و Cancel
                         box.getChildren().remove(completeBtn);
-                        if (box.getChildren().contains(spacer)) {
-                            int idx = box.getChildren().indexOf(spacer);
-                            if (idx >= 0 && idx + 1 < box.getChildren().size() &&
-                                    box.getChildren().get(idx + 1) instanceof Button &&
-                                    ((Button) box.getChildren().get(idx + 1)).getText().contains("Absent")) {
-                                box.getChildren().remove(idx + 1); // absentBtn
-                            }
-                        }
+                        box.getChildren().remove(absentBtn);
+                        box.getChildren().remove(cancelBtn);
                     });
                     showAlert("Success", "Appointment marked as completed.");
                 } catch (SQLException ex) {
@@ -1114,19 +1209,23 @@ public class DoctorController {
                 }
             });
 
-            Button absentBtn = new Button("✖️ Absent");
-            absentBtn.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white; " +
-                    "-fx-font-size: 11px; -fx-padding: 3 8; -fx-background-radius: 4;");
             absentBtn.setOnAction(e -> {
                 a.setStatus(Status.Absent);
                 try {
                     new AppointmentDAO().updateStatus(a.getId(), a.getStatus());
                     Platform.runLater(() -> {
-                        box.setStyle(box.getStyle().replace(bgColor, "#fef9e7").replace(borderColor, "#f9e79f"));
-                        statusLabel.setText("📌 " + a.getStatus());
-                        statusLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #FF8F00;");
+                        box.setStyle(box.getStyle()
+                                .replace(bgColor, "#fef9e7")
+                                .replace(borderColor, "#fbbf24"));
+                        statusLabel.setText("⚠ Absent");
+                        statusLabel.setStyle("-fx-background-color: #fef3c7; -fx-text-fill: #d97706; " +
+                                "-fx-padding: 6 12; -fx-background-radius: 6; -fx-border-color: #f59e0b; " +
+                                "-fx-border-width: 1.5; -fx-border-radius: 6; -fx-font-weight: bold; -fx-font-size: 13px;");
+
+                        // إزالة أزرار Complete و Absent و Cancel
                         box.getChildren().remove(completeBtn);
                         box.getChildren().remove(absentBtn);
+                        box.getChildren().remove(cancelBtn);
                     });
                     showAlert("Success", "Patient marked as absent (No-Show).");
                 } catch (SQLException ex) {
@@ -1135,31 +1234,47 @@ public class DoctorController {
                 }
             });
 
-
-            int spacerIndex = box.getChildren().indexOf(spacer);
-            if (spacerIndex >= 0) {
-                box.getChildren().add(spacerIndex, absentBtn);
-                box.getChildren().add(spacerIndex, completeBtn);
-            } else {
-                box.getChildren().addAll(completeBtn, absentBtn);
-            }
-        }
-        box.getChildren().addAll(
-                patientLabel,
-                new Region(),
-                timeLabel,
-                new Region(),
-                statusLabel
-        );
-
-        if (a.getConsultationExpiryDate() != null) {
-            box.getChildren().add(expiryLabel);
+            box.getChildren().addAll(completeBtn, absentBtn);
         }
 
-        box.getChildren().addAll(spacer, cancelBtn);
+        // إضافة زر Cancel للمواعيد الـ Booked فقط
+        if (a.getStatus() == Status.Booked) {
+            box.getChildren().add(cancelBtn);
+        }
 
         return box;
+    }
 
+    private void confirmAndCancelAppointment(Appointment a, HBox box, Label statusLabel,
+                                             String oldBgColor, String oldBorderColor, Button cancelBtn) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Cancel Appointment");
+        confirmation.setHeaderText("Are you sure you want to cancel this appointment?");
+        confirmation.setContentText("Patient: " + (a.getPatient() != null ? a.getPatient().getName() : "—"));
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            a.setStatus(Status.Cancelled_by_Doctor);
+            try {
+                new AppointmentDAO().updateStatus(a.getId(), a.getStatus());
+                Platform.runLater(() -> {
+                    box.setStyle(box.getStyle()
+                            .replace(oldBgColor, "#fef2f2")
+                            .replace(oldBorderColor, "#f87171"));
+                    statusLabel.setText("❌ Cancelled");
+                    statusLabel.setStyle("-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; " +
+                            "-fx-padding: 6 12; -fx-background-radius: 6; -fx-border-color: #ef4444; " +
+                            "-fx-border-width: 1.5; -fx-border-radius: 6; -fx-font-weight: bold; -fx-font-size: 13px;");
+
+                    // إزالة زر Cancel بعد الإلغاء
+                    box.getChildren().remove(cancelBtn);
+                });
+                showAlert("Success", "Appointment cancelled successfully.");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                showAlert("Error", "Failed to cancel appointment.");
+            }
+        }
     }
 
     @FXML
@@ -1600,12 +1715,12 @@ public class DoctorController {
     @FXML
     private void handleSettings() {
         clinicInfoBox.setVisible(false);
+        waitingListBox.setVisible(false);
         appointmentsBox.setVisible(false);
         reviewsBox.setVisible(false);
         reportBox.setVisible(false);
-
         loadCurrentUserSettings();
-
+        settingsScrollPane.setVisible(true);
         settingsBox.setVisible(true);
     }
 
@@ -1638,12 +1753,12 @@ public class DoctorController {
 
     @FXML
     private void handleSettingsCancel() {
+        settingsScrollPane.setVisible(false);
         settingsBox.setVisible(false);
         clinicInfoBox.setVisible(true);
     }
 
     @FXML
-
     private void handleSettingsSave() {
         try {
             String newName = usernameField.getText().trim();
@@ -1655,16 +1770,17 @@ public class DoctorController {
                 showAlert("Error", "Name/Username cannot be empty.");
                 return;
             }
+
             PractitionerDAO doctorDAO = new PractitionerDAO();
+
             if (!newName.equals(currentDoctor.getName())) {
                 if (doctorDAO.isNameTaken(newName, currentDoctor.getID())) {
                     showAlert("Error", "This name is already taken. Please choose another one.");
                     return;
                 }
-            }
-            if (!newName.equals(currentDoctor.getName())) {
                 currentDoctor.setName(newName);
             }
+
             if (!newPass.isEmpty()) {
                 if (currentPass.isEmpty()) {
                     showAlert("Error", "Please enter your current password.");
@@ -1688,6 +1804,8 @@ public class DoctorController {
             }
 
             showAlert("Success", "Profile updated successfully!");
+
+            settingsScrollPane.setVisible(false);
             handleSettingsCancel();
 
         } catch (Exception e) {
@@ -1695,6 +1813,7 @@ public class DoctorController {
             showAlert("Error", "Failed to update profile.");
         }
     }
+
 
 
     public static void sendEmail(String to, String subject, String body) {
@@ -1978,15 +2097,35 @@ public class DoctorController {
     }
 
     @FXML
-    private void hoverLogoutButton(javafx.scene.input.MouseEvent e) {
-        Button btn = (Button) e.getSource();
-        btn.setStyle("-fx-background-color: #0FAF88; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
+    private void hoverLogoutButton() {
+        logoutButton.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-text-fill: #0C7E5F;" +
+                        "-fx-font-size: 15px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 25;" +
+                        "-fx-border-radius: 25;" +
+                        "-fx-padding: 10 25;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-border-color: white;" +
+                        "-fx-border-width: 2;"
+        );
     }
 
     @FXML
-    private void resetLogoutButton(javafx.scene.input.MouseEvent e) {
-        Button btn = (Button) e.getSource();
-        btn.setStyle("-fx-background-color: #0C7E5F; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-padding: 10 25;");
+    private void resetLogoutButton() {
+        logoutButton.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 15px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 25;" +
+                        "-fx-border-radius: 25;" +
+                        "-fx-padding: 10 25;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-border-color: white;" +
+                        "-fx-border-width: 2;"
+        );
     }
 
     @FXML
@@ -2006,5 +2145,56 @@ public class DoctorController {
         waitingListBox.setManaged(true);
 
         loadWaitingListForClinic();
+    }
+    // ========== Settings Button Hover ==========
+    @FXML
+    private void hoverSettingsButton() {
+        settingsButton.setStyle(
+                "-fx-background-color: #15BF8F;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 20px;" +
+                        "-fx-background-radius: 50;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);"
+        );
+    }
+
+    @FXML
+    private void resetSettingsButton() {
+        settingsButton.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-text-fill: #0C7E5F;" +
+                        "-fx-font-size: 20px;" +
+                        "-fx-background-radius: 50;" +
+                        "-fx-cursor: hand;"
+        );
+    }
+
+    // ========== Edit Button Hover ==========
+    @FXML
+    private void hoverEditButton() {
+        editButton.setStyle(
+                "-fx-background-color: #52a882;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-padding: 5 15;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);"
+        );
+    }
+
+    @FXML
+    private void resetEditButton() {
+        editButton.setStyle(
+                "-fx-background-color: #e0f7fa;" +
+                        "-fx-text-fill: #52a882;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-padding: 5 15;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-cursor: hand;"
+        );
     }
 }
