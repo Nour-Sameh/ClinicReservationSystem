@@ -1114,7 +1114,6 @@ private void updateScheduleCards(Clinic clinic) {
         Label timeLabel = new Label("⏰ " + timeText + " – " + endTimeText);
         timeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6b7280;");
 
-        // Status Label - ليبل عادي مش زرار
         String statusText = "";
         String statusStyle = "";
 
@@ -1237,7 +1236,6 @@ private void updateScheduleCards(Clinic clinic) {
             box.getChildren().addAll(completeBtn, absentBtn);
         }
 
-        // إضافة زر Cancel للمواعيد الـ Booked فقط
         if (a.getStatus() == Status.Booked) {
             box.getChildren().add(cancelBtn);
         }
@@ -1439,14 +1437,11 @@ private void updateScheduleCards(Clinic clinic) {
 
     public void refreshClinicInfo() {
         try {
-            // إعادة تحميل الدكتور (أو الكلاينك فقط)
             Practitioner updatedDoctor = practitionerDAO.getById(currentDoctor.getID());
             if (updatedDoctor != null && updatedDoctor.getClinic() != null) {
-                currentDoctor = updatedDoctor; // أو حدّث فقط الـ clinic
-                // حدّث العناصر في الواجهة:
+                currentDoctor = updatedDoctor;
                 clinicNameLabel.setText(currentDoctor.getClinic().getName());
                 priceLabel.setText(String.format("%.2f EGP", currentDoctor.getClinic().getPrice()));
-                // ... وغيرهم حسب الحاجة
             }
         } catch (SQLException e) {
             e.printStackTrace();
