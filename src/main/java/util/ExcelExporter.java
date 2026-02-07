@@ -1,20 +1,41 @@
 package util;
 
+import model.Appointment;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import model.Appointment;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 public class ExcelExporter {
 
     public static void exportToExcel(List<Appointment> appointments, String fileName) throws IOException {
+        Objects.requireNonNull(fileName, "fileName must not be null");
+
+        Path path = Paths.get(fileName);
+        if (!fileName.toLowerCase().endsWith(".xlsx")) {
+            path = Paths.get(fileName + ".xlsx");
+        }
+
+        Path parent = path.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        if (Files.exists(path) && !Files.isWritable(path)) {
+            boolean writable = path.toFile().setWritable(true);
+            if (!writable) {
+                throw new IOException("Target file is read-only: `" + path + "` (close it in Excel or change permissions)");
+            }
+        }
+
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Appointments");
 
-            // Header
             Row header = sheet.createRow(0);
             String[] headers = {"ID", "Patient", "Date", "Time", "Status", "Type"};
             for (int i = 0; i < headers.length; i++) {
@@ -23,7 +44,6 @@ public class ExcelExporter {
                 cell.setCellStyle(createHeaderStyle(workbook));
             }
 
-            // Data
             int rowNum = 1;
             for (Appointment a : appointments) {
                 Row row = sheet.createRow(rowNum++);
@@ -45,15 +65,15 @@ public class ExcelExporter {
                 row.createCell(5).setCellValue(a.getAppointmentType().name());
             }
 
-            // Auto-size columns
             for (int i = 0; i < headers.length; i++) {
                 sheet.autoSizeColumn(i);
             }
 
-            // Save
-            try (FileOutputStream out = new FileOutputStream(fileName)) {
+            try (OutputStream out = Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
                 workbook.write(out);
             }
+        } catch (IOException e) {
+            throw new IOException("Failed to write Excel file `" + path + "`: " + e.getMessage(), e);
         }
     }
 

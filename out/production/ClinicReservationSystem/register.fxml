@@ -1,84 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.RegisterController">
-
-    <!-- ✅ خلفية كـ ImageView مع opacity -->
-    <ImageView fitWidth="600" fitHeight="700" preserveRatio="false" opacity="0.7">
-        <Image url="@images/ha.jpg" />
+<StackPane stylesheets="@register.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+    <ImageView fitHeight="800" fitWidth="1550" opacity="0.50" preserveRatio="false">
+        <Image url="@images/backgroundd.png" />
     </ImageView>
 
-    <children>
-        <!-- Container مركزي -->
-        <VBox alignment="CENTER" layoutX="68.0" layoutY="50" prefHeight="567.0" prefWidth="464.0" spacing="15">
+    <!-- Back Button -->
+    <AnchorPane>
+        <Button layoutX="40.0" layoutY="81.0" onAction="#handleBack" prefHeight="48.0" prefWidth="118.0" styleClass="btn-back" text="← Back" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="81.0" />
+    </AnchorPane>
 
-            <!-- زر الرجوع (Back) -->
-            <HBox alignment="CENTER_LEFT" prefWidth="400">
-                <Button fx:id="backButton" onAction="#handleBack" prefHeight="30" prefWidth="96.0" style="-fx-background-color: white; -fx-border-color: #15BF8F; -fx-border-radius: 5;                                -fx-background-radius: 5; -fx-text-fill: #15BF8F; -fx-font-weight: bold;" text="← Back" />
-            </HBox>
+    <!-- CARD -->
+    <VBox alignment="CENTER" maxHeight="700" maxWidth="480" spacing="16" styleClass="card">
 
-            <!-- اللوغو -->
-            <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@/images/clinic logo.png" />
-                </image>
+        <!-- ICON CIRCLE -->
+        <StackPane maxHeight="90" maxWidth="90" minHeight="90" minWidth="90" styleClass="icon-circle">
+            <ImageView fitHeight="60" fitWidth="60" preserveRatio="true">
+                <Image url="@images/clinic logo.png" />
             </ImageView>
+        </StackPane>
 
-            <!-- العنوان -->
-            <Text style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-fill: #222;" text="Create Account" />
+        <!-- TITLE -->
+        <Label styleClass="title" text="Create Account" />
 
-            <!-- حقول الإدخال -->
-            <TextField fx:id="fullNameField" prefHeight="40.0" prefWidth="464.0" promptText="Full Name" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-background-radius: 8;" />
+        <!-- FORM -->
+        <VBox alignment="CENTER" spacing="12">
 
-            <TextField fx:id="emailField" prefHeight="42.0" prefWidth="464.0" promptText="Email" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-background-radius: 8;" />
+            <TextField fx:id="fullNameField" promptText="Full Name" styleClass="input" />
 
-            <TextField fx:id="phoneField" prefHeight="43.0" prefWidth="464.0" promptText="Phone" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-background-radius: 8;" />
+            <TextField fx:id="emailField" promptText="Email" styleClass="input" />
 
-            <PasswordField fx:id="passwordField" prefHeight="44.0" prefWidth="464.0" promptText="Password" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-background-radius: 8;" />
+            <TextField fx:id="phoneField" promptText="Phone" styleClass="input" />
 
-            <!-- Gender & Date of Birth (في سطر واحد) -->
-            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="500.0" spacing="20">
-                <!-- Gender -->
-                <VBox alignment="CENTER_LEFT" prefWidth="160" spacing="5">
-                    <Label style="-fx-font-weight: bold;" text="Gender" />
-                    <ComboBox fx:id="genderComboBox" prefHeight="24.0" prefWidth="195.0" promptText="Select gender" />
-                </VBox>
+            <PasswordField fx:id="passwordField" promptText="Password" styleClass="input" />
 
-                <!-- Date of Birth -->
-                <VBox alignment="CENTER_LEFT" prefWidth="160" spacing="5">
-                    <Label style="-fx-font-weight: bold;" text="Date of Birth" />
-                    <DatePicker fx:id="dobPicker" prefWidth="150" promptText="Select date" />
-                </VBox>
+            <!-- Gender & DOB -->
+            <HBox alignment="CENTER" spacing="14">
+                <ComboBox fx:id="genderComboBox" promptText="Gender" styleClass="input-small" />
+
+                <DatePicker fx:id="dobPicker" promptText="Date of Birth" styleClass="input-small" />
             </HBox>
 
-            <!-- Role (Patient / Practitioner) -->
+            <!-- Role -->
             <HBox alignment="CENTER" spacing="30">
                 <CheckBox fx:id="patientCheck" text="Patient" />
                 <CheckBox fx:id="doctorCheck" text="Practitioner" />
             </HBox>
 
-            <!-- زر التسجيل -->
-            <Button fx:id="registerButton" onAction="#handleRegister" onMouseEntered="#onHoverIn" onMouseExited="#onHoverOut" prefHeight="45" prefWidth="350" style="-fx-background-color: #15BF8F; -fx-background-radius: 25; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16;">
-                <effect>
-                    <DropShadow color="#888888" offsetX="0" offsetY="2" radius="5.0" />
-                </effect>
-                <text>Register</text>
-            </Button>
+            <!-- Register Button -->
+            <Button onAction="#handleRegister" prefHeight="48" prefWidth="360" styleClass="btn-primary" text="Register" />
 
-            <!-- رابط Login -->
+            <!-- Login Link -->
             <HBox alignment="CENTER" spacing="5">
-                <Text style="-fx-fill: #777; -fx-font-size: 14px;" text="Already have an account?" />
-                <Hyperlink fx:id="loginLink" onAction="#goToLogin" style="-fx-text-fill: #15BF8F; -fx-font-weight: bold; -fx-underline: true;" text="Login" />
+                <Label styleClass="hint-text" text="Already have an account?" />
+                <Button onAction="#goToLogin" styleClass="link-btn" text="Login" />
             </HBox>
 
         </VBox>
-    </children>
-</AnchorPane>
+    </VBox>
+
+</StackPane>

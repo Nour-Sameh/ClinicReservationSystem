@@ -77,6 +77,7 @@ public class AddClinicController {
     private Integer tempScheduleId = null;
 
     public void setDoctor(Practitioner doctor) {
+        System.out.println(doctor);
         this.currentDoctor = doctor;
     }
 
@@ -143,7 +144,7 @@ public class AddClinicController {
                             af.setText(s);
                             menu.hide();
                             if (statusLbl != null) {
-                                statusLbl.setText("✓ تم اختيار العنوان");
+                                statusLbl.setText("✓ addres selected");
                             }
                         });
                         menu.getItems().add(item);
@@ -464,7 +465,7 @@ public class AddClinicController {
                     .replace("+", "%20")
                     .replace(" ", "%20");
 
-            String url = "https://www.google.com/maps/search/?api=1&query=" + encoded; // ✅ no extra spaces
+            String url = "https://www.google.com/maps/search/?api=1&query=" + encoded;
             java.awt.Desktop.getDesktop().browse(new URI(url));
 
             if (addressStatusLabel != null) {

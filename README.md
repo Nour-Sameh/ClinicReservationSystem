@@ -2,8 +2,6 @@
 
 # 🏥 Clinic Reservation System
 
- A **desktop-based clinic management application** built with **JavaFX** and **MySQL**, designed to streamline appointment booking, patient–doctor communication, and clinic administration.
-
 ---
 
 ## 🎯 Overview
@@ -128,8 +126,8 @@ The system follows **MVC architecture** and the **DAO pattern**, ensuring clean 
 2. Sends an **email notification** with the available slot
 3. If no booking occurs within **10 minutes**:
 
-   * The request is marked as **Expired**
-   * The system automatically notifies the next patient
+  * The request is marked as **Expired**
+  * The system automatically notifies the next patient
 
 ---
 
@@ -141,7 +139,7 @@ The system follows **MVC architecture** and the **DAO pattern**, ensuring clean 
 * Class Diagram
 * Sequence Diagrams (Booking, Waiting List, Chat)
 <p align="center">
-  <img src="ClinicUML.png" "/>
+  <img src="ClinicUML.png"/>
 </p>
 
 ### Database Design
@@ -149,7 +147,7 @@ The system follows **MVC architecture** and the **DAO pattern**, ensuring clean 
 * Relational and normalized schema
 * Main tables:
 <p align="center">
-  <img src="DatabaseDiagram.png" "/>
+  <img src="DatabaseDiagram.png"/>
 </p>
 
 ---
@@ -173,7 +171,7 @@ git clone https://github.com/Nour-Sameh/ClinicReservationSystem.git
 1. Configure database connection
 2. Import SQL schema
 3. Run the application
-4. Make sure you downloaded all libraries 
+4. Make sure you downloaded all libraries
 
 ---
 

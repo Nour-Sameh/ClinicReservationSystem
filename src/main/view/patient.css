@@ -1,0 +1,209 @@
+.root {
+    -fx-background-color: #f0f4f3;
+}
+
+.header {
+    -fx-background-color: linear-gradient(to right, #15BF8F, #0C7E5F);
+    -fx-padding: 10 20;
+    -fx-alignment: center-left;
+}
+
+.header-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.settings-btn {
+    -fx-background-color: white;
+    -fx-text-fill: #0C7E5F;
+    -fx-font-size: 20px;
+    -fx-background-radius: 50;
+    -fx-cursor: hand;
+}
+
+.nav-bar {
+    -fx-background-color: #F5FAF9;
+    -fx-padding: 20;
+    -fx-background-radius: 15;
+    -fx-alignment: center;
+    -fx-spacing: 20;
+}
+
+.nav-button {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #e8f6f3);
+    -fx-text-fill: #444;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-border-color: #c8d6d5;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 2);
+}
+
+.nav-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #f8fafc, #e0f2fe);
+}
+
+.nav-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #dbeafe, #bfdbfe);
+}
+
+.nav-button:selected {
+    -fx-background-color: #15BF8F;
+    -fx-text-fill: white;
+}
+
+.main-content {
+    -fx-padding: 20;
+}
+
+.search-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+}
+
+.specialty-combo {
+    -fx-pref-width: 200;
+    -fx-font-size: 14px;
+}
+
+.clinics-container {
+    -fx-padding: 10;
+    -fx-spacing: 15;
+}
+
+.clinic-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 2);
+}
+
+.clinic-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d3748;
+}
+
+.doctor-name {
+    -fx-font-size: 14px;
+    -fx-text-fill: #15BF8F;
+    -fx-font-weight: bold;
+}
+
+.location {
+    -fx-font-size: 12px;
+    -fx-text-fill: #718096;
+}
+
+.rating {
+    -fx-font-size: 12px;
+    -fx-text-fill: #f59e0b;
+}
+
+.price {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333;
+}
+
+.working-hours {
+    -fx-font-size: 12px;
+    -fx-text-fill: #15BF8F;
+    -fx-font-weight: bold;
+}
+
+.specialty-tag {
+    -fx-background-color: #e0f2fe;
+    -fx-text-fill: #0ea5e9;
+    -fx-font-size: 12px;
+    -fx-padding: 2 8;
+    -fx-background-radius: 15;
+}
+
+.start-chat-btn {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #334155;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+}
+
+.view-slots-btn {
+    -fx-background-color: #15BF8F;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+}
+
+.view-slots-btn:hover {
+    -fx-background-color: #0ea5e9;
+}
+
+.logout-btn {
+    -fx-background-color: #0C7E5F;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #0c6a4d;
+}
+
+.settings-panel {
+    -fx-background-color: white;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
+
+.settings-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.settings-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.settings-field {
+    -fx-editable: false;
+    -fx-opacity: 0.7;
+}
+
+.settings-password-field {
+    -fx-editable: true;
+    -fx-opacity: 1;
+}
+
+.settings-cancel-btn {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-padding: 5 15;
+}
+
+.settings-save-btn {
+    -fx-background-color: #15BF8F;
+    -fx-text-fill: white;
+    -fx-padding: 5 15;
+}

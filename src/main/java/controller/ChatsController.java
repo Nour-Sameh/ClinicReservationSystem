@@ -53,6 +53,15 @@ public class ChatsController implements Initializable {
         if (chatListView != null) {
             chatListView.getSelectionModel().selectedItemProperty()
                     .addListener((obs, old, cur) -> onChatSelect());
+
+
+            chatListView.setStyle(
+                    "-fx-border-color: transparent;" +
+                            "-fx-background-color: white;" +
+                            "-fx-padding: 8;" +
+                            "-fx-background-insets: 0;" +
+                            "-fx-cell-size: 70;"
+            );
         }
     }
 
@@ -128,14 +137,17 @@ public class ChatsController implements Initializable {
                 lv.getItems().clear();
                 lv.getItems().addAll(practitioners);
 
+                // ✅ NEW CARD-BASED CELL FACTORY
                 lv.setCellFactory(param -> new ListCell<Practitioner>() {
                     @Override
                     protected void updateItem(Practitioner p, boolean empty) {
                         super.updateItem(p, empty);
                         if (empty || p == null) {
-                            setText("");
+                            setGraphic(null);
+                            setText(null);
                         } else {
-                            setText("Dr. " + p.getName());
+                            setGraphic(createPractitionerCard(p));
+                            setText(null);
                         }
                     }
                 });
@@ -161,11 +173,11 @@ public class ChatsController implements Initializable {
                     protected void updateItem(Chat chat, boolean empty) {
                         super.updateItem(chat, empty);
                         if (empty || chat == null || chat.getPatient() == null) {
-                            setText("");
                             setGraphic(null);
+                            setText(null);
                         } else {
-                            setText("Patient: " + chat.getPatient().getName());
-                            // Unread indicator can be added later
+                            setGraphic(createChatCard(chat));
+                            setText(null);
                         }
                     }
                 });
@@ -175,8 +187,98 @@ public class ChatsController implements Initializable {
             showError("Error", "Failed to load chats.");
         }
     }
+    private HBox createPractitionerCard(Practitioner practitioner) {
+        HBox card = new HBox(12);
+        card.setPadding(new Insets(10, 12, 10, 12));
+        card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);" +
+                        "-fx-cursor: hand;"
+        );
 
-    // ==================== MESSAGE DISPLAY ====================
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-background-color: #f0f9f7;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0, 0, 3);" +
+                        "-fx-cursor: hand;"
+        ));
+
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);" +
+                        "-fx-cursor: hand;"
+        ));
+
+        Label avatar = new Label("👨‍⚕️");
+        avatar.setStyle(
+                "-fx-font-size: 24px;" +
+                        "-fx-min-width: 40px;" +
+                        "-fx-min-height: 40px;" +
+                        "-fx-alignment: center;" +
+                        "-fx-background-color: #e8f5e9;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-text-alignment: center;"
+        );
+
+        Label nameLabel = new Label("Dr. " + practitioner.getName());
+        nameLabel.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #2D3436;"
+        );
+
+        card.getChildren().addAll(avatar, nameLabel);
+        return card;
+    }
+
+    private HBox createChatCard(Chat chat) {
+        HBox card = new HBox(12);
+        card.setPadding(new Insets(10, 12, 10, 12));
+        card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);" +
+                        "-fx-cursor: hand;"
+        );
+
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-background-color: #f0f9f7;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0, 0, 3);" +
+                        "-fx-cursor: hand;"
+        ));
+
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);" +
+                        "-fx-cursor: hand;"
+        ));
+
+        Label avatar = new Label("👤");
+        avatar.setStyle(
+                "-fx-font-size: 24px;" +
+                        "-fx-min-width: 40px;" +
+                        "-fx-min-height: 40px;" +
+                        "-fx-alignment: center;" +
+                        "-fx-background-color: #6bb8aa;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-text-alignment: center;"
+        );
+
+        Label nameLabel = new Label("Patient: " + chat.getPatient().getName());
+        nameLabel.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #2D3436;"
+        );
+
+        card.getChildren().addAll(avatar, nameLabel);
+        return card;
+    }
+
     @FXML
     public void onChatSelect() {
         if (mode == Mode.PATIENT) {
@@ -204,7 +306,6 @@ public class ChatsController implements Initializable {
             Chat chat = chatDAO.getChatByParticipants(currentPatient.getID(), practitioner.getID());
             messageArea.getChildren().clear();
             if (chat == null) {
-                // ✅ إنشاء رسالة ترحيب أولية وحفظها
                 chat = new Chat(currentPatient, practitioner);
                 chatDAO.add(chat);
 
@@ -377,9 +478,11 @@ public class ChatsController implements Initializable {
                         protected void updateItem(Practitioner p, boolean empty) {
                             super.updateItem(p, empty);
                             if (empty || p == null) {
-                                setText("");
+                                setGraphic(null);
+                                setText(null);
                             } else {
-                                setText("Dr. " + p.getName());
+                                setGraphic(createPractitionerCard(p));
+                                setText(null);
                             }
                         }
                     });
@@ -410,9 +513,11 @@ public class ChatsController implements Initializable {
                         protected void updateItem(Patient p, boolean empty) {
                             super.updateItem(p, empty);
                             if (empty || p == null) {
-                                setText("");
+                                setGraphic(null);
+                                setText(null);
                             } else {
-                                setText("Patient: " + p.getName());
+                                setGraphic(createPatientCard(p));
+                                setText(null);
                             }
                         }
                     });
@@ -422,5 +527,50 @@ public class ChatsController implements Initializable {
                 showError("Error", "Failed to load active chats.");
             }
         }
+    }
+
+    private HBox createPatientCard(Patient patient) {
+        HBox card = new HBox(12);
+        card.setPadding(new Insets(10, 12, 10, 12));
+        card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);" +
+                        "-fx-cursor: hand;"
+        );
+
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-background-color: #f0f9f7;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0, 0, 3);" +
+                        "-fx-cursor: hand;"
+        ));
+
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);" +
+                        "-fx-cursor: hand;"
+        ));
+
+        Label avatar = new Label("👤");
+        avatar.setStyle(
+                "-fx-font-size: 24px;" +
+                        "-fx-min-width: 40px;" +
+                        "-fx-min-height: 40px;" +
+                        "-fx-alignment: center;" +
+                        "-fx-background-color: #e3f2fd;" +
+                        "-fx-background-radius: 20;"
+        );
+
+        Label nameLabel = new Label("Patient: " + patient.getName());
+        nameLabel.setStyle(
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #2D3436;"
+        );
+
+        card.getChildren().addAll(avatar, nameLabel);
+        return card;
     }
 }

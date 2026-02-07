@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ClinicSlotsController {
@@ -261,78 +262,129 @@ public class ClinicSlotsController {
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Booking");
-        confirm.setHeaderText("Book this appointment?");
         String timeText = slot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm a"))
                 + " – " + slot.getEndTime().format(DateTimeFormatter.ofPattern("hh:mm a"));
-        confirm.setContentText(String.format(
-                "Clinic: %s\nDate: %s\nTime: %s",
-                selectedClinic.getName(),
-                datePicker.getValue().format(DateTimeFormatter.ofPattern("EEEE, MMM d, yyyy")),
-                timeText
-        ));
-        confirm.getButtonTypes().setAll(ButtonType.NO, ButtonType.YES);
 
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.YES) {
-                Platform.runLater(() -> {
-                    bookButton.setText("Booking...");
-                    bookButton.setDisable(true);
-                });
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setTitle("Confirm Booking");
+        dialog.setHeaderText(null);
+        dialog.setGraphic(null);
 
-                new Thread(() -> {
-                    try {
-                        AppointmentDAO appDAO = new AppointmentDAO();
 
-                        LocalDate selectedDate = slot.getDate();
-                        List<Appointment> todayAppointments = appDAO.getAppointmentsByPatientId(currentPatient.getID());
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(25));
+        content.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 15;"
+        );
 
-                        boolean alreadyBooked = todayAppointments.stream()
-                                .anyMatch(appt ->
-                                        appt.getClinic().getID() == selectedClinic.getID() &&
-                                                appt.getAppointmentDateTime().getDate().isEqual(selectedDate) &&
-                                                appt.getStatus() == Status.Booked
-                                );
+        Label title = new Label("Book this appointment?");
+        title.setStyle(
+                "-fx-font-size: 18px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #2c3e50;"
+        );
 
-                        if (alreadyBooked) {
-                            Platform.runLater(() ->
-                                    showAlert("Booking Limit",
-                                            "You already have an appointment today at this clinic.\nOnly one appointment per day is allowed.",
-                                            Alert.AlertType.WARNING)
-                            );
-                            Platform.runLater(() -> {
-                                bookButton.setText("Book Now");
-                                bookButton.setDisable(false);
-                            });
-                            return;
-                        }
+        Label clinicLbl = new Label("🏥 " + selectedClinic.getName());
+        Label dateLbl = new Label("📅 " +
+                datePicker.getValue().format(DateTimeFormatter.ofPattern("EEEE, MMM d, yyyy")));
+        Label timeLbl = new Label("⏰ " + timeText);
 
-                        Appointment newAppointment = new Appointment(currentPatient, selectedClinic, slot);
+        for (Label l : List.of(clinicLbl, dateLbl, timeLbl)) {
+            l.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495e;");
+        }
 
-                        appDAO.add(newAppointment);
+        content.getChildren().addAll(title, clinicLbl, dateLbl, timeLbl);
 
-                        Platform.runLater(() -> {
-                            showAlert("Success", "Appointment booked!", Alert.AlertType.INFORMATION);
-                        });
+        /* ===== BUTTONS ===== */
 
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        Platform.runLater(() ->
-                                showAlert("Booking Failed", "Error: " + ex.getMessage(), Alert.AlertType.ERROR)
-                        );
-                    } finally {
-                        Platform.runLater(() -> {
-                            bookButton.setText("Book Now");
-                            bookButton.setDisable(false);
-                        });
-                    }
-                }).start();
+        ButtonType yesBtn = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+        ButtonType noBtn = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            } else {
-                Platform.runLater(() -> bookButton.setDisable(false));
-            }
+        dialog.getDialogPane().getButtonTypes().addAll(yesBtn, noBtn);
+        dialog.getDialogPane().setContent(content);
+
+
+        Platform.runLater(() -> {
+            Button yes = (Button) dialog.getDialogPane().lookupButton(yesBtn);
+            yes.setStyle(
+                    "-fx-background-color: #15BF8F;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 100px;" +
+                            "-fx-background-radius: 8;"
+            );
+
+            Button no = (Button) dialog.getDialogPane().lookupButton(noBtn);
+            no.setStyle(
+                    "-fx-background-color: #ecf0f1;" +
+                            "-fx-text-fill: #2c3e50;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-min-width: 100px;" +
+                            "-fx-background-radius: 8;"
+            );
         });
+
+        dialog.setResultConverter(btn -> btn == yesBtn);
+
+
+        Optional<Boolean> result = dialog.showAndWait();
+        if (result.isPresent() && result.get()) {
+
+            Platform.runLater(() -> {
+                bookButton.setText("Booking...");
+                bookButton.setDisable(true);
+            });
+
+            new Thread(() -> {
+                try {
+                    AppointmentDAO appDAO = new AppointmentDAO();
+
+                    LocalDate selectedDate = slot.getDate();
+                    List<Appointment> todayAppointments =
+                            appDAO.getAppointmentsByPatientId(currentPatient.getID());
+
+                    boolean alreadyBooked = todayAppointments.stream().anyMatch(appt ->
+                            appt.getClinic().getID() == selectedClinic.getID() &&
+                                    appt.getAppointmentDateTime().getDate().isEqual(selectedDate) &&
+                                    appt.getStatus() == Status.Booked
+                    );
+
+                    if (alreadyBooked) {
+                        Platform.runLater(() ->
+                                showAlert("Booking Limit",
+                                        "You already have an appointment today at this clinic.\nOnly one appointment per day is allowed.",
+                                        Alert.AlertType.WARNING)
+                        );
+                        return;
+                    }
+
+                    Appointment newAppointment =
+                            new Appointment(currentPatient, selectedClinic, slot);
+
+                    appDAO.add(newAppointment);
+
+                    Platform.runLater(() ->
+                            showAlert("Success", "Appointment booked!", Alert.AlertType.INFORMATION)
+                    );
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Platform.runLater(() ->
+                            showAlert("Booking Failed", ex.getMessage(), Alert.AlertType.ERROR)
+                    );
+                } finally {
+                    Platform.runLater(() -> {
+                        bookButton.setText("Booked");
+                        bookButton.setDisable(false);
+                    });
+                }
+            }).start();
+
+        } else {
+            Platform.runLater(() -> bookButton.setDisable(false));
+        }
+
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {

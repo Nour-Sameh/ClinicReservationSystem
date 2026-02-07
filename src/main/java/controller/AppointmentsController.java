@@ -101,9 +101,9 @@ public class AppointmentsController {
         Label clinicLabel = new Label(clinic.getName());
         clinicLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
 
-        Button rescheduleBtn = new Button("Reschedule");
-        rescheduleBtn.setStyle("-fx-background-color: linear-gradient(#0A84FF,#0066CC); -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 4 10; -fx-font-size: 11px;");
-        rescheduleBtn.setOnAction(e -> System.out.println("Rescheduling: " + appointment.getId()));
+//        Button rescheduleBtn = new Button("Reschedule");
+//        rescheduleBtn.setStyle("-fx-background-color: linear-gradient(#0A84FF,#0066CC); -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 4 10; -fx-font-size: 11px;");
+//        rescheduleBtn.setOnAction(e -> System.out.println("Rescheduling: " + appointment.getId()));
 
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setStyle("-fx-background-color: linear-gradient(#FF3B30,#C82010); -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 4 10; -fx-font-size: 11px;");
@@ -122,7 +122,7 @@ public class AppointmentsController {
             });
         });
 
-        HBox btns = new HBox(5, rescheduleBtn, cancelBtn);
+        HBox btns = new HBox(5, cancelBtn);
         btns.setAlignment(Pos.CENTER_RIGHT);
         rightVBox.getChildren().addAll(ratingBtn, clinicLabel, btns);
 

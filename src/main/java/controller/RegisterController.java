@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Patient;
 import model.Practitioner;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,9 +29,6 @@ public class RegisterController {
     @FXML private TextField phoneField;
     @FXML private PasswordField passwordField;
 
-    @FXML private Button registerButton;
-    @FXML private Button backButton;
-    @FXML private Hyperlink loginLink;
     @FXML private ComboBox<String> genderComboBox;
     @FXML private DatePicker dobPicker;
 
@@ -42,7 +40,7 @@ public class RegisterController {
         doctorCheck.setOnAction(e -> {
             if (doctorCheck.isSelected()) patientCheck.setSelected(false);
         });
-        genderComboBox.getItems().addAll("Male", "Female", "Other");
+        genderComboBox.getItems().addAll("Male", "Female");
     }
 
     @FXML
@@ -63,6 +61,10 @@ public class RegisterController {
         String password = passwordField.getText().trim();
         String gender = genderComboBox.getValue();
         LocalDate dob = dobPicker.getValue();
+        if (dob == null) {
+            showAlert("Error", "All fields are required, including gender and date of birth.");
+            return;
+        }
         int age = Period.between(dob, LocalDate.now()).getYears();
 
         if (!patientCheck.isSelected() && !doctorCheck.isSelected()) {
@@ -70,7 +72,7 @@ public class RegisterController {
             return;
         }
 
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || gender == null || dob == null) {
+        if (name.isEmpty() || email.isEmpty()  || phone.isEmpty() || password.isEmpty() || gender == null || dob == null) {
             showAlert("Error", "All fields are required, including gender and date of birth.");
             return;
         }
@@ -97,12 +99,17 @@ public class RegisterController {
             );
             return;
         }
-
-
         if (dob.isAfter(LocalDate.now())) {
             showAlert("Error", "Date of birth cannot be in the future.");
             return;
         }
+
+        // age number validation
+        if(age < 0 || age > 120|| ObjectUtils.isEmpty(age)) {
+            showAlert("Error", "Please enter a valid date of birth.");
+            return;
+        }
+
 
         if (patientCheck.isSelected()) {
             if (age < 18) {
