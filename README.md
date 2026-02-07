@@ -2,8 +2,6 @@
 
 # 🏥 Clinic Reservation System
 
-A **desktop-based clinic management application** built with **JavaFX** and **MySQL**, designed to streamline appointment booking, patient–doctor communication, and clinic administration.
-
 ---
 
 ## 🎯 Overview
